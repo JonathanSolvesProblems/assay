@@ -1,0 +1,72 @@
+{
+  "generatedFrom": "experiments/reliability.json",
+  "ranAt": "2026-08-10T17:18:51.152Z",
+  "unitsSpent": 108,
+  "determinism": [
+    {
+      "concern": "Texture",
+      "range": 0,
+      "sd": 0
+    },
+    {
+      "concern": "Redness",
+      "range": 0,
+      "sd": 0
+    },
+    {
+      "concern": "Hydration",
+      "range": 0,
+      "sd": 0
+    },
+    {
+      "concern": "Blemishes",
+      "range": 0,
+      "sd": 1.7404671430534633e-14
+    },
+    {
+      "concern": "Pores",
+      "range": 0,
+      "sd": 0
+    },
+    {
+      "concern": "Radiance",
+      "range": 0,
+      "sd": 0
+    }
+  ],
+  "budgetConcerns": [
+    "Blemishes",
+    "Hydration",
+    "Texture",
+    "Pores"
+  ],
+  "budget": [
+    {
+      "source": "Model (identical bytes)",
+      "values": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "source": "JPEG quality q80 to q96",
+      "values": [
+        2.912850000000006,
+        0.34870803356170654,
+        0.1244962215423584,
+        2.550824522972107
+      ]
+    },
+    {
+      "source": "Brightness plus/minus 8%",
+      "values": [
+        4.85475000000001,
+        3.866666555404663,
+        1.9592881202697754,
+        1.5182304382324219
+      ]
+    }
+  ]
+}

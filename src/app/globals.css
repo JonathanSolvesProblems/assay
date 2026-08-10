@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+/*
+  Assay reads as a lab report, not a beauty app. Every competitor in this
+  category ships a soft gradient and a pink CTA; the whole argument here is
+  measurement, so the interface is a document: warm paper, one hairline rule
+  weight, and numbers set in monospace so they line up in a column the way a
+  result sheet does.
+*/
+
+@theme {
+  /* Canvas and surfaces */
+  --color-paper: #fbfbfa;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f7f6f3;
+  --color-rule: #eaeaea;
+  --color-rule-strong: #d8d7d3;
+
+  /* Ink */
+  --color-ink: #191918;
+  --color-ink-secondary: #5f5e5b;
+  --color-ink-muted: #8b8a85;
+
+  /* Verdict semantics.
+     Green reads "working", amber "expected flare", red "stop", slate "null
+     result", blue "still measuring". The null result deliberately gets a flat
+     neutral rather than a red: nothing happened, and the colour says so. */
+  --color-verdict-working-bg: #edf3ec;
+  --color-verdict-working-ink: #346538;
+  --color-verdict-purge-bg: #fbf3db;
+  --color-verdict-purge-ink: #956400;
+  --color-verdict-worsening-bg: #fdebec;
+  --color-verdict-worsening-ink: #9f2f2d;
+  --color-verdict-null-bg: #f1f1ef;
+  --color-verdict-null-ink: #4a4a47;
+  --color-verdict-pending-bg: #e1f3fe;
+  --color-verdict-pending-ink: #1f6c9f;
+
+  --font-sans:
+    "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+    Arial, sans-serif;
+  --font-serif: var(--font-instrument-serif), "Lyon Text", Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), "SF Mono", ui-monospace, monospace;
+
+  --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+  }
+
+  /* Numerals must line up vertically wherever a score sits next to a floor. */
+  .tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  ::selection {
+    background: #191918;
+    color: #fbfbfa;
+  }
+}
+
+@layer components {
+  .rule {
+    border: 1px solid var(--color-rule);
+  }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-rule);
+    border-radius: 12px;
+  }
+
+  /* Scroll entry. Motion is present but should never be the thing you notice. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .reveal[data-visible="true"] {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 600ms var(--ease-out-quint),
+      transform 600ms var(--ease-out-quint);
+    transition-delay: calc(var(--index, 0) * 80ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal[data-visible="true"] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}

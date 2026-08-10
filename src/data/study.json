@@ -1,0 +1,56 @@
+{
+  "id": "gt-study-001",
+  "subject": "Subject A",
+  "startedAt": "2026-08-10",
+  "cadenceDays": 1,
+  "isRealCapture": true,
+  "notes": "Prospective n-of-1 study. Every reading in this file comes from a real YouCam Skin Analysis call on a real capture session. Nothing here is generated or illustrative; if a session is missing it is because it has not been captured yet. Face images are never stored in this repository - only the scores the API returned, so the dataset is auditable without publishing anyone's photograph.",
+  "concerns": [
+    "texture",
+    "redness",
+    "moisture",
+    "acne",
+    "pore",
+    "radiance"
+  ],
+  "products": [],
+  "calibrationSessions": [
+    {
+      "id": "calibration-0-msnixcd6",
+      "day": 0,
+      "capturedAt": "2026-08-10T17:47:06.330Z",
+      "readings": {
+        "redness": [
+          70.37879943847656,
+          70.63018035888672
+        ],
+        "pore": [
+          52.19332277774811,
+          41.666842579841614
+        ],
+        "radiance": [
+          71.59339189529419,
+          69.41182017326355
+        ],
+        "moisture": [
+          52.69264578819275,
+          50.06210207939148
+        ],
+        "acne": [
+          91.64983,
+          85.92342000000001
+        ],
+        "texture": [
+          69.86615657806396,
+          67.62055158615112
+        ]
+      },
+      "note": "baseline, indoor daylight, handheld",
+      "taskIds": [
+        "K5MhUHLjbXXCrVYW-N1SoCLlokzxXgnWaI1vZTHzhDJk886EvnaRT2WfqqDyv1M2PVHCF5fIuuD_SIlt3qDy9TjE-071fjlnjzhbCbagI0U",
+        "jzS7Ij2LJWEtzZL7j09fMDxuJ7ghjnO4DINyEnpnN_RrKz3uN1h9YAi5M6SVkWJB590KJZtuDWmWUtXlB2trZf4Spm0MebgWZiEd4FZXH7E"
+      ]
+    }
+  ],
+  "treatmentSessions": []
+}

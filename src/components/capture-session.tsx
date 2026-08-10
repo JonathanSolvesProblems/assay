@@ -1,0 +1,542 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import {
+  CAPTURE_JPEG_QUALITY,
+  CAPTURE_LONG_EDGE,
+  MIN_SHORT_EDGE_SD,
+} from "@/lib/youcam/image";
+import { CONCERNS, DEFAULT_CONCERNS, type ConcernId } from "@/lib/domain/concerns";
+import {
+  estimateReliability,
+  type ReliabilityEstimate,
+  type Session,
+} from "@/lib/stats/reliability";
+
+const FRAMES_PER_SESSION = 3;
+const SECONDS_BETWEEN_FRAMES = 3;
+
+interface AnalyzeResponse {
+  readings: Record<string, number[]>;
+  frameCount: number;
+  taskIds: string[];
+  unitsBefore: number | null;
+  unitsAfter: number | null;
+  capturedAt: string;
+  error?: string;
+}
+
+type Phase = "idle" | "streaming" | "capturing" | "analysing" | "done" | "error";
+
+export function CaptureSession() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const framesRef = useRef<Blob[]>([]);
+
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [message, setMessage] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const [captured, setCaptured] = useState(0);
+  const [luminance, setLuminance] = useState<number | null>(null);
+  const [luminanceLog, setLuminanceLog] = useState<number[]>([]);
+  const [result, setResult] = useState<AnalyzeResponse | null>(null);
+
+  // Live luminance. This is on-thesis rather than decorative: illumination is
+  // the single largest source of error in the whole pipeline, and showing it
+  // moving in real time is the fastest way to make that legible.
+  useEffect(() => {
+    if (phase !== "streaming" && phase !== "capturing") return;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) return;
+
+    const timer = window.setInterval(() => {
+      const video = videoRef.current;
+      if (!video || video.readyState < 2) return;
+
+      context.drawImage(video, 0, 0, 64, 64);
+      const { data } = context.getImageData(0, 0, 64, 64);
+
+      let sum = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        // Rec. 601 luma, which tracks perceived brightness better than a mean.
+        sum += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+      }
+      setLuminance((sum / (data.length / 4) / 255) * 100);
+    }, 250);
+
+    return () => window.clearInterval(timer);
+  }, [phase]);
+
+  const stopStream = useCallback(() => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+  }, []);
+
+  useEffect(() => stopStream, [stopStream]);
+
+  async function startCamera() {
+    setMessage(null);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "user",
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+        },
+        audio: false,
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+      setPhase("streaming");
+    } catch {
+      setPhase("error");
+      setMessage(
+        "Could not open the camera. Grant camera permission, or upload photographs instead: the analysis is identical either way.",
+      );
+    }
+  }
+
+  /** Draw the current video frame at a fixed size and quality. */
+  async function grabFrame(): Promise<Blob> {
+    const video = videoRef.current;
+    if (!video) throw new Error("Camera is not running.");
+
+    const { videoWidth: w, videoHeight: h } = video;
+    const scale = Math.min(1, CAPTURE_LONG_EDGE / Math.max(w, h));
+    const width = Math.round(w * scale);
+    const height = Math.round(h * scale);
+
+    if (Math.min(width, height) < MIN_SHORT_EDGE_SD) {
+      throw new Error(
+        `Camera frame is ${width}x${height}; the analyser needs a short side of at least ${MIN_SHORT_EDGE_SD}px.`,
+      );
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Could not acquire a canvas context.");
+    context.drawImage(video, 0, 0, width, height);
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/jpeg", CAPTURE_JPEG_QUALITY),
+    );
+    if (!blob) throw new Error("Could not encode the frame.");
+    return blob;
+  }
+
+  async function runCapture() {
+    setPhase("capturing");
+    framesRef.current = [];
+    setCaptured(0);
+    setLuminanceLog([]);
+
+    try {
+      for (let i = 0; i < FRAMES_PER_SESSION; i++) {
+        for (let s = SECONDS_BETWEEN_FRAMES; s > 0; s--) {
+          setCountdown(s);
+          await wait(1000);
+        }
+        setCountdown(null);
+
+        framesRef.current.push(await grabFrame());
+        setCaptured(i + 1);
+        setLuminanceLog((log) => [...log, luminance ?? 0]);
+        await wait(350);
+      }
+
+      stopStream();
+      await analyse(framesRef.current);
+    } catch (error) {
+      setPhase("error");
+      setMessage(error instanceof Error ? error.message : "Capture failed.");
+    }
+  }
+
+  async function analyse(frames: Blob[]) {
+    setPhase("analysing");
+    setMessage(null);
+
+    const form = new FormData();
+    frames.forEach((blob, i) => form.append("frames", blob, `frame-${i}.jpg`));
+    form.append("concerns", DEFAULT_CONCERNS.join(","));
+
+    try {
+      const response = await fetch("/api/analyze", { method: "POST", body: form });
+      const payload = (await response.json()) as AnalyzeResponse;
+
+      if (!response.ok) {
+        setPhase("error");
+        setMessage(payload.error ?? "Analysis failed.");
+        return;
+      }
+
+      setResult(payload);
+      setPhase("done");
+      persist(payload);
+    } catch {
+      setPhase("error");
+      setMessage("Could not reach the analysis service.");
+    }
+  }
+
+  async function onFilesChosen(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []);
+    if (files.length < 2) {
+      setMessage(
+        "Choose at least two photographs taken seconds apart. The spread between them is what measures the error.",
+      );
+      return;
+    }
+
+    try {
+      const frames = await Promise.all(files.slice(0, 3).map(normaliseFile));
+      framesRef.current = frames;
+      setCaptured(frames.length);
+      await analyse(frames);
+    } catch (error) {
+      setPhase("error");
+      setMessage(error instanceof Error ? error.message : "Could not read those files.");
+    }
+  }
+
+  const reliability = result ? reliabilityFrom(result.readings) : null;
+  const luminanceDrift =
+    luminanceLog.length >= 2
+      ? Math.max(...luminanceLog) - Math.min(...luminanceLog)
+      : null;
+
+  return (
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
+      <div>
+        <div className="relative overflow-hidden rounded-[12px] border border-[var(--color-rule)] bg-[var(--color-surface-sunken)]">
+          <div className="aspect-[4/3] w-full">
+            <video
+              ref={videoRef}
+              playsInline
+              muted
+              className="h-full w-full scale-x-[-1] object-cover"
+              style={{
+                display:
+                  phase === "streaming" || phase === "capturing" ? "block" : "none",
+              }}
+            />
+
+            {phase !== "streaming" && phase !== "capturing" && (
+              <div className="flex h-full flex-col items-center justify-center px-8 text-center">
+                <p className="max-w-xs text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
+                  {phase === "analysing"
+                    ? "Analysing three frames. Each one is a separate call to the YouCam Skin Analysis API."
+                    : phase === "done"
+                      ? "Session complete. Your noise floor is on the right."
+                      : "Assay takes three frames a few seconds apart. Your skin cannot change in that time, so any difference between them is the instrument's error."}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Face guide. Reproducing framing between sessions is part of the protocol. */}
+          {(phase === "streaming" || phase === "capturing") && (
+            <svg
+              className="pointer-events-none absolute inset-0 h-full w-full"
+              viewBox="0 0 400 300"
+              preserveAspectRatio="xMidYMid slice"
+            >
+              <ellipse
+                cx="200"
+                cy="145"
+                rx="76"
+                ry="98"
+                fill="none"
+                stroke="rgba(255,255,255,0.75)"
+                strokeWidth="1.5"
+                strokeDasharray="5 5"
+              />
+              <line
+                x1="200"
+                y1="30"
+                x2="200"
+                y2="52"
+                stroke="rgba(255,255,255,0.5)"
+                strokeWidth="1"
+              />
+              <line
+                x1="200"
+                y1="238"
+                x2="200"
+                y2="260"
+                stroke="rgba(255,255,255,0.5)"
+                strokeWidth="1"
+              />
+            </svg>
+          )}
+
+          {countdown !== null && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <span className="tabular text-[76px] leading-none text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
+                {countdown}
+              </span>
+            </div>
+          )}
+
+          {(phase === "streaming" || phase === "capturing") && (
+            <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-black/55 px-3 py-1.5 backdrop-blur-sm">
+              <span className="text-[10px] uppercase tracking-[0.1em] text-white/65">
+                Light
+              </span>
+              <span className="tabular text-[12px] text-white">
+                {luminance === null ? "--" : luminance.toFixed(1)}
+              </span>
+            </div>
+          )}
+
+          {phase === "capturing" && (
+            <div className="absolute bottom-3 right-3 flex gap-1.5">
+              {Array.from({ length: FRAMES_PER_SESSION }, (_, i) => (
+                <span
+                  key={i}
+                  className="h-1.5 w-6 rounded-full transition-colors duration-300"
+                  style={{ background: i < captured ? "#fff" : "rgba(255,255,255,0.3)" }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          {phase === "idle" || phase === "error" ? (
+            <button
+              onClick={startCamera}
+              className="rounded-[5px] bg-[var(--color-ink)] px-5 py-2.5 text-[14px] text-white transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
+            >
+              Open camera
+            </button>
+          ) : null}
+
+          {phase === "streaming" && (
+            <button
+              onClick={runCapture}
+              className="rounded-[5px] bg-[var(--color-ink)] px-5 py-2.5 text-[14px] text-white transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
+            >
+              Capture three frames
+            </button>
+          )}
+
+          {(phase === "idle" || phase === "error" || phase === "done") && (
+            <label className="cursor-pointer rounded-[5px] border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]">
+              Upload photographs
+              <input
+                type="file"
+                accept="image/jpeg,image/png"
+                multiple
+                className="hidden"
+                onChange={onFilesChosen}
+              />
+            </label>
+          )}
+
+          {phase === "analysing" && (
+            <span className="tabular text-[13px] text-[var(--color-ink-secondary)]">
+              Analysing frame {captured} of {FRAMES_PER_SESSION}&hellip;
+            </span>
+          )}
+        </div>
+
+        {message && (
+          <p className="mt-4 rounded-[8px] bg-[var(--color-verdict-worsening-bg)] px-4 py-3 text-[13px] leading-relaxed text-[var(--color-verdict-worsening-ink)]">
+            {message}
+          </p>
+        )}
+      </div>
+
+      <aside>
+        {reliability ? (
+          <NoiseFloorPanel
+            reliability={reliability}
+            luminanceDrift={luminanceDrift}
+            units={
+              result && result.unitsBefore !== null && result.unitsAfter !== null
+                ? result.unitsBefore - result.unitsAfter
+                : null
+            }
+          />
+        ) : (
+          <Protocol />
+        )}
+      </aside>
+    </div>
+  );
+}
+
+function Protocol() {
+  return (
+    <div className="card p-6">
+      <p className="text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-muted)]">
+        Capture protocol
+      </p>
+      <ol className="mt-4 space-y-3.5 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
+        {[
+          "Face a steady light source. A window works; a lamp works. Mixing them does not.",
+          "Hold the phone at arm's length, face filling the oval.",
+          "No makeup, hair back off the face.",
+          "Do not move between frames. Reproducing the same framing is what keeps the noise floor low.",
+          "Repeat at the same time of day. Skin genuinely changes between morning and night.",
+        ].map((step, i) => (
+          <li key={i} className="flex gap-3">
+            <span className="tabular shrink-0 text-[var(--color-ink-muted)]">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span>{step}</span>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-5 border-t border-[var(--color-rule)] pt-4 text-[12px] leading-relaxed text-[var(--color-ink-muted)]">
+        Three frames cost about 36 API units. Photographs are sent to the YouCam Skin
+        Analysis API for scoring and are never stored by Assay.
+      </p>
+    </div>
+  );
+}
+
+function NoiseFloorPanel({
+  reliability,
+  luminanceDrift,
+  units,
+}: {
+  reliability: Record<string, ReliabilityEstimate>;
+  luminanceDrift: number | null;
+  units: number | null;
+}) {
+  const entries = Object.entries(reliability);
+
+  return (
+    <div className="card p-6">
+      <p className="text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-muted)]">
+        Your noise floor
+      </p>
+      <h3 className="mt-2 font-serif text-[22px] leading-tight tracking-[-0.02em]">
+        What a change has to beat
+      </h3>
+      <p className="mt-3 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
+        Measured on your face, on your device, from three frames taken seconds apart. Any
+        future change smaller than these numbers cannot be told apart from the instrument.
+      </p>
+
+      <dl className="mt-5 space-y-2.5">
+        {entries.map(([concern, estimate]) => {
+          const meta = CONCERNS[concern as ConcernId];
+          const saturated = estimate.saturation !== "none";
+          return (
+            <div
+              key={concern}
+              className="flex items-baseline justify-between gap-3 border-b border-[var(--color-rule)] pb-2.5 last:border-0"
+            >
+              <dt className="text-[13px]">{meta?.label ?? concern}</dt>
+              <dd className="tabular text-[14px]">
+                {saturated ? (
+                  <span className="text-[11px] uppercase tracking-[0.08em] text-[var(--color-ink-muted)]">
+                    saturated
+                  </span>
+                ) : (
+                  <>&plusmn;{estimate.mdc95SessionMean.toFixed(1)}</>
+                )}
+              </dd>
+            </div>
+          );
+        })}
+      </dl>
+
+      {entries.some(([, e]) => e.underestimates) && (
+        <p className="mt-4 rounded-[8px] bg-[var(--color-verdict-pending-bg)] px-4 py-3 text-[12px] leading-relaxed text-[var(--color-verdict-pending-ink)]">
+          These are a lower bound. One session measures sensor and pose noise but cannot
+          see the error you add by setting the camera back up tomorrow, and re-cropping
+          the same photograph was measured to shift a texture score by 5.8 points. Capture
+          two more sessions today, moving the camera in between, and the floor becomes the
+          one that actually applies.
+        </p>
+      )}
+
+      {luminanceDrift !== null && luminanceDrift > 2 && (
+        <p className="mt-4 rounded-[8px] bg-[var(--color-verdict-purge-bg)] px-4 py-3 text-[12px] leading-relaxed text-[var(--color-verdict-purge-ink)]">
+          Your lighting moved {luminanceDrift.toFixed(1)} points during capture. That
+          inflates the noise floor and makes real changes harder to detect. Recapturing
+          under steadier light will tighten these numbers.
+        </p>
+      )}
+
+      {units !== null && (
+        <p className="mt-4 border-t border-[var(--color-rule)] pt-4 text-[12px] text-[var(--color-ink-muted)]">
+          <span className="tabular">{units}</span> API units spent on this session.
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ---- helpers --------------------------------------------------------------
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function reliabilityFrom(readings: Record<string, number[]>) {
+  const out: Record<string, ReliabilityEstimate> = {};
+  for (const [concern, frames] of Object.entries(readings)) {
+    if (frames.length < 2) continue;
+    const session: Session = { id: "calibration", day: 0, frames };
+    out[concern] = estimateReliability([session]);
+  }
+  return out;
+}
+
+/** Resize an uploaded photograph to the same spec the camera path produces. */
+async function normaliseFile(file: File): Promise<Blob> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, CAPTURE_LONG_EDGE / Math.max(bitmap.width, bitmap.height));
+  const width = Math.round(bitmap.width * scale);
+  const height = Math.round(bitmap.height * scale);
+
+  if (Math.min(width, height) < MIN_SHORT_EDGE_SD) {
+    throw new Error(
+      `${file.name} is ${width}x${height} after resizing; the analyser needs a short side of at least ${MIN_SHORT_EDGE_SD}px.`,
+    );
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Could not acquire a canvas context.");
+  context.drawImage(bitmap, 0, 0, width, height);
+
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, "image/jpeg", CAPTURE_JPEG_QUALITY),
+  );
+  if (!blob) throw new Error(`Could not encode ${file.name}.`);
+  return blob;
+}
+
+/** Keep the session locally so a visitor can build up their own study. */
+function persist(payload: AnalyzeResponse) {
+  try {
+    const key = "assay:sessions";
+    const existing = JSON.parse(localStorage.getItem(key) ?? "[]");
+    existing.push({
+      capturedAt: payload.capturedAt,
+      readings: payload.readings,
+      taskIds: payload.taskIds,
+    });
+    localStorage.setItem(key, JSON.stringify(existing));
+  } catch {
+    // Storage being unavailable must never break a capture.
+  }
+}

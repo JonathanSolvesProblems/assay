@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Build output
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Secrets. The YouCam API key is a bearer credential with spend attached to it,
+# so it must never reach the repository or the client bundle.
+.env
+.env.local
+.env*.local
+*.pem
+*.key
+
+# Personal data. Capture frames are photographs of a real person's face and are
+# never committed. Only the scores the API returned are, which keeps the dataset
+# auditable without publishing anybody's face.
+/captures/
+/public/captures/
+*.heic
+
+# Local scratch and tooling output
+/.scratch/
+*.log
+
+# Editors and OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Deployment
+.vercel
+
+# Test and coverage
+coverage/
+.nyc_output/

@@ -1,0 +1,153 @@
+# Assay
+
+**Know if it's working.**
+
+Assay tells you whether a skincare product is actually doing anything on your
+face, by measuring its own error before it measures your skin.
+
+Built on the [YouCam Skin Analysis API](https://yce.perfectcorp.com/ai-api) for
+the YouCam API Skin AI & Apparel VTO Hackathon.
+
+---
+
+## The problem
+
+The average woman spends around $170 a year on skincare that turns out not to
+work, and is holding four products right now that never delivered. Nobody can
+tell her which four, because nobody can measure it.
+
+The measurement exists. YouCam's Skin Analysis API scores fourteen skin concerns
+from a photograph, and it is a genuinely good instrument. The problem is that a
+score reported without its error is a number you cannot make a decision with.
+
+Assay measured how bad that gets. Same face, one variable changed at a time:
+
+| Source of variation | acne | moisture | texture | pore |
+| ------------------- | ---: | -------: | ------: | ---: |
+| The model itself (byte-identical input) | 0.00 | 0.00 | 0.00 | 0.00 |
+| JPEG quality, q80 to q96 | 2.91 | 0.35 | 0.12 | 2.55 |
+| Brightness, plus or minus 8% | **4.86** | 3.87 | 1.96 | 1.52 |
+| **Cropping the same photograph differently** | | | **5.81** | |
+
+A realistic four-week treatment effect is about five points. Re-saving the same
+photograph at a different compression level moves the blemish score by 2.91.
+Standing slightly closer to the camera than you did last week moves texture by
+5.81. A tracker that compares today's score against yesterday's, with no error
+model, is substantially reporting the lighting.
+
+## What Assay does about it
+
+Before it says anything about your skin, Assay measures how much the reading
+moves when your skin has **not** changed, then requires any claimed change to
+clear that bar.
+
+Two standard quantities from clinical measurement science do the work:
+
+```
+SEM    = pooled standard deviation across replicate captures
+MDC₉₅  = 1.96 × √2 × SEM
+```
+
+The `√2` is there because two measurements are being compared and each carries
+its own error. Below that threshold, the honest answer is not zero and it is not
+a small improvement. It is "cannot tell yet", and Assay says so, with the number
+of further sessions required.
+
+### The verdicts
+
+| Verdict | Meaning |
+| ------- | ------- |
+| **Working** | Change clears the noise floor and the trend across all sessions agrees |
+| **Getting worse** | Change clears the floor in the wrong direction. Reported early, because an adverse reaction shows up fast |
+| **Expected flare** | Worse, but inside the window where this active is known to purge. Retinoids and BHAs get worse before they help, and people quit good products over it |
+| **Not working** | Flat, past the point where this ingredient should have done something, with enough data to have caught it. A null result, not an early one |
+| **No evidence yet** | Flat, but the study cannot yet resolve an effect this size |
+| **Cannot measure** | The concern is pinned against the end of the scale and has no room to move |
+
+Separating **not working** from **no evidence yet** is the part almost nothing
+else does. Telling someone their retinoid failed at three weeks is not a cautious
+result, it is a wrong one: retinoids do not remodel anything on that timescale.
+Assay knows the onset window for each active and refuses to render a verdict
+before it.
+
+## Why the noise floor is measured between sessions
+
+Frames taken seconds apart without touching the camera capture sensor and pose
+noise, and nothing else. They cannot see the error you add by setting the camera
+back up tomorrow, which the crop experiment above shows is the largest error
+there is.
+
+So calibration is several sessions captured the same day with the camera taken
+down and reset in between. Skin cannot change in twenty minutes, so the spread
+across those session means is pure measurement error including repositioning.
+Assay takes whichever is larger, the between-session error or the frame-level
+error, and never the smaller.
+
+## Running it
+
+```bash
+pnpm install
+cp .env.example .env.local     # add your YouCam API key
+pnpm dev
+```
+
+| Command | What it does |
+| ------- | ------------ |
+| `pnpm dev` | Run the app |
+| `pnpm test` | 92 tests, no network, no API units spent |
+| `pnpm typecheck` | Type check |
+| `node scripts/verify-youcam.mjs` | Check your key, balance and per-feature costs. Spends nothing |
+| `node scripts/capture.mjs --dir captures/day1 --type treatment --day 1` | Ingest a capture session |
+| `node scripts/experiment-reliability.mjs` | Re-run the instrument characterisation |
+
+Capture protocol is in [CAPTURE.md](CAPTURE.md). Everything learned about the
+API, including several behaviours that contradict or are missing from the docs,
+is in [API_FINDINGS.md](API_FINDINGS.md).
+
+## YouCam APIs used
+
+- **AI Skin Analysis** (`/s2s/v2.0/task/skin-analysis`) is the core instrument.
+  Six SD concerns per session, scored on `raw_score` rather than `ui_score`
+  because the latter is a rounded non-linear remap and a noise floor built from
+  integers would be quantised rather than precise.
+- **AI Image Generator** (`/s2s/v2.0/task/text-to-image/youcam`) generated the
+  synthetic reference face used for instrument characterisation, so that no real
+  person had to be scored to produce those numbers.
+- **Credit and feature-cost endpoints** for the budget guard that refuses to
+  start a session it cannot afford.
+
+## Structure
+
+```
+src/lib/stats/         distributions, reliability, inference, the verdict engine
+src/lib/domain/        the 14 concerns, and actives with their onset windows
+src/lib/youcam/        API client: rate limiting, retries, budget guard
+src/lib/study/         study loading and verdict assembly
+src/app/               verdict, calibrate, method, and the analysis route
+scripts/               capture ingest, instrument characterisation, key check
+experiments/           raw output backing every number on the method page
+```
+
+The statistics are implemented directly rather than pulled from a package,
+because the whole claim of this project is that the numbers are defensible and a
+reviewer should be able to check them against a table. Every expected value in
+`src/lib/stats/stats.test.ts` is hand-computed from the definition or taken from
+a published table, never from a previous run of the code.
+
+## Honest limitations
+
+- **Not a medical device.** No diagnosis, no treatment, no medical advice.
+- The threshold for "a change worth acting on" is set at five points. That is a
+  product decision, not a clinical constant: there is no published minimal
+  clinically important difference for this scale, because establishing one needs
+  anchor-based studies against patient-reported outcomes.
+- The error budget was measured on a single synthetic face. That holds the
+  subject perfectly constant, which is what instrument characterisation needs,
+  but it is one face. The per-user noise floor is measured on your own, and that
+  is the number that gates your verdict.
+- A single subject cannot tell you what a product does in general. It can tell
+  you what it is doing on you, which is the question you actually have.
+
+## Licence
+
+MIT, see [LICENSE](LICENSE).
