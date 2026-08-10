@@ -1,6 +1,8 @@
 import { CONCERNS } from "@/lib/domain/concerns";
 import type { ConcernFloor } from "@/lib/study/store";
 
+import { DriftPlot } from "./drift-plot";
+
 const USABLE_COPY = {
   measurable: {
     label: "Measurable",
@@ -53,13 +55,14 @@ export function InstrumentPanel({
       </div>
 
       <div className="mt-8 overflow-x-auto">
-        <table className="w-full min-w-[560px] text-[14px]">
+        <table className="w-full min-w-[780px] text-[14px]">
           <thead>
             <tr className="border-b border-[var(--color-rule)] text-left text-[10px] uppercase tracking-[0.1em] text-[var(--color-ink-muted)]">
               <th className="pb-2.5 font-normal">Concern</th>
               <th className="pb-2.5 text-right font-normal">
                 Readings, {windowMinutes} min apart
               </th>
+              <th className="pb-2.5 pl-6 font-normal">Vs. within-sitting</th>
               <th className="pb-2.5 text-right font-normal">Drift</th>
               <th className="pb-2.5 text-right font-normal">Noise floor</th>
               <th className="pb-2.5 pl-6 font-normal">Can it answer?</th>
@@ -77,6 +80,9 @@ export function InstrumentPanel({
                   <td className="py-3">{meta.label}</td>
                   <td className="tabular py-3 text-right text-[13px] text-[var(--color-ink-secondary)]">
                     {row.sessionMeans.map((m) => m.toFixed(1)).join("  ")}
+                  </td>
+                  <td className="py-3 pl-6">
+                    <DriftPlot values={row.sessionMeans} floor={row.withinFloor} />
                   </td>
                   <td
                     className="tabular py-3 text-right"

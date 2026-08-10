@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { InstrumentPanel } from "@/components/instrument-panel";
 import { Reveal } from "@/components/reveal";
+import { TitleBlock } from "@/components/title-block";
 import { VerdictCard } from "@/components/verdict-card";
 import { CONCERNS } from "@/lib/domain/concerns";
 import {
@@ -87,22 +88,35 @@ export default function VerdictPage() {
       </Reveal>
 
       <section className="border-t border-[var(--color-rule)] py-14">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 className="font-serif text-[30px] tracking-[0.005em]">The study</h2>
-            <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
-              A prospective n-of-1 study running on a real face, with real products,
-              scored by the YouCam Skin Analysis API. Every reading is captured live.
-              Nothing on this page is simulated.
-            </p>
-          </div>
-
-          <dl className="flex gap-8">
-            <Stat label="Sessions" value={String(progress.sessionCount)} />
-            <Stat label="Baseline" value={String(progress.calibrationSessionCount)} />
-            <Stat label="Days" value={String(progress.studyDays)} />
-          </dl>
+        <div className="mb-8">
+          <h2 className="font-serif text-[30px] tracking-[0.005em]">The study</h2>
+          <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
+            A prospective n-of-1 study running on a real face, with real products, scored
+            by the YouCam Skin Analysis API. Every reading is captured live. Nothing on
+            this page is simulated.
+          </p>
         </div>
+
+        <TitleBlock
+          fields={[
+            { label: "Subject", value: study.subject },
+            { label: "Instrument", value: "YouCam Skin Analysis" },
+            {
+              label: "Reference",
+              value: `${progress.calibrationSessionCount} baseline sessions`,
+            },
+            { label: "Opened", value: study.startedAt },
+            { label: "Treatment sessions", value: String(progress.sessionCount) },
+            { label: "Span", value: `${progress.studyDays} days` },
+            { label: "Concerns", value: String(study.concerns.length) },
+            { label: "Cadence", value: `${study.cadenceDays}d` },
+          ]}
+          status={
+            progress.hasData
+              ? { label: "Result issued", tone: "issued" }
+              : { label: "No result yet", tone: "pending" }
+          }
+        />
 
         {progress.hasData ? (
           <div className="mt-10 grid gap-5">
@@ -191,17 +205,6 @@ function Figure({ value, label }: { value: string; label: string }) {
       <p className="mt-2.5 text-[12px] leading-relaxed text-[var(--color-ink-secondary)]">
         {label}
       </p>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-muted)]">
-        {label}
-      </dt>
-      <dd className="tabular mt-0.5 text-[22px] leading-none">{value}</dd>
     </div>
   );
 }

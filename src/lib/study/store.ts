@@ -94,6 +94,19 @@ export interface ConcernFloor {
   drift: number;
   /** The bar a change must clear, MDC95 on session means. */
   floor: number;
+  /**
+   * The frame-level tolerance: what the instrument repeats to inside a single
+   * sitting, with the camera untouched.
+   *
+   * Kept separate from `floor` because it is the only non-circular thing to plot
+   * drift against. `floor` is derived from the session means themselves whenever
+   * between-session error dominates, so plotting those means against it would
+   * compare a set of numbers to a band computed from them, and the marks could
+   * essentially never fall outside. This one is computed from within-session
+   * spread only, so a mark escaping it genuinely means the reading wandered
+   * further between sittings than the instrument wanders inside one.
+   */
+  withinFloor: number;
   basis: "within-session" | "between-session";
   /**
    * Whether this concern can support a verdict at all under these capture
@@ -124,9 +137,15 @@ export function calibrationFloors(source: Study = study): ConcernFloor[] {
       const sessionMeans = sessions.map((s) => mean(s.frames));
       const floor = estimate.mdc95SessionMean;
 
+      // mdc95Single is the frame-to-frame tolerance; dividing by √k gives the
+      // equivalent for a session mean of k frames.
+      const withinFloor =
+        estimate.mdc95Single / Math.sqrt(Math.max(1, estimate.framesPerSession));
+
       return {
         concern,
         sessionMeans,
+        withinFloor,
         drift:
           sessionMeans.length >= 2
             ? sessionMeans[sessionMeans.length - 1] - sessionMeans[0]
