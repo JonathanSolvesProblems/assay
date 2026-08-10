@@ -1,14 +1,29 @@
 import Link from "next/link";
 
+import { InstrumentPanel } from "@/components/instrument-panel";
 import { Reveal } from "@/components/reveal";
 import { VerdictCard } from "@/components/verdict-card";
 import { CONCERNS } from "@/lib/domain/concerns";
-import { study, studyProgress, sortVerdicts, verdictsFor } from "@/lib/study/store";
+import {
+  calibrationFloors,
+  study,
+  studyProgress,
+  sortVerdicts,
+  verdictsFor,
+} from "@/lib/study/store";
+
+/**
+ * Span of the recording the calibration sessions were sampled from. Stated
+ * rather than derived, because the sessions carry a study day rather than a
+ * wall-clock offset and the honest figure is the one from the source footage.
+ */
+const CALIBRATION_WINDOW_MINUTES = 15;
 
 export default function VerdictPage() {
   const progress = studyProgress();
   const verdicts = sortVerdicts(verdictsFor());
   const decided = verdicts.filter((v) => v.verdict !== null);
+  const floors = calibrationFloors();
 
   return (
     <div className="mx-auto max-w-5xl px-6">
@@ -101,6 +116,16 @@ export default function VerdictPage() {
           <EmptyStudy />
         )}
       </section>
+
+      {floors.length > 0 && (
+        <Reveal as="section" className="border-t border-[var(--color-rule)] py-14">
+          <InstrumentPanel
+            floors={floors}
+            sessionCount={progress.calibrationSessionCount}
+            windowMinutes={CALIBRATION_WINDOW_MINUTES}
+          />
+        </Reveal>
+      )}
     </div>
   );
 }

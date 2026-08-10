@@ -8,7 +8,7 @@
  */
 
 import { computeVerdict, type Verdict } from "../stats/verdict";
-import type { Session } from "../stats/reliability";
+import { estimateReliability, mean, type Session } from "../stats/reliability";
 import { getActive, type Active } from "../domain/actives";
 import type { ConcernId } from "../domain/concerns";
 import type { Study, StudySession } from "./types";
@@ -84,6 +84,65 @@ export function verdictsFor(source: Study = study): ConcernVerdict[] {
       };
     }
   });
+}
+
+export interface ConcernFloor {
+  concern: ConcernId;
+  /** Session means across the calibration sessions, in capture order. */
+  sessionMeans: number[];
+  /** Total drift across the calibration window, last mean minus first. */
+  drift: number;
+  /** The bar a change must clear, MDC95 on session means. */
+  floor: number;
+  basis: "within-session" | "between-session";
+  /**
+   * Whether this concern can support a verdict at all under these capture
+   * conditions. A floor wider than this is not a precise instrument reporting a
+   * small effect, it is an instrument that cannot see the effect at all.
+   */
+  usable: "measurable" | "marginal" | "unusable";
+}
+
+const MEASURABLE_FLOOR = 3.5;
+const MARGINAL_FLOOR = 8;
+
+/**
+ * The measured noise floor for every concern, from the calibration sessions.
+ *
+ * This exists to be shown before any treatment data does. Knowing which metrics
+ * are capable of answering the question is worth more than a confident answer
+ * from one that is not, and it is the only honest thing to put on screen while a
+ * study is still accumulating.
+ */
+export function calibrationFloors(source: Study = study): ConcernFloor[] {
+  return source.concerns
+    .map((concern) => {
+      const sessions = toSessions(source.calibrationSessions, concern);
+      if (sessions.length === 0) return null;
+
+      const estimate = estimateReliability(sessions);
+      const sessionMeans = sessions.map((s) => mean(s.frames));
+      const floor = estimate.mdc95SessionMean;
+
+      return {
+        concern,
+        sessionMeans,
+        drift:
+          sessionMeans.length >= 2
+            ? sessionMeans[sessionMeans.length - 1] - sessionMeans[0]
+            : 0,
+        floor,
+        basis: estimate.basis,
+        usable:
+          floor <= MEASURABLE_FLOOR
+            ? ("measurable" as const)
+            : floor <= MARGINAL_FLOOR
+              ? ("marginal" as const)
+              : ("unusable" as const),
+      };
+    })
+    .filter((f): f is ConcernFloor => f !== null)
+    .sort((a, b) => a.floor - b.floor);
 }
 
 export interface StudyProgress {

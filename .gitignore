@@ -56,3 +56,7 @@ Thumbs.db
 # Test and coverage
 coverage/
 .nyc_output/
+
+# Demo production working files. Scripts are tracked; footage is not.
+/broll/*
+!/broll/*.md
