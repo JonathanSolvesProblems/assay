@@ -14,10 +14,20 @@ import { DEFAULT_CONCERNS, type ConcernId } from "@/lib/domain/concerns";
 import { SAFE_UPLOAD_BYTES } from "@/lib/youcam/image";
 
 export const runtime = "nodejs";
-/** Frames take a few seconds each and run serially. */
-export const maxDuration = 120;
+/**
+ * Frames run serially and each takes a few seconds, so a three-frame session
+ * lands around 20 to 30 seconds. Capped at 60 because that is the ceiling for a
+ * serverless function on Vercel's Hobby tier; asking for more does not fail the
+ * build, it just never gets honoured, and the request would be killed mid-session
+ * after the units had already been spent.
+ */
+export const maxDuration = 60;
 
-const MAX_FRAMES = 5;
+/**
+ * Five frames would exceed the 60 second budget on a slow analysis. The capture
+ * UI sends three.
+ */
+const MAX_FRAMES = 4;
 
 export async function POST(request: Request) {
   if (!process.env.YOUCAM_API_KEY) {

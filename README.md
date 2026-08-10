@@ -104,6 +104,27 @@ Capture protocol is in [CAPTURE.md](CAPTURE.md). Everything learned about the
 API, including several behaviours that contradict or are missing from the docs,
 is in [API_FINDINGS.md](API_FINDINGS.md).
 
+## Deploying
+
+The app is a standard Next.js build. The only required environment variable is
+`YOUCAM_API_KEY`, which must be set on the host and is read only on the server.
+
+```bash
+vercel login
+vercel link
+vercel env add YOUCAM_API_KEY production
+vercel --prod
+```
+
+Two things worth knowing before deploying elsewhere:
+
+- `/api/analyze` runs frames serially and is capped at `maxDuration = 60`, which
+  is the Hobby-tier ceiling on Vercel. A three-frame session lands around 20 to 30
+  seconds. Raising the cap on a host that allows it is safe; lowering it is not,
+  because a request killed mid-session has already spent the units.
+- The key is a bearer credential with spend attached. It is never exposed to the
+  client, and `.env.local` is gitignored.
+
 ## YouCam APIs used
 
 - **AI Skin Analysis** (`/s2s/v2.0/task/skin-analysis`) is the core instrument.
