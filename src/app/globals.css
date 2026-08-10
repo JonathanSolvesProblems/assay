@@ -167,9 +167,21 @@
     border-bottom: 1px solid var(--color-rule);
   }
 
-  /* Motion is functional only. An instrument does not animate for decoration,
-     so entries settle rather than travel. */
-  .reveal {
+  /*
+    Motion is functional only. An instrument does not animate for decoration, so
+    entries settle rather than travel.
+
+    Content is visible by default and the animation is layered on top, never the
+    other way round. An earlier version hid every section at opacity 0 and waited
+    for an IntersectionObserver to reveal it, which meant the entire impact
+    section was invisible in a full-page screenshot, and would have stayed
+    invisible for anyone whose JavaScript failed. Hiding content behind a script
+    that might not run is not an animation, it is a way to lose the page.
+
+    The hidden state is therefore opt-in: the component sets data-visible="false"
+    only once it has mounted and can guarantee it will later set it to "true".
+  */
+  .reveal[data-visible="false"] {
     opacity: 0;
     transform: translateY(4px);
   }
@@ -184,7 +196,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .reveal,
+    .reveal[data-visible="false"],
     .reveal[data-visible="true"] {
       opacity: 1;
       transform: none;

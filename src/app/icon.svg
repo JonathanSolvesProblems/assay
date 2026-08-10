@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    Assay favicon.
+
+    The mark is the plus-minus sign, because that is what the product actually
+    adds to a skin score. Everything else in this category ships a droplet, a
+    leaf, or a smiling face; a tolerance symbol says instrument, and it is the one
+    glyph that carries the whole thesis at sixteen pixels.
+
+    Ground is the 18 percent grey card the interface is built on, framed in ink
+    the way a ColorChecker patch is framed. The bar under the plus is the single
+    spot colour, the same teal that marks a reading which clears its uncertainty.
+  -->
+  <rect width="32" height="32" fill="#BCBEB8"/>
+  <rect x="0.5" y="0.5" width="31" height="31" fill="none" stroke="#14161A" stroke-width="2"/>
+
+  <!-- Plus, in ink. -->
+  <rect x="14.1" y="7" width="3.8" height="13" fill="#14161A"/>
+  <rect x="9.5" y="11.6" width="13" height="3.8" fill="#14161A"/>
+
+  <!-- Minus, in the spot. Reading the mark top to bottom gives plus over minus:
+       the tolerance the whole app is built on. -->
+  <rect x="9.5" y="22.5" width="13" height="3.8" fill="#004E56"/>
+</svg>
