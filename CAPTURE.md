@@ -116,6 +116,22 @@ node scripts/capture.mjs --dir captures/day1 --type treatment --day 1
 The `--day` number is days since the baseline. Keep it accurate; every statistic
 downstream is a function of it.
 
+## Capture before you apply, not after
+
+This one decides whether the study measures anything real.
+
+A humectant works by holding water at the surface, so a frame taken shortly after
+application is looking at wet product sitting on skin rather than at the skin's
+own state. The reading would rise on day one, stay high, and mean nothing.
+
+So the order every day is: **record on a bare face, then apply.** Same point in
+the cycle each time. Applying again at night is fine and expected; the capture
+just has to happen at the same place in the routine, which in practice means
+first thing, before anything touches your face.
+
+Showering first is fine. Give it a few minutes so your skin is dry and not flushed
+from the heat, since both move hydration and redness genuinely.
+
 ## The product
 
 Apply your hydrating moisturiser or serum as normal, morning and night, starting
