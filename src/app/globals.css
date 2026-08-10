@@ -46,6 +46,26 @@
   --color-spot: #004e56;
 
   /*
+    Concern identity, taken from the X-Rite ColorChecker Classic.
+
+    The grey card this canvas is built on does not ship alone. It comes in a kit
+    with the 24-patch ColorChecker, the chart used to calibrate colour
+    reproduction, so these values are the same physical object family as the
+    canvas rather than a palette chosen for looks. The patches are also
+    deliberately muted, because they were formulated to mimic natural object
+    colours, which keeps them well clear of the saturated neon that reads as
+    machine-generated.
+
+    These carry identity only, never state. A patch says which concern a row is
+    about; it never says whether that concern passed. Verdicts stay on ink weight
+    and the single spot, so adding colour here costs the semantics nothing.
+
+    Each is assigned for a reason, not by position on the chart.
+  */
+  /* Values live in the :root block below. Tailwind's @theme only reliably emits
+     variables in its own namespaces, so custom names declared here are dropped. */
+
+  /*
     Verdict tokens.
 
     Deliberately not a semantic rainbow. A cleared improvement gets the spot; an
@@ -73,6 +93,23 @@
 }
 
 @layer base {
+  /*
+    Concern identity, taken from the X-Rite ColorChecker Classic. Declared here
+    rather than in @theme because Tailwind only emits variables that fall into
+    one of its own namespaces, and these are consumed directly by var() rather
+    than through a utility class.
+  */
+  :root {
+    --patch-moisture: #0885a1; /* cyan, water */
+    --patch-redness: #c15a63; /* moderate red, the thing being measured */
+    --patch-acne: #d67e2c; /* orange, inflammation */
+    --patch-pore: #505ba6; /* purplish blue, depth and shadow */
+    --patch-texture: #576c43; /* foliage, surface relief */
+    /* Yellow, darkened from the chart's #e7c71f so a small patch keeps its edge
+       against the stock rather than dissolving into it. */
+    --patch-radiance: #b39415;
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;

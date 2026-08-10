@@ -3,6 +3,21 @@ import type { ConcernFloor } from "@/lib/study/store";
 
 import { DriftPlot } from "./drift-plot";
 
+/**
+ * A ColorChecker patch per concern, framed the way the physical chart frames its
+ * patches. Identity only: it says which concern the row is about and never
+ * whether that concern passed.
+ */
+function Patch({ concern }: { concern: string }) {
+  return (
+    <span
+      aria-hidden
+      className="inline-block h-3 w-3 shrink-0 border border-[var(--color-ink)]"
+      style={{ background: `var(--patch-${concern}, var(--color-ink-muted))` }}
+    />
+  );
+}
+
 const USABLE_COPY = {
   measurable: {
     label: "Measurable",
@@ -42,7 +57,7 @@ export function InstrumentPanel({
 
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-8">
         <div className="max-w-xl">
           <h2 className="font-serif text-[30px] tracking-[0.005em]">Your instrument</h2>
           <p className="mt-2 text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
@@ -52,6 +67,27 @@ export function InstrumentPanel({
             the instrument, not the face.
           </p>
         </div>
+
+        {/*
+          The reference chart, laid out the way the physical one is: patches in a
+          grid, each framed in black. It doubles as the legend for the swatches in
+          the table below, so it is a key rather than decoration.
+        */}
+        <figure className="shrink-0">
+          <div className="inline-flex gap-px border border-[var(--color-ink)] bg-[var(--color-ink)] p-px">
+            {floors.map((row) => (
+              <span
+                key={row.concern}
+                title={CONCERNS[row.concern].label}
+                className="block h-7 w-7"
+                style={{ background: `var(--patch-${row.concern})` }}
+              />
+            ))}
+          </div>
+          <figcaption className="tabular mt-2 text-[9px] tracking-[0.14em] text-[var(--color-ink-muted)] uppercase">
+            Reference chart
+          </figcaption>
+        </figure>
       </div>
 
       <div className="mt-8 overflow-x-auto">
@@ -77,7 +113,12 @@ export function InstrumentPanel({
                   key={row.concern}
                   className="border-b border-[var(--color-rule)] last:border-0"
                 >
-                  <td className="py-3">{meta.label}</td>
+                  <td className="py-3">
+                    <span className="flex items-center gap-2.5">
+                      <Patch concern={row.concern} />
+                      {meta.label}
+                    </span>
+                  </td>
                   <td className="tabular py-3 text-right text-[13px] text-[var(--color-ink-secondary)]">
                     {row.sessionMeans.map((m) => m.toFixed(1)).join("  ")}
                   </td>
