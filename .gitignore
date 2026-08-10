@@ -19,12 +19,24 @@ next-env.d.ts
 *.pem
 *.key
 
-# Personal data. Capture frames are photographs of a real person's face and are
-# never committed. Only the scores the API returned are, which keeps the dataset
-# auditable without publishing anybody's face.
+# Personal data. Capture frames are photographs and video of a real person's
+# face and are never committed. Only the scores the API returned are, which keeps
+# the dataset auditable without publishing anybody's face.
+#
+# The extensions are listed as well as the directory because source footage
+# arrives in the repository root before it is filed, and a single camera clip can
+# run to several gigabytes.
 /captures/
 /public/captures/
 *.heic
+*.mov
+*.MOV
+*.mp4
+*.MP4
+*.avi
+*.mkv
+*.webm
+*.zip
 
 # Local scratch and tooling output
 /.scratch/
