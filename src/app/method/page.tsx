@@ -17,7 +17,7 @@ export default function MethodPage() {
         <p className="tabular text-[11px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
           Method
         </p>
-        <h1 className="mt-5 font-serif text-[42px] leading-[1.1] tracking-[-0.03em] sm:text-[52px]">
+        <h1 className="mt-5 font-serif text-[42px] leading-[1.1] tracking-[-0.01em] sm:text-[52px]">
           How to tell a result from a shadow.
         </h1>
         <p className="mt-6 text-[17px] leading-relaxed text-[var(--color-ink-secondary)]">
@@ -32,8 +32,8 @@ export default function MethodPage() {
         title="A score is a measurement, and measurements have error"
       >
         <p>
-          The YouCam Skin Analysis API returns a 0, 100 score for each of fourteen skin
-          concerns. It is a genuinely good instrument. But like any instrument it has
+          The YouCam Skin Analysis API returns a score from 0 to 100 for each of fourteen
+          skin concerns. It is a genuinely good instrument. But like any instrument it has
           error, and a score reported without its error is a number you cannot make a
           decision with.
         </p>
@@ -278,18 +278,18 @@ export default function MethodPage() {
       >
         <p className="text-[15px] leading-relaxed text-[var(--color-ink-secondary)]">
           The reliability experiment is reproducible:{" "}
-          <code className="tabular rounded-[4px] bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[13px]">
+          <code className="tabular rounded-none bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[13px]">
             node scripts/experiment-reliability.mjs
           </code>
           . Raw output is committed at{" "}
-          <code className="tabular rounded-[4px] bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[13px]">
+          <code className="tabular rounded-none bg-[var(--color-surface-sunken)] px-1.5 py-0.5 text-[13px]">
             experiments/reliability.json
           </code>
           .
         </p>
         <Link
           href="/calibrate"
-          className="mt-7 inline-block rounded-[5px] bg-[var(--color-ink)] px-5 py-2.5 text-[14px] text-white transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
+          className="mt-7 inline-block rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] uppercase text-[var(--color-paper)] transition-colors duration-150 hover:bg-[var(--color-spot)]"
         >
           Measure your own noise floor
         </Link>
@@ -320,7 +320,7 @@ function Section({
           {number}
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="font-serif text-[27px] leading-tight tracking-[-0.02em]">
+          <h2 className="font-serif text-[27px] leading-tight tracking-[0.005em]">
             {title}
           </h2>
           <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-[var(--color-ink-secondary)]">
@@ -345,7 +345,7 @@ function Figure({ caption, children }: { caption: string; children: React.ReactN
 
 function Formula({ children }: { children: React.ReactNode }) {
   return (
-    <div className="tabular my-5 rounded-[8px] border border-[var(--color-rule)] bg-[var(--color-surface-sunken)] px-5 py-4 text-center text-[15px] text-[var(--color-ink)]">
+    <div className="tabular my-5 rounded-none border border-[var(--color-rule)] bg-[var(--color-surface-sunken)] px-5 py-4 text-center text-[15px] text-[var(--color-ink)]">
       {children}
     </div>
   );
@@ -382,7 +382,7 @@ function Verdict({
   return (
     <li className="flex flex-col gap-2 sm:flex-row sm:gap-4">
       <span
-        className="tabular h-fit w-fit shrink-0 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em]"
+        className="tabular h-fit w-fit shrink-0 rounded-none px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em]"
         style={{ background: t.bg, color: t.ink }}
       >
         {label}

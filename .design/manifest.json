@@ -1,0 +1,64 @@
+{
+  "project": "assay",
+  "mode": "redesign",
+  "supersedes": "warm-paper editorial (verbatim _prior_notion_light, killed by ledger)",
+  "platform": "web-app",
+  "metaphor": "calibration certificate issued with an instrument",
+  "category_convention_avoided": "Consumer skincare apps ship peach-to-lavender gradients, 16-24px radii, a circular skin score gauge out of 100, friendly geometric sans, pastel donut charts, a face-mesh overlay in cyan or violet, and uniformly encouraging copy. Nothing in the category ever displays uncertainty.",
+  "design_code": [
+    "Every reported value carries its uncertainty in the same visual unit and column, because a number without its error is precisely the failure this product exists to correct. Rules out the bare hero stat.",
+    "The canvas is an 18 percent photographic grey card rather than white, because that card is the physical object that exists to solve this exact problem, measuring reliably under uncontrolled light. Rules out the near-white document space.",
+    "There is exactly one saturated ink and it marks a reading that has cleared its uncertainty, because most readings here do not clear it and the eye must go to the ones that do. Rules out the polychrome pastel badge set.",
+    "An out-of-tolerance result is marked by ink weight, not by a second hue, because a certificate stamps a failure rather than colouring it in. Rules out red-green semantic coding.",
+    "Corners are square and depth is print-flat, because a certificate is issued on stock and nothing on it floats above anything else. Rules out cards and shadows."
+  ],
+  "anti_brief": [
+    "Wrong: an encouraging register. The product's entire value is telling you nothing happened.",
+    "Wrong: a circular score gauge. It asserts that one number is the answer, which is the belief being refuted.",
+    "Wrong: photography of skin. There is nothing to show, and it would reclassify this as a beauty app."
+  ],
+  "axes": {
+    "canvas": "tinted-mid",
+    "chroma": "duotone plus one spot",
+    "type_voice": "mono-as-primary-UI with an institutional sans for prose",
+    "structure": "certificate: title block over ruled measurement sections",
+    "density": "functional",
+    "edge": "square",
+    "depth": "print",
+    "ornament": "the data itself",
+    "motion": "functional only",
+    "register": "precise",
+    "numerals": "tabular, uncertainty always adjacent as a signed tolerance"
+  },
+  "canvas_hex": "#BCBEB8",
+  "accent_hex": "#004E56",
+  "accent_hue_deg": 186,
+  "palette": {
+    "stock": "#BCBEB8",
+    "stock_raised": "#C9CBC5",
+    "stock_sunken": "#AFB1AB",
+    "rule": "#9A9C96",
+    "rule_strong": "#7E817B",
+    "ink": "#14161A",
+    "ink_secondary": "#3D4147",
+    "ink_muted": "#494D53",
+    "spot": "#004E56"
+  },
+  "contrast_verified": {
+    "ink_on_stock": "9.84:1",
+    "ink_secondary_on_stock": "5.62:1",
+    "ink_muted_on_stock": "4.51:1",
+    "spot_on_stock": "5.02:1",
+    "note": "All body-size pairs clear WCAG AA 4.5:1. The muted tone was darkened from an initial #5E6268 which measured 3.31:1 and failed."
+  },
+  "type": {
+    "display": "DM Mono",
+    "body": "Public Sans",
+    "figures": "DM Mono, tabular",
+    "scale_ratio": 1.25,
+    "body_px": 15
+  },
+  "spacing": { "base": 4 },
+  "radius": { "all": 0 },
+  "notes": "Redesign off a first pass whose tokens matched _prior_notion_light byte for byte (canvas #fbfbfa, accent #346538, the four pastel badges, Instrument Serif), because minimalist-skill was invoked earlier in the same session and mandates those literal values. Direction derived instead from what the software does: it measures a specimen repeatedly against a reference and reports its own uncertainty. Kills at Phase 2: oscilloscope/phosphor vs _prior_dark_console and _prior_ai_blue; specimen-drawer warm paper vs _prior_notion_light and cooldown."
+}

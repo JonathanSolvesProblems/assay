@@ -1,46 +1,73 @@
 @import "tailwindcss";
 
 /*
-  Assay reads as a lab report, not a beauty app. Every competitor in this
-  category ships a soft gradient and a pink CTA; the whole argument here is
-  measurement, so the interface is a document: warm paper, one hairline rule
-  weight, and numbers set in monospace so they line up in a column the way a
-  result sheet does.
+  DESIGN CODE, Assay
+  See .design/manifest.json for the full derivation.
+
+  Category convention being avoided: consumer skincare apps ship peach-to-lavender
+  gradients, 16-24px radii, a circular skin score gauge out of 100, friendly
+  geometric sans, pastel donut charts, and uniformly encouraging copy. Nothing in
+  the category ever displays uncertainty.
+
+  Metaphor: a calibration certificate, the document a metrology lab issues with an
+  instrument. It states the reference standard, the deviation at each point, the
+  expanded uncertainty, and an explicit fitness-for-purpose statement. It is the
+  one common document whose primary content is its own error, which is exactly
+  what this product is.
+
+  1. Every reported value carries its uncertainty in the same column, because a
+     number without its error is the failure this product exists to correct.
+  2. The canvas is an 18 percent photographic grey card rather than white, because
+     that card is the physical object that exists to make measurement reliable
+     under uncontrolled light, which is the problem being solved.
+  3. There is exactly one saturated ink and it marks a reading that has cleared its
+     uncertainty, because most readings here do not clear it.
+  4. An out-of-tolerance result is marked by ink weight, not a second hue, because
+     a certificate stamps a failure rather than colouring it in.
+  5. Corners are square and depth is print-flat, because a certificate is issued on
+     stock and nothing on it floats above anything else.
 */
 
 @theme {
-  /* Canvas and surfaces */
-  --color-paper: #fbfbfa;
-  --color-surface: #ffffff;
-  --color-surface-sunken: #f7f6f3;
-  --color-rule: #eaeaea;
-  --color-rule-strong: #d8d7d3;
+  /* Stock. An 18 percent grey card, faintly cool. */
+  --color-paper: #bcbeb8;
+  --color-surface: #c9cbc5;
+  --color-surface-sunken: #afb1ab;
+  --color-rule: #9a9c96;
+  --color-rule-strong: #7e817b;
 
-  /* Ink */
-  --color-ink: #191918;
-  --color-ink-secondary: #5f5e5b;
-  --color-ink-muted: #8b8a85;
+  /* Ink. All pairs below verified against the stock at WCAG AA or better:
+     ink 9.84:1, secondary 5.62:1, muted 4.51:1, spot 5.02:1. */
+  --color-ink: #14161a;
+  --color-ink-secondary: #3d4147;
+  --color-ink-muted: #494d53;
 
-  /* Verdict semantics.
-     Green reads "working", amber "expected flare", red "stop", slate "null
-     result", blue "still measuring". The null result deliberately gets a flat
-     neutral rather than a red: nothing happened, and the colour says so. */
-  --color-verdict-working-bg: #edf3ec;
-  --color-verdict-working-ink: #346538;
-  --color-verdict-purge-bg: #fbf3db;
-  --color-verdict-purge-ink: #956400;
-  --color-verdict-worsening-bg: #fdebec;
-  --color-verdict-worsening-ink: #9f2f2d;
-  --color-verdict-null-bg: #f1f1ef;
-  --color-verdict-null-ink: #4a4a47;
-  --color-verdict-pending-bg: #e1f3fe;
-  --color-verdict-pending-ink: #1f6c9f;
+  /* The single spot, reserved for a reading that clears its uncertainty. */
+  --color-spot: #004e56;
 
-  --font-sans:
-    "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
-    Arial, sans-serif;
-  --font-serif: var(--font-instrument-serif), "Lyon Text", Georgia, serif;
-  --font-mono: var(--font-jetbrains-mono), "SF Mono", ui-monospace, monospace;
+  /*
+    Verdict tokens.
+
+    Deliberately not a semantic rainbow. A cleared improvement gets the spot; an
+    out-of-tolerance result gets full ink weight, the way a certificate stamps a
+    failure rather than colouring it in; everything unresolved stays in the
+    neutral ramp. State is carried by weight and fill, not hue.
+  */
+  --color-verdict-working-bg: #b3bcb9;
+  --color-verdict-working-ink: #004e56;
+  --color-verdict-purge-bg: #b8b6ac;
+  --color-verdict-purge-ink: #3d4147;
+  --color-verdict-worsening-bg: #14161a;
+  --color-verdict-worsening-ink: #dcdeda;
+  --color-verdict-null-bg: #b0b2ac;
+  --color-verdict-null-ink: #494d53;
+  --color-verdict-pending-bg: #c3c5bf;
+  --color-verdict-pending-ink: #494d53;
+
+  --font-sans: var(--font-public-sans), "Helvetica Neue", Arial, sans-serif;
+  /* Mono is the display voice, not a code-only face. */
+  --font-serif: var(--font-dm-mono), ui-monospace, monospace;
+  --font-mono: var(--font-dm-mono), ui-monospace, monospace;
 
   --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -55,10 +82,12 @@
     background-color: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.62;
   }
 
-  /* Numerals must line up vertically wherever a score sits next to a floor. */
+  /* Every score sits in the same column position across every row and session,
+     because the whole argument is that these readings are comparable. */
   .tabular {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
@@ -66,8 +95,15 @@
   }
 
   ::selection {
-    background: #191918;
-    color: #fbfbfa;
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  /* The spot doubles as the focus ink, so keyboard focus reads as an instrument
+     mark rather than a browser default. */
+  :focus-visible {
+    outline: 2px solid var(--color-spot);
+    outline-offset: 2px;
   }
 }
 
@@ -76,25 +112,38 @@
     border: 1px solid var(--color-rule);
   }
 
+  /*
+    Not a card. A certificate section: ruled on the stock, square, no shadow,
+    with the top rule heavier so sections read as issued blocks rather than as
+    floating panels.
+  */
   .card {
     background: var(--color-surface);
     border: 1px solid var(--color-rule);
-    border-radius: 12px;
+    border-top: 2px solid var(--color-ink);
+    border-radius: 0;
   }
 
-  /* Scroll entry. Motion is present but should never be the thing you notice. */
+  /* Title block, the header of an issued document. */
+  .titleblock {
+    border-top: 2px solid var(--color-ink);
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  /* Motion is functional only. An instrument does not animate for decoration,
+     so entries settle rather than travel. */
   .reveal {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(4px);
   }
 
   .reveal[data-visible="true"] {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
     transition:
-      opacity 600ms var(--ease-out-quint),
-      transform 600ms var(--ease-out-quint);
-    transition-delay: calc(var(--index, 0) * 80ms);
+      opacity 320ms var(--ease-out-quint),
+      transform 320ms var(--ease-out-quint);
+    transition-delay: calc(var(--index, 0) * 40ms);
   }
 
   @media (prefers-reduced-motion: reduce) {

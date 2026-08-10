@@ -35,6 +35,7 @@ Everything in square brackets is a screen direction, not something you say.
 > chair, same camera, no product, nothing.
 >
 > My radiance score dropped nine and a half points.
+> *(Exact figure is 9.54. "Nine and a half" is the honest way to say it out loud.)*
 >
 > My skin did not change. The sun went down a bit. That's it. That's the whole
 > reason.

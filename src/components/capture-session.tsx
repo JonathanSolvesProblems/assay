@@ -218,7 +218,7 @@ export function CaptureSession() {
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
       <div>
-        <div className="relative overflow-hidden rounded-[12px] border border-[var(--color-rule)] bg-[var(--color-surface-sunken)]">
+        <div className="relative overflow-hidden rounded-none border border-[var(--color-rule)] bg-[var(--color-surface-sunken)]">
           <div className="aspect-[4/3] w-full">
             <video
               ref={videoRef}
@@ -289,7 +289,7 @@ export function CaptureSession() {
           )}
 
           {(phase === "streaming" || phase === "capturing") && (
-            <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-black/55 px-3 py-1.5 backdrop-blur-sm">
+            <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-none bg-black/55 px-3 py-1.5 backdrop-blur-sm">
               <span className="text-[10px] uppercase tracking-[0.1em] text-white/65">
                 Light
               </span>
@@ -304,7 +304,7 @@ export function CaptureSession() {
               {Array.from({ length: FRAMES_PER_SESSION }, (_, i) => (
                 <span
                   key={i}
-                  className="h-1.5 w-6 rounded-full transition-colors duration-300"
+                  className="h-1.5 w-6 rounded-none transition-colors duration-300"
                   style={{ background: i < captured ? "#fff" : "rgba(255,255,255,0.3)" }}
                 />
               ))}
@@ -316,7 +316,7 @@ export function CaptureSession() {
           {phase === "idle" || phase === "error" ? (
             <button
               onClick={startCamera}
-              className="rounded-[5px] bg-[var(--color-ink)] px-5 py-2.5 text-[14px] text-white transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
+              className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] uppercase text-[var(--color-paper)] transition-colors duration-150 hover:bg-[var(--color-spot)]"
             >
               Open camera
             </button>
@@ -325,14 +325,14 @@ export function CaptureSession() {
           {phase === "streaming" && (
             <button
               onClick={runCapture}
-              className="rounded-[5px] bg-[var(--color-ink)] px-5 py-2.5 text-[14px] text-white transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
+              className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] uppercase text-[var(--color-paper)] transition-colors duration-150 hover:bg-[var(--color-spot)]"
             >
               Capture three frames
             </button>
           )}
 
           {(phase === "idle" || phase === "error" || phase === "done") && (
-            <label className="cursor-pointer rounded-[5px] border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]">
+            <label className="cursor-pointer rounded-none border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]">
               Upload photographs
               <input
                 type="file"
@@ -352,7 +352,7 @@ export function CaptureSession() {
         </div>
 
         {message && (
-          <p className="mt-4 rounded-[8px] bg-[var(--color-verdict-worsening-bg)] px-4 py-3 text-[13px] leading-relaxed text-[var(--color-verdict-worsening-ink)]">
+          <p className="mt-4 rounded-none bg-[var(--color-verdict-worsening-bg)] px-4 py-3 text-[13px] leading-relaxed text-[var(--color-verdict-worsening-ink)]">
             {message}
           </p>
         )}
@@ -423,7 +423,7 @@ function NoiseFloorPanel({
       <p className="text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-muted)]">
         Your noise floor
       </p>
-      <h3 className="mt-2 font-serif text-[22px] leading-tight tracking-[-0.02em]">
+      <h3 className="mt-2 font-serif text-[22px] leading-tight tracking-[0.005em]">
         What a change has to beat
       </h3>
       <p className="mt-3 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
@@ -456,7 +456,7 @@ function NoiseFloorPanel({
       </dl>
 
       {entries.some(([, e]) => e.underestimates) && (
-        <p className="mt-4 rounded-[8px] bg-[var(--color-verdict-pending-bg)] px-4 py-3 text-[12px] leading-relaxed text-[var(--color-verdict-pending-ink)]">
+        <p className="mt-4 rounded-none bg-[var(--color-verdict-pending-bg)] px-4 py-3 text-[12px] leading-relaxed text-[var(--color-verdict-pending-ink)]">
           These are a lower bound. One session measures sensor and pose noise but cannot
           see the error you add by setting the camera back up tomorrow, and re-cropping
           the same photograph was measured to shift a texture score by 5.8 points. Capture
@@ -466,7 +466,7 @@ function NoiseFloorPanel({
       )}
 
       {luminanceDrift !== null && luminanceDrift > 2 && (
-        <p className="mt-4 rounded-[8px] bg-[var(--color-verdict-purge-bg)] px-4 py-3 text-[12px] leading-relaxed text-[var(--color-verdict-purge-ink)]">
+        <p className="mt-4 rounded-none bg-[var(--color-verdict-purge-bg)] px-4 py-3 text-[12px] leading-relaxed text-[var(--color-verdict-purge-ink)]">
           Your lighting moved {luminanceDrift.toFixed(1)} points during capture. That
           inflates the noise floor and makes real changes harder to detect. Recapturing
           under steadier light will tighten these numbers.

@@ -42,7 +42,7 @@ export function InstrumentPanel({
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-xl">
-          <h2 className="font-serif text-[30px] tracking-[-0.02em]">Your instrument</h2>
+          <h2 className="font-serif text-[30px] tracking-[0.005em]">Your instrument</h2>
           <p className="mt-2 text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
             {sessionCount} calibration sessions sampled from separate windows of one
             continuous {windowMinutes}-minute recording. Same person, same seat, same
@@ -94,7 +94,7 @@ export function InstrumentPanel({
                   </td>
                   <td className="py-3 pl-6">
                     <span
-                      className="tabular rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em]"
+                      className="tabular rounded-none px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em]"
                       style={{ background: tone.bg, color: tone.ink }}
                     >
                       {tone.label}

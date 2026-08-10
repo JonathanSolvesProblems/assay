@@ -56,13 +56,10 @@ export function VerdictCard({
     Math.abs(verdict.naiveChange) > verdict.mdc95 && !verdict.clearsNoiseFloor;
 
   return (
-    <article
-      className="card p-7 transition-shadow duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
-      style={{ "--index": index } as React.CSSProperties}
-    >
+    <article className="card p-7" style={{ "--index": index } as React.CSSProperties}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-serif text-[22px] leading-tight tracking-[-0.02em]">
+          <h3 className="font-serif text-[22px] leading-tight tracking-[0.005em]">
             {concern.label}
           </h3>
           <p className="mt-1 max-w-sm text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
@@ -71,7 +68,7 @@ export function VerdictCard({
         </div>
 
         <span
-          className="tabular shrink-0 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em]"
+          className="tabular shrink-0 rounded-none px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em]"
           style={{ background: tone.bg, color: tone.ink }}
         >
           {tone.label}
@@ -120,7 +117,7 @@ export function VerdictCard({
       </p>
 
       {naiveDisagrees && (
-        <p className="mt-3 rounded-[8px] bg-[var(--color-surface-sunken)] px-4 py-3 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
+        <p className="mt-3 rounded-none bg-[var(--color-surface-sunken)] px-4 py-3 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
           A tracker without a noise floor would have read this as{" "}
           <span className="tabular" style={{ color: "var(--color-ink)" }}>
             {signed(verdict.naiveChange)}

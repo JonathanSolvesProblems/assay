@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { DM_Mono, Public_Sans } from "next/font/google";
 import Link from "next/link";
 
 import "./globals.css";
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+/**
+ * Mono is the display voice here, not a code face. A certificate is typed, and
+ * the same family that sets the headings sets the figures, so a score and a
+ * heading share a rhythm.
+ */
+const dmMono = DM_Mono({
+  variable: "--font-dm-mono",
   subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+/** Public Sans carries long prose. Institutional rather than promotional. */
+const publicSans = Public_Sans({
+  variable: "--font-public-sans",
   subsets: ["latin"],
-  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -33,24 +37,33 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${instrumentSerif.variable} ${jetbrainsMono.variable}`}>
+    // The font variables belong on <html>, not <body>. Tailwind's @theme emits
+    // --font-sans and --font-mono onto :root, and they reference these via var();
+    // if the fonts were declared one level lower those references would be
+    // undefined at :root, the declarations would be invalid at computed-value
+    // time, and every family would silently fall back to the browser default.
+    <html lang="en" className={`${dmMono.variable} ${publicSans.variable}`}>
+      <body>
         <div className="min-h-screen">
-          <header className="sticky top-0 z-50 border-b border-[var(--color-rule)] bg-[color-mix(in_srgb,var(--color-paper)_88%,transparent)] backdrop-blur-md">
-            <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-              <Link href="/" className="group flex items-baseline gap-2.5">
-                <span className="font-serif text-[19px] tracking-[-0.02em]">Assay</span>
-                <span className="tabular hidden text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)] sm:inline">
-                  n-of-1
+          {/* The masthead of an issued document: a heavy top rule, the instrument
+              named on the left, the certificate reference on the right. */}
+          <header className="sticky top-0 z-50 border-t-2 border-b border-t-[var(--color-ink)] border-b-[var(--color-rule)] bg-[color-mix(in_srgb,var(--color-paper)_92%,transparent)] backdrop-blur-sm">
+            <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3.5">
+              <Link href="/" className="flex items-baseline gap-3">
+                <span className="tabular text-[17px] font-medium tracking-[0.08em] uppercase">
+                  Assay
+                </span>
+                <span className="tabular hidden text-[10px] tracking-[0.14em] text-[var(--color-ink-muted)] uppercase sm:inline">
+                  cert. n-of-1
                 </span>
               </Link>
 
-              <nav className="flex items-center gap-1">
+              <nav className="flex items-center">
                 {NAV.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-[5px] px-2.5 py-1.5 text-[13px] text-[var(--color-ink-secondary)] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-ink)]"
+                    className="tabular border-l border-[var(--color-rule)] px-3 py-1 text-[11px] tracking-[0.1em] text-[var(--color-ink-secondary)] uppercase transition-colors duration-150 first:border-l-0 hover:text-[var(--color-spot)]"
                   >
                     {item.label}
                   </Link>
@@ -61,11 +74,11 @@ export default function RootLayout({
 
           <main>{children}</main>
 
-          <footer className="mt-32 border-t border-[var(--color-rule)]">
-            <div className="mx-auto max-w-5xl px-6 py-12">
+          <footer className="mt-28 border-t-2 border-[var(--color-ink)]">
+            <div className="mx-auto max-w-5xl px-6 py-10">
               <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                 <div className="max-w-md">
-                  <p className="font-serif text-[17px] tracking-[-0.02em]">Assay</p>
+                  <p className="tabular text-[13px] tracking-[0.1em] uppercase">Assay</p>
                   <p className="mt-2 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
                     Skin measurement with an error bar. Built on the YouCam Skin Analysis
                     API by Perfect Corp.

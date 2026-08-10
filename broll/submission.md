@@ -149,7 +149,7 @@ measuring anything would have been the single most misleading thing this app cou
 do. Assay detects it and declines.
 
 And the number that came out of the real study. Three calibration sessions from
-one continuous recording of me sitting still: radiance fell 9.6 points across
+one continuous recording of me sitting still: radiance fell 9.54 points across
 fifteen minutes, monotonically, on skin that by construction did not change. The
 afternoon light through the window faded and the score followed it. That is the
 entire argument for the project, measured on a real face rather than asserted.

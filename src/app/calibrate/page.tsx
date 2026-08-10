@@ -16,7 +16,7 @@ export default function CalibratePage() {
         <p className="tabular text-[11px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
           Step one
         </p>
-        <h1 className="mt-5 max-w-2xl font-serif text-[42px] leading-[1.1] tracking-[-0.03em] sm:text-[52px]">
+        <h1 className="mt-5 max-w-2xl font-serif text-[42px] leading-[1.1] tracking-[-0.01em] sm:text-[52px]">
           Measure the instrument before you measure yourself.
         </h1>
         <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-[var(--color-ink-secondary)]">

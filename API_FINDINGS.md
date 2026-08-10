@@ -235,10 +235,15 @@ Session means:
 | radiance | 93.0 | 89.5 | **83.4** | ±13.4 |
 | redness | 75.8 | 71.7 | **88.7** | ±24.6 |
 
-**Radiance fell 9.6 points across fifteen minutes**, monotonically, on skin that
+**Radiance fell 9.54 points across fifteen minutes**, monotonically, on skin that
 by construction did not change. The recording ran into late afternoon, so the
-daylight through the window was fading, and the score followed it. Redness moved
-17 points in the same window.
+daylight through the window was fading, and the score followed it.
+
+Redness drifted 12.86 points over the same window, and its full range across the
+three sessions was 17.0. Those are two different statistics and only the first is
+the drift; the range is quoted separately here rather than folded into the drift
+figure, because a project about not overstating a number does not get to overstate
+its own.
 
 A tracker without an error model, comparing a Monday reading against a Tuesday
 reading, would report both of those as progress or decline. They are the room.

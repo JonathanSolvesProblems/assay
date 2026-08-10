@@ -32,7 +32,7 @@ export default function VerdictPage() {
           Skin measurement with an error bar
         </p>
 
-        <h1 className="mt-5 max-w-3xl font-serif text-[44px] leading-[1.08] tracking-[-0.03em] sm:text-[58px]">
+        <h1 className="mt-5 max-w-3xl font-serif text-[44px] leading-[1.08] tracking-[-0.01em] sm:text-[58px]">
           Most skin trackers report your lighting as progress.
         </h1>
 
@@ -45,13 +45,13 @@ export default function VerdictPage() {
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Link
             href="/calibrate"
-            className="rounded-[5px] bg-[var(--color-ink)] px-5 py-2.5 text-[14px] text-white transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
+            className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] uppercase text-[var(--color-paper)] transition-colors duration-150 hover:bg-[var(--color-spot)]"
           >
             Calibrate your instrument
           </Link>
           <Link
             href="/method"
-            className="rounded-[5px] border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]"
+            className="rounded-none border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]"
           >
             How the maths works
           </Link>
@@ -89,7 +89,7 @@ export default function VerdictPage() {
       <section className="border-t border-[var(--color-rule)] py-14">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="font-serif text-[30px] tracking-[-0.02em]">The study</h2>
+            <h2 className="font-serif text-[30px] tracking-[0.005em]">The study</h2>
             <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
               A prospective n-of-1 study running on a real face, with real products,
               scored by the YouCam Skin Analysis API. Every reading is captured live.
@@ -136,7 +136,7 @@ function EmptyStudy() {
       <p className="tabular text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
         Awaiting capture
       </p>
-      <h3 className="mt-3 max-w-lg font-serif text-[26px] leading-tight tracking-[-0.02em]">
+      <h3 className="mt-3 max-w-lg font-serif text-[26px] leading-tight tracking-[0.005em]">
         The study has no readings yet, so there is nothing to report.
       </h3>
       <p className="mt-4 max-w-xl text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
@@ -153,13 +153,13 @@ function EmptyStudy() {
       <div className="mt-7 flex flex-wrap gap-3">
         <Link
           href="/calibrate"
-          className="rounded-[5px] bg-[var(--color-ink)] px-5 py-2.5 text-[14px] text-white transition-all duration-200 hover:bg-[#333] active:scale-[0.98]"
+          className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] uppercase text-[var(--color-paper)] transition-colors duration-150 hover:bg-[var(--color-spot)]"
         >
           Capture a baseline
         </Link>
         <Link
           href="/method"
-          className="rounded-[5px] border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]"
+          className="rounded-none border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]"
         >
           See a worked example
         </Link>
@@ -173,7 +173,7 @@ function EmptyStudy() {
           {study.concerns.map((concern) => (
             <li
               key={concern}
-              className="rounded-full bg-[var(--color-surface-sunken)] px-3 py-1 text-[12px] text-[var(--color-ink-secondary)]"
+              className="rounded-none bg-[var(--color-surface-sunken)] px-3 py-1 text-[12px] text-[var(--color-ink-secondary)]"
             >
               {CONCERNS[concern].label}
             </li>
@@ -187,7 +187,7 @@ function EmptyStudy() {
 function Figure({ value, label }: { value: string; label: string }) {
   return (
     <div>
-      <p className="tabular text-[32px] leading-none tracking-[-0.02em]">{value}</p>
+      <p className="tabular text-[32px] leading-none tracking-[0.005em]">{value}</p>
       <p className="mt-2.5 text-[12px] leading-relaxed text-[var(--color-ink-secondary)]">
         {label}
       </p>
