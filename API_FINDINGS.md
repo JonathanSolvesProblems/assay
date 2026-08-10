@@ -217,7 +217,45 @@ Two consequences, both of which shape this whole project:
 This is the strongest single argument for why a skin score reported without a
 noise floor cannot support a claim.
 
-## 12. Undocumented required parameters
+## 12. A score can drift ten points in fifteen minutes with the skin unchanged
+
+Measured on a real subject, not a synthetic one. Three calibration sessions were
+sampled from separate windows of a single continuous nineteen-minute recording:
+same person, same camera, same seat, same clothes, no product applied, no
+opportunity for skin to change.
+
+Session means:
+
+| Concern | 2 min | 8.7 min | 15 min | Floor (MDC95) |
+|---|---|---|---|---|
+| moisture | 87.8 | 88.0 | 86.1 | **±2.9** |
+| texture | 96.3 | 97.6 | 95.4 | **±3.1** |
+| pore | 92.9 | 92.8 | 94.4 | ±4.0 |
+| acne | 92.8 | 96.5 | 92.3 | ±6.4 |
+| radiance | 93.0 | 89.5 | **83.4** | ±13.4 |
+| redness | 75.8 | 71.7 | **88.7** | ±24.6 |
+
+**Radiance fell 9.6 points across fifteen minutes**, monotonically, on skin that
+by construction did not change. The recording ran into late afternoon, so the
+daylight through the window was fading, and the score followed it. Redness moved
+17 points in the same window.
+
+A tracker without an error model, comparing a Monday reading against a Tuesday
+reading, would report both of those as progress or decline. They are the room.
+
+The practical consequence for this study is that the six concerns split cleanly:
+
+- **moisture (±2.9) and texture (±3.1) are measurable.** A hydrating product can
+  move hydration by five to fifteen points, comfortably clear of the floor.
+- **pore (±4.0) and acne (±6.4) are marginal.**
+- **radiance (±13.4) and redness (±24.6) cannot support a verdict** under these
+  capture conditions, and Assay will decline to give one rather than report a
+  change it cannot stand behind.
+
+Publishing that split is the point. Knowing which of your metrics are capable of
+answering the question is worth more than a confident answer from one that is not.
+
+## 13. Undocumented required parameters
 
 `POST /s2s/v2.0/task/text-to-image/youcam` requires both `model` and `prompt`.
 The only accepted `model` value is `youcam-image-v2`; the API helpfully returns

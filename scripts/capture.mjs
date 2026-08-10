@@ -33,20 +33,75 @@ const MIN_SHORT_EDGE = 480;
  * Both must stay fixed for the life of a study: changing the framing rule
  * between sessions would change the measurement, not just the picture.
  */
-const CROP_FRACTION = 0.7;
+const DEFAULT_CROP_FRACTION = 0.7;
 const CROP_TOP_BIAS = 0.75;
 
+/**
+ * Video sits further from the face than a phone selfie does, so the same crop
+ * rule that works for stills leaves the face below the analyser's minimum.
+ * Measured on a 1080p sofa recording: a 70% window was rejected with
+ * `error_src_face_too_small`, a 50% window scored fine.
+ *
+ * Whichever value a study starts with must be used for every session in it. The
+ * fraction is recorded on each session so a mismatch is visible in the data
+ * rather than silently distorting it.
+ */
+const VIDEO_CROP_FRACTION = 0.5;
+const VIDEO_CROP_TOP_BIAS = 0.55;
+
 function parseArgs(argv) {
-  const args = { type: "treatment", dryRun: false };
+  const args = { type: "treatment", dryRun: false, frames: 5, spacing: 3 };
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i];
     if (flag === "--dry-run") args.dryRun = true;
     else if (flag === "--dir") args.dir = argv[++i];
+    else if (flag === "--video") args.video = argv[++i];
+    else if (flag === "--at") args.at = Number(argv[++i]);
+    else if (flag === "--frames") args.frames = Number(argv[++i]);
+    else if (flag === "--spacing") args.spacing = Number(argv[++i]);
+    else if (flag === "--crop") args.crop = Number(argv[++i]);
     else if (flag === "--type") args.type = argv[++i];
     else if (flag === "--day") args.day = Number(argv[++i]);
     else if (flag === "--note") args.note = argv[++i];
   }
   return args;
+}
+
+/**
+ * Pull `count` frames from a video, `spacing` seconds apart, starting at `at`.
+ *
+ * Seeking before the input rather than after is what keeps this fast on a
+ * multi-gigabyte file: it jumps to the keyframe instead of decoding from zero.
+ */
+async function extractFrames(videoPath, { at, count, spacing, outDir }) {
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const run = promisify(execFile);
+
+  await mkdir(outDir, { recursive: true });
+  const produced = [];
+
+  for (let i = 0; i < count; i++) {
+    const t = at + i * spacing;
+    const out = join(outDir, `t${String(t).padStart(5, "0")}.jpg`);
+    await run("ffmpeg", [
+      "-y",
+      "-v",
+      "error",
+      "-ss",
+      String(t),
+      "-i",
+      videoPath,
+      "-frames:v",
+      "1",
+      "-q:v",
+      "2",
+      out,
+    ]);
+    produced.push(out);
+  }
+
+  return produced;
 }
 
 async function loadKey() {
@@ -150,7 +205,7 @@ const NON_CONCERNS = new Set(["all", "skin_age", "resize_image"]);
  * while still consuming units, and a fixed capture size removes resolution as a
  * source of between-session variance in the noise floor. See API_FINDINGS.md.
  */
-async function normalise(path) {
+async function normalise(path, cropFraction, cropTopBias) {
   const image = sharp(path).rotate(); // honour EXIF orientation, then drop EXIF
   const meta = await image.metadata();
 
@@ -163,8 +218,9 @@ async function normalise(path) {
   // was larger in absolute pixels in the rejected one. Raising resolution does
   // not help; cropping does.
   //
-  // CROP_FRACTION takes the centre 70% of the square, and CROP_TOP_BIAS shifts
-  // that window upward because a head sits above the centre of a portrait.
+  // `cropFraction` takes that share of the centre square, and `cropTopBias`
+  // shifts the window upward because a head sits above the centre of a portrait.
+  // Stills work at 0.7; video sits further away and needs roughly 0.5.
   //
   // This is a fixed geometric rule rather than face detection on purpose: every
   // session must be processed identically, and a detector that framed each day
@@ -173,19 +229,20 @@ async function normalise(path) {
   const rotated = await image.toBuffer();
   const dims = await sharp(rotated).metadata();
   const side = Math.min(dims.width, dims.height);
-  const window = Math.round(side * CROP_FRACTION);
+  const window = Math.round(side * cropFraction);
 
   const buffer = await sharp(rotated)
     .extract({
       left: Math.round((dims.width - window) / 2),
-      top: Math.round(((dims.height - window) / 2) * CROP_TOP_BIAS),
+      top: Math.round(((dims.height - window) / 2) * cropTopBias),
       width: window,
       height: window,
     })
-    .resize(CAPTURE_LONG_EDGE, CAPTURE_LONG_EDGE, {
-      fit: "inside",
-      withoutEnlargement: true,
-    })
+    // Upscaling is permitted here. A 540px video window carries no more detail
+    // at 1024, but the analyser was verified against exactly that pipeline, and
+    // holding the submitted size constant across every session matters more
+    // than avoiding an interpolation that adds no error of its own.
+    .resize(CAPTURE_LONG_EDGE, CAPTURE_LONG_EDGE, { fit: "inside" })
     .jpeg({ quality: CAPTURE_JPEG_QUALITY })
     .toBuffer();
 
@@ -206,9 +263,18 @@ async function normalise(path) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-if (!args.dir) {
+if (!args.dir && !args.video) {
   console.error(
-    "Usage: node scripts/capture.mjs --dir <folder> [--type calibration|treatment] [--day n] [--note text] [--dry-run]",
+    "Usage:\n" +
+      "  node scripts/capture.mjs --dir <folder> [--type calibration|treatment] [--day n] [--note text]\n" +
+      "  node scripts/capture.mjs --video <file> --at <seconds> [--frames 5] [--spacing 3] [--crop 0.5]\n" +
+      "\nOptions:\n" +
+      "  --at        second to start sampling from (video only, required)\n" +
+      "  --frames    frames to take (default 5)\n" +
+      "  --spacing   seconds between frames (default 3)\n" +
+      "  --crop      fraction of the centre square kept; defaults to 0.5 for\n" +
+      "              video and 0.7 for stills. Must not change within a study.\n" +
+      "  --dry-run   normalise and report, spend nothing",
   );
   process.exit(1);
 }
@@ -216,10 +282,52 @@ if (!args.dir) {
 const study = JSON.parse(await readFile(STUDY_PATH, "utf8"));
 const concerns = study.concerns;
 
-const dir = join(ROOT, args.dir);
-const files = (await readdir(dir))
-  .filter((f) => [".jpg", ".jpeg", ".png"].includes(extname(f).toLowerCase()))
-  .sort();
+const fromVideo = Boolean(args.video);
+const cropFraction =
+  args.crop ?? (fromVideo ? VIDEO_CROP_FRACTION : DEFAULT_CROP_FRACTION);
+const cropTopBias = fromVideo ? VIDEO_CROP_TOP_BIAS : CROP_TOP_BIAS;
+
+// A study's crop rule is part of its measurement. Mixing two would inject a
+// step change larger than most treatment effects, so refuse rather than warn.
+const established = [...study.calibrationSessions, ...study.treatmentSessions].find(
+  (s) => typeof s.cropFraction === "number",
+);
+if (established && Math.abs(established.cropFraction - cropFraction) > 1e-9) {
+  console.error(
+    `This study was calibrated at a crop fraction of ${established.cropFraction}, and this session\n` +
+      `would use ${cropFraction}. Re-cropping the same photograph was measured to move a texture\n` +
+      `score by 5.81 points, larger than a realistic treatment effect, so mixing the two would\n` +
+      `manufacture a result. Pass --crop ${established.cropFraction}, or start a new study.`,
+  );
+  process.exit(1);
+}
+
+let dir;
+let files;
+
+if (fromVideo) {
+  if (!Number.isFinite(args.at)) {
+    console.error("--video requires --at <seconds> to say where to sample from.");
+    process.exit(1);
+  }
+  const videoPath = join(ROOT, args.video);
+  dir = join(ROOT, ".scratch", "video-frames", String(args.at));
+  const produced = await extractFrames(videoPath, {
+    at: args.at,
+    count: args.frames,
+    spacing: args.spacing,
+    outDir: dir,
+  });
+  files = produced.map((p) => p.split(/[\\/]/).pop());
+  console.log(
+    `Extracted ${files.length} frames from ${args.video}, starting at ${args.at}s, ${args.spacing}s apart.`,
+  );
+} else {
+  dir = join(ROOT, args.dir);
+  files = (await readdir(dir))
+    .filter((f) => [".jpg", ".jpeg", ".png"].includes(extname(f).toLowerCase()))
+    .sort();
+}
 
 if (files.length === 0) {
   console.error(`No .jpg/.jpeg/.png frames found in ${dir}`);
@@ -240,12 +348,14 @@ const day =
     (args.type === "calibration" ? 0 : 1);
 
 console.log(`\nSession: ${args.type}, day ${day}`);
-console.log(`Frames:  ${files.length} in ${args.dir}`);
+console.log(`Source:  ${fromVideo ? `${args.video} @ ${args.at}s` : args.dir}`);
+console.log(`Frames:  ${files.length}`);
+console.log(`Crop:    ${cropFraction} of the centre square`);
 console.log(`Concerns: ${concerns.join(", ")}\n`);
 
 const prepared = [];
 for (const file of files) {
-  const frame = await normalise(join(dir, file));
+  const frame = await normalise(join(dir, file), cropFraction, cropTopBias);
   prepared.push({ file, ...frame });
   console.log(
     `  ${file.padEnd(28)} ${frame.sourceWidth}x${frame.sourceHeight} -> ${frame.width}x${frame.height}  ${(frame.buffer.length / 1024).toFixed(0)} KB`,
@@ -342,6 +452,13 @@ const session = {
   capturedAt: new Date().toISOString(),
   readings,
   ...(args.note ? { note: args.note } : {}),
+  // The crop rule and the source are recorded on every session so that the
+  // geometry behind each number is visible in the data, and so a later run
+  // cannot quietly change it.
+  cropFraction,
+  source: fromVideo
+    ? { kind: "video", file: args.video, atSeconds: args.at }
+    : { kind: "stills" },
   taskIds,
 };
 

@@ -26,6 +26,17 @@ export interface StudySession {
   readings: StudyReadings;
   /** Free-text note, e.g. the lighting condition, for the record. */
   note?: string;
+  /**
+   * Fraction of the centre square kept before the frame was submitted.
+   *
+   * Recorded per session because it is part of the measurement, not a
+   * processing detail. Re-cropping one photograph two ways was measured to move
+   * a texture score by 5.81 points, so two sessions cropped differently are not
+   * comparable and the ingest refuses to mix them.
+   */
+  cropFraction?: number;
+  /** Where the frames came from, so the geometry is traceable. */
+  source?: { kind: "stills" } | { kind: "video"; file: string; atSeconds: number };
   /** Task ids returned by YouCam, kept so any reading can be traced back. */
   taskIds?: string[];
 }

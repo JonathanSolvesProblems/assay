@@ -4,51 +4,134 @@
   "startedAt": "2026-08-10",
   "cadenceDays": 1,
   "isRealCapture": true,
-  "notes": "Prospective n-of-1 study. Every reading in this file comes from a real YouCam Skin Analysis call on a real capture session. Nothing here is generated or illustrative; if a session is missing it is because it has not been captured yet. Face images are never stored in this repository - only the scores the API returned, so the dataset is auditable without publishing anyone's photograph.",
-  "concerns": [
-    "texture",
-    "redness",
-    "moisture",
-    "acne",
-    "pore",
-    "radiance"
-  ],
+  "notes": "Prospective n-of-1 study. Every reading comes from a real YouCam Skin Analysis call on a real capture session; nothing is generated or illustrative. Face images are never committed, only the scores the API returned, so the dataset is auditable without publishing anyone photograph. Calibration sessions are sampled from separate windows of one continuous recording, which captures pose and distance drift between sessions but not the error of moving the camera itself, so the floor it yields is a lower bound on full repositioning error.",
+  "concerns": ["texture", "redness", "moisture", "acne", "pore", "radiance"],
   "products": [],
   "calibrationSessions": [
     {
-      "id": "calibration-0-msnixcd6",
+      "id": "calibration-0-msnof9f5",
       "day": 0,
-      "capturedAt": "2026-08-10T17:47:06.330Z",
+      "capturedAt": "2026-08-10T20:21:00.401Z",
       "readings": {
         "redness": [
-          70.37879943847656,
-          70.63018035888672
+          72.28364562988281, 73.34912109375, 71.07745361328125, 92.40364837646484,
+          70.10735321044922
         ],
         "pore": [
-          52.19332277774811,
-          41.666842579841614
-        ],
-        "radiance": [
-          71.59339189529419,
-          69.41182017326355
-        ],
-        "moisture": [
-          52.69264578819275,
-          50.06210207939148
-        ],
-        "acne": [
-          91.64983,
-          85.92342000000001
+          93.35838258266449, 94.04842245578766, 94.33737254142761, 92.88648664951324,
+          90.09416735172272
         ],
         "texture": [
-          69.86615657806396,
-          67.62055158615112
+          96.05700373649597, 98.64392280578613, 96.62367105484009, 92.43913292884827,
+          97.6056694984436
+        ],
+        "radiance": [
+          94.28955316543579, 93.06861162185669, 92.89209842681885, 92.50690937042236,
+          92.05065965652466
+        ],
+        "acne": [93.59173, 91.13199, 91.45564, 99.02905000000001, 88.9959],
+        "moisture": [
+          86.0623300075531, 89.48129415512085, 87.32259273529053, 87.94111609458923,
+          88.32417726516724
         ]
       },
-      "note": "baseline, indoor daylight, handheld",
+      "note": "baseline A, window at 2min",
+      "cropFraction": 0.5,
+      "source": {
+        "kind": "video",
+        "file": "captures/baseline-recording.mp4",
+        "atSeconds": 120
+      },
       "taskIds": [
-        "K5MhUHLjbXXCrVYW-N1SoCLlokzxXgnWaI1vZTHzhDJk886EvnaRT2WfqqDyv1M2PVHCF5fIuuD_SIlt3qDy9TjE-071fjlnjzhbCbagI0U",
-        "jzS7Ij2LJWEtzZL7j09fMDxuJ7ghjnO4DINyEnpnN_RrKz3uN1h9YAi5M6SVkWJB590KJZtuDWmWUtXlB2trZf4Spm0MebgWZiEd4FZXH7E"
+        "f1BSLgsUIFAIxgC-iFqjf4RLuPPLipEl4IL13fNV5K5afoq4tkibkybEitFxYhVQsF6BLgUw35xB9pOpc5z7M2XttPqfy4wGPi_F5aKvywI",
+        "MV_srHERATA9js0MQCUGhqrduOzWjI1nKv9OeszkZNNugBzAKmvj8q7djeEQ6fhhd9ptG6WzVrsTiD8DbfNdyb8RAf8cxjtXfBy7SDEoqmA",
+        "2o-Zdh8nP4iqfVzlS7cPlcbi_dBJFKY2oyL5MykSg6eXHiQAWcF6dvvObfBesw1tMBr0fg-Zx9JwYQ290iIOvJAo1UPjP26Nie9i_-RpeOQ",
+        "7FEQXMwfqML0Hs9AOJi-6AwnFjuk9FQg7HoLYVA1TdJIL3PqXTA7VfzkerSUqKycjCsGt60CzIn6HFFDBSZkkxHVaR-m98MC0JqVwyXlpuU",
+        "yt0AWRF6CJTVgZ2ay2412SrQUJMMvipNRbcUROmEVzl6QC1iQpuHTsbw3faBsFeMWooiyElrfwS3fhA5bX9T4kVRwSERnfDQdN3pm6lf7TQ"
+      ]
+    },
+    {
+      "id": "calibration-0-msnog4ox",
+      "day": 0,
+      "capturedAt": "2026-08-10T20:21:40.929Z",
+      "readings": {
+        "redness": [
+          72.17988586425781, 65.49273681640625, 71.90880584716797, 77.51610565185547,
+          71.21574401855469
+        ],
+        "pore": [
+          96.93801999092102, 94.18404793739319, 91.56215631961823, 96.8441367149353,
+          84.27486562728882
+        ],
+        "texture": [
+          96.77102565765381, 97.8182315826416, 97.96960353851318, 97.57599234580994,
+          98.04545044898987
+        ],
+        "radiance": [
+          93.10169816017151, 90.66177606582642, 87.93559074401855, 88.09483051300049,
+          87.78420686721802
+        ],
+        "acne": [100, 100, 95.72782000000001, 97.86391, 88.9959],
+        "moisture": [
+          84.22744274139404, 88.09894323348999, 88.89564275741577, 90.02828001976013,
+          88.55721354484558
+        ]
+      },
+      "note": "baseline B, window at 8.7min",
+      "cropFraction": 0.5,
+      "source": {
+        "kind": "video",
+        "file": "captures/baseline-recording.mp4",
+        "atSeconds": 520
+      },
+      "taskIds": [
+        "z7WFHvGfP_gIUOI0umOrSD21PDlP8lCRZGkAppuS25FibiiWiMWMOYzi2Kxm2bCf7cvLcsxqjRWDprPqPhz2BNP8s3YbaUN8zIyS8k7_E6Q",
+        "e-aAsk1y7_LDm4rYJKkqq9n7zxoTovCCzpB3M33Su6P0ozPcKR8MoGp8V_SFEwt3jALNKvG_uIxDeJvS3DO-d13vdhZn3a5NnCWEFiZ3Pvc",
+        "i9YsdATf326dHPcrdDG1dyQBJ1X2CKgLgsXSIVNFtKRCWCW2QcPsACwABWGtznYsWE5DaCRaDezQwzcOczLpndr0da8ZehEEVZTebbrQAHo",
+        "7qr99uS8e0YcZLtQ447JrhWKhhkFYdfQ5xik8q3vCAAURu9haAoPmvxCAMMpZ6wjewIbgU9uU1yiWGhJEEmxYz0gRVQQn912ExLYSC9UcdE",
+        "mbqC7NqQ0yixc2pox3fQ-BBCeYcx1lTLVqgf0fL_hejRmuwoO9FMvX18FmuvSe5z9akGRQKSwaCjGagCKn66jNLCxabI4cBnn1-16PKaX70"
+      ]
+    },
+    {
+      "id": "calibration-0-msnogtd2",
+      "day": 0,
+      "capturedAt": "2026-08-10T20:22:12.902Z",
+      "readings": {
+        "redness": [
+          91.16967010498047, 86.84862518310547, 87.95742797851562, 87.809326171875,
+          89.750732421875
+        ],
+        "pore": [
+          94.20382678508759, 95.13619542121887, 93.57250332832336, 94.35984790325165,
+          94.93402242660522
+        ],
+        "radiance": [
+          82.32955932617188, 82.74316787719727, 83.12989473342896, 85.59197187423706,
+          83.3211600780487
+        ],
+        "moisture": [
+          85.5961799621582, 86.09485030174255, 84.84757542610168, 87.84668445587158,
+          86.15010380744934
+        ],
+        "acne": [93.59173, 97.86391, 87.18346, 84.94700999999999, 97.86391],
+        "texture": [
+          96.0204541683197, 93.71416568756104, 95.43235301971436, 95.4558789730072,
+          96.45755887031555
+        ]
+      },
+      "note": "baseline C, window at 15min",
+      "cropFraction": 0.5,
+      "source": {
+        "kind": "video",
+        "file": "captures/baseline-recording.mp4",
+        "atSeconds": 900
+      },
+      "taskIds": [
+        "PmopCwugqqkRnBK009-zCF1Leh8NgRoN6u2yJk2VXGyXk-Iz2er8qWDFHTclNuGdhQ2_ZJOCnrcnx5nypEBzWj3G_Q3xPOKpJY5kramftuU",
+        "3fTmUl-oCcp8fh2ibwEbWRSGpe_hrgcglwRuIpV1l6a3guqS6hPjGeZFuNIYYOsgbVh1OFBi0-soK3A0EirpG1JEzxY3sWKMeYJdlQUdNbo",
+        "BOlMQLR7mQdb5qWEJH_zICadZm4DkpOpOfjln-SRSbqxrjU9EU3MmZLqJdQpNdc5dJux-BCWQnCP0oK2b6IAC5KxnfBAWk0IOvfp46r5UGI",
+        "PpUWUb4fG-1rCmxRi9EssLlZXoxWYfRZpKtQLcEwQ5hpFUoWXAAkG8Os7xBwNTZYCSgd1aKvpJKdAdFrnsL0IStydjHvMSFO4BcxOk9UmkQ",
+        "V6x8a0N9gXAl7aBFPJyDpxsmn1UDwjhw5eqjJ4VaIzP4iwSgzBGDnlQ14z4yDw_lzXos-SxSwy-x7q7c4UfYNjVUvhpi6HN9itdMpJNgTng"
       ]
     }
   ],
