@@ -196,7 +196,7 @@ youcam-api, perfect-corp, skin-analysis-api, ai-image-generator, typescript, nex
 ## "Try it out" links
 
 ```
-TODO deployed URL
+https://assay-lime.vercel.app
 https://github.com/JonathanSolvesProblems/assay
 ```
 
