@@ -5,21 +5,12 @@
   "cadenceDays": 1,
   "isRealCapture": true,
   "notes": "Prospective n-of-1 study. Every reading comes from a real YouCam Skin Analysis call on a real capture session; nothing is generated or illustrative. Face images are never committed, only the scores the API returned, so the dataset is auditable without publishing anyone photograph. Calibration sessions are sampled from separate windows of one continuous recording, which captures pose and distance drift between sessions but not the error of moving the camera itself, so the floor it yields is a lower bound on full repositioning error.",
-  "concerns": [
-    "texture",
-    "redness",
-    "moisture",
-    "acne",
-    "pore",
-    "radiance"
-  ],
+  "concerns": ["texture", "redness", "moisture", "acne", "pore", "radiance"],
   "products": [
     {
       "id": "the-ordinary-hyaluronic-acid-2-b5",
       "name": "The Ordinary Hyaluronic Acid 2% + B5",
-      "activeIds": [
-        "humectant"
-      ],
+      "activeIds": ["humectant"],
       "startedDay": 0
     }
   ],
@@ -30,45 +21,24 @@
       "capturedAt": "2026-08-10T20:21:00.401Z",
       "readings": {
         "redness": [
-          72.28364562988281,
-          73.34912109375,
-          71.07745361328125,
-          92.40364837646484,
+          72.28364562988281, 73.34912109375, 71.07745361328125, 92.40364837646484,
           70.10735321044922
         ],
         "pore": [
-          93.35838258266449,
-          94.04842245578766,
-          94.33737254142761,
-          92.88648664951324,
+          93.35838258266449, 94.04842245578766, 94.33737254142761, 92.88648664951324,
           90.09416735172272
         ],
         "texture": [
-          96.05700373649597,
-          98.64392280578613,
-          96.62367105484009,
-          92.43913292884827,
+          96.05700373649597, 98.64392280578613, 96.62367105484009, 92.43913292884827,
           97.6056694984436
         ],
         "radiance": [
-          94.28955316543579,
-          93.06861162185669,
-          92.89209842681885,
-          92.50690937042236,
+          94.28955316543579, 93.06861162185669, 92.89209842681885, 92.50690937042236,
           92.05065965652466
         ],
-        "acne": [
-          93.59173,
-          91.13199,
-          91.45564,
-          99.02905000000001,
-          88.9959
-        ],
+        "acne": [93.59173, 91.13199, 91.45564, 99.02905000000001, 88.9959],
         "moisture": [
-          86.0623300075531,
-          89.48129415512085,
-          87.32259273529053,
-          87.94111609458923,
+          86.0623300075531, 89.48129415512085, 87.32259273529053, 87.94111609458923,
           88.32417726516724
         ]
       },
@@ -93,45 +63,24 @@
       "capturedAt": "2026-08-10T20:21:40.929Z",
       "readings": {
         "redness": [
-          72.17988586425781,
-          65.49273681640625,
-          71.90880584716797,
-          77.51610565185547,
+          72.17988586425781, 65.49273681640625, 71.90880584716797, 77.51610565185547,
           71.21574401855469
         ],
         "pore": [
-          96.93801999092102,
-          94.18404793739319,
-          91.56215631961823,
-          96.8441367149353,
+          96.93801999092102, 94.18404793739319, 91.56215631961823, 96.8441367149353,
           84.27486562728882
         ],
         "texture": [
-          96.77102565765381,
-          97.8182315826416,
-          97.96960353851318,
-          97.57599234580994,
+          96.77102565765381, 97.8182315826416, 97.96960353851318, 97.57599234580994,
           98.04545044898987
         ],
         "radiance": [
-          93.10169816017151,
-          90.66177606582642,
-          87.93559074401855,
-          88.09483051300049,
+          93.10169816017151, 90.66177606582642, 87.93559074401855, 88.09483051300049,
           87.78420686721802
         ],
-        "acne": [
-          100,
-          100,
-          95.72782000000001,
-          97.86391,
-          88.9959
-        ],
+        "acne": [100, 100, 95.72782000000001, 97.86391, 88.9959],
         "moisture": [
-          84.22744274139404,
-          88.09894323348999,
-          88.89564275741577,
-          90.02828001976013,
+          84.22744274139404, 88.09894323348999, 88.89564275741577, 90.02828001976013,
           88.55721354484558
         ]
       },
@@ -156,45 +105,24 @@
       "capturedAt": "2026-08-10T20:22:12.902Z",
       "readings": {
         "redness": [
-          91.16967010498047,
-          86.84862518310547,
-          87.95742797851562,
-          87.809326171875,
+          91.16967010498047, 86.84862518310547, 87.95742797851562, 87.809326171875,
           89.750732421875
         ],
         "pore": [
-          94.20382678508759,
-          95.13619542121887,
-          93.57250332832336,
-          94.35984790325165,
+          94.20382678508759, 95.13619542121887, 93.57250332832336, 94.35984790325165,
           94.93402242660522
         ],
         "radiance": [
-          82.32955932617188,
-          82.74316787719727,
-          83.12989473342896,
-          85.59197187423706,
+          82.32955932617188, 82.74316787719727, 83.12989473342896, 85.59197187423706,
           83.3211600780487
         ],
         "moisture": [
-          85.5961799621582,
-          86.09485030174255,
-          84.84757542610168,
-          87.84668445587158,
+          85.5961799621582, 86.09485030174255, 84.84757542610168, 87.84668445587158,
           86.15010380744934
         ],
-        "acne": [
-          93.59173,
-          97.86391,
-          87.18346,
-          84.94700999999999,
-          97.86391
-        ],
+        "acne": [93.59173, 97.86391, 87.18346, 84.94700999999999, 97.86391],
         "texture": [
-          96.0204541683197,
-          93.71416568756104,
-          95.43235301971436,
-          95.4558789730072,
+          96.0204541683197, 93.71416568756104, 95.43235301971436, 95.4558789730072,
           96.45755887031555
         ]
       },
@@ -214,5 +142,85 @@
       ]
     }
   ],
-  "treatmentSessions": []
+  "treatmentSessions": [
+    {
+      "id": "treatment-1-msotmhht",
+      "day": 1,
+      "capturedAt": "2026-08-11T15:34:21.714Z",
+      "readings": {
+        "redness": [
+          73.68382263183594, 75.97817993164062, 83.80845642089844, 77.64768981933594,
+          80.81932830810547
+        ],
+        "pore": [
+          96.88811981678009, 94.52645099163055, 94.26191663742065, 95.82359254360199,
+          96.10255062580109
+        ],
+        "radiance": [
+          89.46189284324646, 89.43376541137695, 89.70637321472168, 88.42468857765198,
+          89.41183090209961
+        ],
+        "acne": [100, 91.13199, 95.72782000000001, 95.72782000000001, 91.13199],
+        "moisture": [
+          88.86927366256714, 88.08115720748901, 88.662588596344, 87.63145804405212,
+          88.00016045570374
+        ],
+        "texture": [
+          99.32496547698975, 99.0138292312622, 98.93684983253479, 98.62726330757141,
+          98.90475869178772
+        ]
+      },
+      "note": "day 1, sofa (same location as baseline), after shower, before applying",
+      "cropFraction": 0.5,
+      "source": {
+        "kind": "video",
+        "file": "captures/day1b.mp4",
+        "atSeconds": 20
+      },
+      "taskIds": [
+        "ij6TlduZOYG0cUfmdXB8RT6sp-qTS41YJ-XrAGNrFcMwMh9CxbetnMOr9tAn5H-aULVI_WsGdnpAqttYkigiO0gnHlv7gRJhYQ6tGMUBpRg",
+        "6A0X7YW9ng5JNA3EqBJPL7ebsHF_P0pQAJHylkxuT6E7wsp9bjKPXwIOUcA0RxAae5RvXYhJHGnI3UVUxoXz1gTd_dRScKv8zUDrUuJQXoM",
+        "cYwTLc--ccIHXYNEj_TkZKb_acT2xhmscw7UJ2R1HBKZbK53Y-rQoH5lJfMeSRuOM2TwHyIpBgglZdv8kheXM5ONGSXZGk17CABqUeOTGRE",
+        "2F2ZiUCEzPj43T5KOpRUiBvBNXl2j-tU6uM4tsrTPhvK10HVXlufaKNCM-y9HLQk_47JVH3SW5BKJHdB57bPPbN5v_QAcCqsN4zZaBWOaRg",
+        "qn1UdHn1FcLVHyZxQvicYKtjgzWMxVsd2Ork7F20tadffV5CG5mXdP7e0jfZ3UjNj1MVUI_AD0K46o-o8VqKWGHkCZM-wvZAA6IqqNr25SI"
+      ]
+    }
+  ],
+  "excludedSessions": [
+    {
+      "id": "treatment-1-msosedb0",
+      "day": 1,
+      "capturedAt": "2026-08-11T15:00:03.420Z",
+      "readings": {
+        "texture": [
+          95.8471417427063, 89.89245891571045, 97.1247136592865, 99.20360445976257
+        ],
+        "moisture": [
+          73.63177537918091, 80.2528440952301, 79.36094403266907, 83.18173289299011
+        ],
+        "radiance": [
+          90.88743925094604, 73.15478324890137, 88.2472038269043, 89.93222117424011
+        ],
+        "pore": [
+          86.5357096195221, 87.89850354194641, 96.67481398582458, 97.09427952766418
+        ],
+        "redness": [73.92509460449219, 100, 84.4009017944336, 66.72721862792969],
+        "acne": [85.20396, 97.86391, 97.86391, 97.86391]
+      },
+      "note": "day 1, after shower, before applying, different room to baseline",
+      "cropFraction": 0.5,
+      "source": {
+        "kind": "video",
+        "file": "captures/day1.mp4",
+        "atSeconds": 30
+      },
+      "taskIds": [
+        "_PCfnHmjLQIAFUuTCw2BuQfHSF7l9dUY5IDb0JDzQtYW95YdHy_SA7q1J06yeMBtqPsGrujEkric1jZvCrgyK_bvZIAjRI7-ULQmSAdOimg",
+        "nmfabU847rOujrYanFlEFctmcQNFm8Swnsftq6m2VfncWxes816p4kYbDZOktJ8epRoSCv-cH7pE5ifsrPR6z1eK_EY1ZI7kDit_bjfqx2s",
+        "Q2sGH-_EAAnXnb-5r4TgHDZ709GEnjFSNes3rrPxBR9nDLo-qXp97xWKncflwB2tsRupjfagkSHZizYtrucaJyHsag3EPHCuDHjmiZlHE_s",
+        "R5x4Edxm-5aAg_9uYCajHjTVTBcUUINXAfk5UNJMXDwDrvVyOmPzqXRP80_WKMbe-E1O5Y34wvdcbCnkyn0VfGnUKx-4-yjVrMpE0xsNZhE"
+      ],
+      "excludedReason": "Captured in a different room from the baseline, under different light. The calibration floor was measured from a single location and cannot account for a change of setting, so this session is not comparable to the baseline. Excluded on protocol grounds, which were stated before the replacement capture existed. Retained here in full rather than deleted, so the exclusion is auditable."
+    }
+  ]
 }
