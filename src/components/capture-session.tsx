@@ -270,6 +270,20 @@ export function CaptureSession() {
     phase === "streaming" && luminance !== null && luminance < MIN_USABLE_LUMINANCE;
 
   const reliability = result ? reliabilityFrom(result.readings) : null;
+
+  /**
+   * A floor of zero is not a perfect instrument, it is identical frames.
+   *
+   * Real frames always differ a little, if only by sensor noise, so a spread of
+   * exactly zero means the same image was measured more than once: three copies
+   * of one uploaded photograph, or a static virtual camera. Left alone this is
+   * the most dangerous output the app can produce, because a floor of zero lets
+   * every subsequent change count as real.
+   */
+  const degenerateFloor =
+    reliability !== null &&
+    Object.values(reliability).length > 0 &&
+    Object.values(reliability).every((e) => e.mdc95SessionMean < 0.05);
   const luminanceDrift =
     luminanceLog.length >= 2
       ? Math.max(...luminanceLog) - Math.min(...luminanceLog)
@@ -448,6 +462,7 @@ export function CaptureSession() {
       <aside>
         {reliability ? (
           <NoiseFloorPanel
+            degenerate={degenerateFloor}
             reliability={reliability}
             luminanceDrift={luminanceDrift}
             units={
@@ -495,10 +510,12 @@ function Protocol() {
 }
 
 function NoiseFloorPanel({
+  degenerate,
   reliability,
   luminanceDrift,
   units,
 }: {
+  degenerate: boolean;
   reliability: Record<string, ReliabilityEstimate>;
   luminanceDrift: number | null;
   units: number | null;
@@ -541,6 +558,17 @@ function NoiseFloorPanel({
           );
         })}
       </dl>
+
+      {degenerate && (
+        <p className="mt-4 rounded-none bg-[var(--color-verdict-worsening-bg)] px-4 py-3 text-[12px] leading-relaxed text-[var(--color-verdict-worsening-ink)]">
+          Every floor came out at zero, which means the frames were identical rather than
+          the instrument being perfect. Real frames always differ a little, if only by
+          sensor noise. This happens when the same photograph is uploaded more than once,
+          or a static virtual camera is selected. A floor of zero would let any later
+          change count as real, so do not build a study on this session. Recapture from a
+          live camera.
+        </p>
+      )}
 
       {entries.some(([, e]) => e.underestimates) && (
         <p className="mt-4 rounded-none bg-[var(--color-verdict-pending-bg)] px-4 py-3 text-[12px] leading-relaxed text-[var(--color-verdict-pending-ink)]">
