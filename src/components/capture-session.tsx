@@ -33,6 +33,20 @@ const SECONDS_BETWEEN_FRAMES = 3;
  */
 const MIN_USABLE_LUMINANCE = 6;
 
+/** Above this the frame is blown out and skin detail is clipped away. */
+const MAX_USABLE_LUMINANCE = 88;
+
+/**
+ * Share of the frame height the face should span before capture.
+ *
+ * The analyser rejects a face that fills too little of the frame, and it only
+ * says so after the units are spent. Checking in the browser turns a paid
+ * failure into live guidance.
+ */
+const MIN_FACE_HEIGHT_RATIO = 0.34;
+
+type Guidance = { label: string; state: "ok" | "warn" };
+
 interface AnalyzeResponse {
   readings: Record<string, number[]>;
   frameCount: number;
@@ -59,6 +73,8 @@ export function CaptureSession() {
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [cameraId, setCameraId] = useState<string>("");
+  /** Face height as a share of frame height, or null when undetectable. */
+  const [faceRatio, setFaceRatio] = useState<number | null>(null);
 
   // Live luminance. This is on-thesis rather than decorative: illumination is
   // the single largest source of error in the whole pipeline, and showing it
@@ -72,7 +88,7 @@ export function CaptureSession() {
     const context = canvas.getContext("2d", { willReadFrequently: true });
     if (!context) return;
 
-    const timer = window.setInterval(() => {
+    const timer = window.setInterval(async () => {
       const video = videoRef.current;
       if (!video || video.readyState < 2) return;
 
@@ -85,6 +101,28 @@ export function CaptureSession() {
         sum += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
       }
       setLuminance((sum / (data.length / 4) / 255) * 100);
+
+      // Face size, where the browser can measure it. FaceDetector is not
+      // universally available, so this is progressive enhancement: without it
+      // the oval guide and the server's own rejection still apply, and the chip
+      // simply does not appear.
+      const Detector = (
+        window as unknown as {
+          FaceDetector?: new () => {
+            detect(s: CanvasImageSource): Promise<{ boundingBox: DOMRectReadOnly }[]>;
+          };
+        }
+      ).FaceDetector;
+      if (Detector) {
+        try {
+          const faces = await new Detector().detect(video);
+          setFaceRatio(
+            faces.length > 0 ? faces[0].boundingBox.height / video.videoHeight : null,
+          );
+        } catch {
+          setFaceRatio(null);
+        }
+      }
     }, 250);
 
     return () => window.clearInterval(timer);
@@ -144,13 +182,31 @@ export function CaptureSession() {
       );
       setCameras(devices);
 
+      // Only switch away from a device that actually looks virtual, and never at
+      // the cost of a stream that is already working. An earlier version stopped
+      // the live stream and reopened with a deviceId exact constraint; when that
+      // constraint could not be satisfied the failure landed in the catch below
+      // and the user was left with an error instead of the working camera they
+      // already had.
       if (!deviceId) {
+        const active = devices.find((d) => d.deviceId === activeId);
         const preferred = preferredCamera(devices);
-        if (preferred && preferred.deviceId && preferred.deviceId !== activeId) {
-          void startCamera(preferred.deviceId);
+        const activeLooksVirtual =
+          active !== undefined && preferred !== undefined && active !== preferred;
+
+        if (activeLooksVirtual && preferred.deviceId) {
+          try {
+            await startCamera(preferred.deviceId);
+          } catch {
+            // Keep whatever is already streaming rather than stranding the user.
+          }
         }
       }
-    } catch {
+    } catch (error) {
+      // A failed switch to a specific device must not tear down a session that
+      // is already streaming; let the caller decide.
+      if (deviceId && streamRef.current) throw error;
+
       setPhase("error");
       setMessage(
         "Could not open the camera. Grant camera permission, or upload photographs instead: the analysis is identical either way.",
@@ -269,6 +325,33 @@ export function CaptureSession() {
   const feedIsDark =
     phase === "streaming" && luminance !== null && luminance < MIN_USABLE_LUMINANCE;
 
+  /**
+   * Live capture guidance, the same three things the analyser will judge after
+   * the fact: is there light, is it not blown out, and is the face big enough.
+   * Saying so before the shutter turns a paid rejection into a nudge.
+   */
+  const guidance: Guidance[] =
+    phase !== "streaming"
+      ? []
+      : [
+          luminance === null
+            ? { label: "Reading light", state: "warn" as const }
+            : luminance < MIN_USABLE_LUMINANCE
+              ? { label: "Too dark", state: "warn" as const }
+              : luminance > MAX_USABLE_LUMINANCE
+                ? { label: "Too bright", state: "warn" as const }
+                : { label: "Lighting ok", state: "ok" as const },
+          ...(faceRatio === null
+            ? []
+            : [
+                faceRatio < MIN_FACE_HEIGHT_RATIO
+                  ? { label: "Come closer", state: "warn" as const }
+                  : { label: "Face position ok", state: "ok" as const },
+              ]),
+        ];
+
+  const faceTooSmall = faceRatio !== null && faceRatio < MIN_FACE_HEIGHT_RATIO;
+
   const reliability = result ? reliabilityFrom(result.readings) : null;
 
   /**
@@ -363,11 +446,21 @@ export function CaptureSession() {
           )}
 
           {(phase === "streaming" || phase === "capturing") && (
-            <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-none bg-black/55 px-3 py-1.5 backdrop-blur-sm">
-              <span className="text-[10px] uppercase tracking-[0.1em] text-white/65">
-                Light
-              </span>
-              <span className="tabular text-[12px] text-white">
+            <div className="absolute bottom-3 left-3 flex flex-wrap items-center gap-1.5">
+              {guidance.map((g) => (
+                <span
+                  key={g.label}
+                  className="tabular rounded-none px-2.5 py-1 text-[10px] tracking-[0.08em] uppercase backdrop-blur-sm"
+                  style={
+                    g.state === "ok"
+                      ? { background: "rgba(0,78,86,0.85)", color: "#fff" }
+                      : { background: "rgba(20,22,26,0.8)", color: "#e8b4a0" }
+                  }
+                >
+                  {g.label}
+                </span>
+              ))}
+              <span className="tabular rounded-none bg-black/55 px-2.5 py-1 text-[10px] text-white/70 backdrop-blur-sm">
                 {luminance === null ? "--" : luminance.toFixed(1)}
               </span>
             </div>
@@ -414,11 +507,20 @@ export function CaptureSession() {
           {phase === "streaming" && (
             <button
               onClick={runCapture}
-              disabled={feedIsDark}
+              disabled={feedIsDark || faceTooSmall}
               className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] text-[var(--color-paper)] uppercase transition-colors duration-150 hover:bg-[var(--color-spot)] disabled:cursor-not-allowed disabled:bg-[var(--color-rule-strong)]"
             >
               Capture three frames
             </button>
+          )}
+
+          {faceTooSmall && !feedIsDark && (
+            <p className="w-full text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
+              Your face is filling too little of the frame. Move closer until your head
+              roughly fills the oval. The analyser rejects a face below a minimum share of
+              the image, and it only says so after the units are spent, so capture is held
+              until the framing will pass.
+            </p>
           )}
 
           {feedIsDark && (
