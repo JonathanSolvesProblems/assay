@@ -280,6 +280,18 @@ export function CaptureSession() {
         }
         setCountdown(null);
 
+        // The pre-capture guard cannot see a lens covered midway through the
+        // sequence. Checking again before each frame stops a blind frame being
+        // sent, which costs units and returns no face.
+        if (luminance !== null && luminance < MIN_USABLE_LUMINANCE) {
+          stopStream();
+          setPhase("error");
+          setMessage(
+            `The camera went dark before frame ${i + 1}. Nothing was sent for it. Uncover the lens and start the session again.`,
+          );
+          return;
+        }
+
         framesRef.current.push(await grabFrame());
         setCaptured(i + 1);
         setLuminanceLog((log) => [...log, luminance ?? 0]);
@@ -322,7 +334,20 @@ export function CaptureSession() {
 
       try {
         const response = await fetch("/api/analyze", { method: "POST", body: form });
-        const payload = (await response.json()) as AnalyzeResponse;
+
+        // A killed or proxied request can return HTML rather than JSON, and
+        // parsing it would throw into the network branch below and report the
+        // wrong cause. Read the status first.
+        let payload: AnalyzeResponse;
+        try {
+          payload = (await response.json()) as AnalyzeResponse;
+        } catch {
+          setPhase("error");
+          setMessage(
+            `The server returned an unreadable response for frame ${index + 1} (HTTP ${response.status}). If the frame was very dark or had no face in it, retake the session.`,
+          );
+          return;
+        }
 
         if (!response.ok) {
           setPhase("error");
@@ -506,7 +531,7 @@ export function CaptureSession() {
               <div className="flex h-full flex-col items-center justify-center px-8 text-center">
                 <p className="max-w-xs text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
                   {phase === "done"
-                    ? "Session complete. Your noise floor is on the right."
+                    ? "Session complete. Your noise floor is below on a phone, and to the right on a wider screen."
                     : "Assay takes three frames a few seconds apart. Your skin cannot change in that time, so any difference between them is the instrument's error."}
                 </p>
               </div>
