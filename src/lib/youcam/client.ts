@@ -70,6 +70,10 @@ export class YouCamError extends Error {
     switch (this.code) {
       case YOUCAM_ERROR_CODES.NO_FACE:
         return "No face detected in that frame. Move closer and make sure your whole face is in view.";
+      case YOUCAM_ERROR_CODES.FACE_TOO_SMALL:
+        return "Your face fills too little of the frame. Move closer, so your head roughly fills the oval, and try again.";
+      case YOUCAM_ERROR_CODES.FACE_ANGLE:
+        return "Your head was turned too far. Look straight at the camera and hold still, then try again.";
       case YOUCAM_ERROR_CODES.FILE_TOO_LARGE:
         return "That photo is too large. Assay captures below 10 MB.";
       case YOUCAM_ERROR_CODES.NSFW:

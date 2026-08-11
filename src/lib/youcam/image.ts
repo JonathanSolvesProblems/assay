@@ -20,6 +20,41 @@
 /** Long side, in pixels, that every frame is resized to before upload. */
 export const CAPTURE_LONG_EDGE = 1024;
 
+/**
+ * Fraction of the centre square kept before downscaling, and how far that window
+ * is shifted upward.
+ *
+ * The analyser rejects a frame with `error_src_face_too_small` when the face
+ * occupies too little of the image, and the requirement is a proportion of the
+ * frame rather than a pixel count: a full-frame crop at 1536px was rejected while
+ * a 70% crop at 1024px passed, with a smaller face in absolute pixels. Raising
+ * resolution never helps; cropping does.
+ *
+ * A webcam frame is 16:9 with a lot of room in it, so the browser path uses the
+ * same tighter window the video ingest does. Without this, live capture sends the
+ * whole frame and is rejected every time, which is precisely what happened.
+ *
+ * The window is shifted up because a head sits above the centre of a portrait.
+ */
+export const CAPTURE_CROP_FRACTION = 0.55;
+export const CAPTURE_CROP_TOP_BIAS = 0.6;
+
+/**
+ * Centre-square crop geometry for a source of the given dimensions.
+ *
+ * Shared by the camera path and the upload path so a session cannot mix two
+ * framings, which would inject a step change larger than most treatment effects.
+ */
+export function cropWindow(width: number, height: number) {
+  const side = Math.min(width, height);
+  const window = Math.round(side * CAPTURE_CROP_FRACTION);
+  return {
+    sx: Math.round((width - window) / 2),
+    sy: Math.round(((height - window) / 2) * CAPTURE_CROP_TOP_BIAS),
+    size: window,
+  };
+}
+
 /** JPEG quality used for upload. High enough to preserve fine skin texture. */
 export const CAPTURE_JPEG_QUALITY = 0.88;
 

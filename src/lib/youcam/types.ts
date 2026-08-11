@@ -94,6 +94,10 @@ export const MEASURED_SKIN_ANALYSIS_COST = 12;
 /** Documented failure codes worth handling distinctly rather than as "500". */
 export const YOUCAM_ERROR_CODES = {
   NO_FACE: "error_no_face",
+  /** The face occupies too little of the frame. Cropping fixes it; upscaling does not. */
+  FACE_TOO_SMALL: "error_src_face_too_small",
+  /** The head is turned too far from the camera for landmarks to resolve. */
+  FACE_ANGLE: "error_large_face_angle",
   NSFW: "error_nsfw_content_detected",
   FILE_TOO_LARGE: "exceed_max_filesize",
   INVALID_TASK: "InvalidTaskId",

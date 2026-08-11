@@ -6,6 +6,7 @@ import {
   CAPTURE_JPEG_QUALITY,
   CAPTURE_LONG_EDGE,
   MIN_SHORT_EDGE_SD,
+  cropWindow,
 } from "@/lib/youcam/image";
 import { CONCERNS, DEFAULT_CONCERNS, type ConcernId } from "@/lib/domain/concerns";
 import {
@@ -145,22 +146,24 @@ export function CaptureSession() {
     if (!video) throw new Error("Camera is not running.");
 
     const { videoWidth: w, videoHeight: h } = video;
-    const scale = Math.min(1, CAPTURE_LONG_EDGE / Math.max(w, h));
-    const width = Math.round(w * scale);
-    const height = Math.round(h * scale);
+    // Crop to the same window the video ingest uses. Sending the whole 16:9
+    // frame leaves the face too small a fraction of the image and the analyser
+    // rejects it with error_src_face_too_small.
+    const { sx, sy, size } = cropWindow(w, h);
+    const side = Math.min(CAPTURE_LONG_EDGE, Math.max(size, MIN_SHORT_EDGE_SD));
 
-    if (Math.min(width, height) < MIN_SHORT_EDGE_SD) {
+    if (size < MIN_SHORT_EDGE_SD) {
       throw new Error(
-        `Camera frame is ${width}x${height}; the analyser needs a short side of at least ${MIN_SHORT_EDGE_SD}px.`,
+        `Camera gives a ${w}x${h} frame, which crops to ${size}px; the analyser needs at least ${MIN_SHORT_EDGE_SD}px. Try a higher-resolution camera.`,
       );
     }
 
     const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = side;
+    canvas.height = side;
     const context = canvas.getContext("2d");
     if (!context) throw new Error("Could not acquire a canvas context.");
-    context.drawImage(video, 0, 0, width, height);
+    context.drawImage(video, sx, sy, size, size, 0, 0, side, side);
 
     const blob = await new Promise<Blob | null>((resolve) =>
       canvas.toBlob(resolve, "image/jpeg", CAPTURE_JPEG_QUALITY),
@@ -567,13 +570,14 @@ function reliabilityFrom(readings: Record<string, number[]>) {
 /** Resize an uploaded photograph to the same spec the camera path produces. */
 async function normaliseFile(file: File): Promise<Blob> {
   const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, CAPTURE_LONG_EDGE / Math.max(bitmap.width, bitmap.height));
-  const width = Math.round(bitmap.width * scale);
-  const height = Math.round(bitmap.height * scale);
+  // Same crop window as the camera path, so a session cannot mix two framings.
+  const { sx, sy, size } = cropWindow(bitmap.width, bitmap.height);
+  const width = Math.min(CAPTURE_LONG_EDGE, Math.max(size, MIN_SHORT_EDGE_SD));
+  const height = width;
 
-  if (Math.min(width, height) < MIN_SHORT_EDGE_SD) {
+  if (size < MIN_SHORT_EDGE_SD) {
     throw new Error(
-      `${file.name} is ${width}x${height} after resizing; the analyser needs a short side of at least ${MIN_SHORT_EDGE_SD}px.`,
+      `${file.name} crops to ${size}px; the analyser needs at least ${MIN_SHORT_EDGE_SD}px. Use a higher-resolution photograph.`,
     );
   }
 
@@ -582,7 +586,7 @@ async function normaliseFile(file: File): Promise<Blob> {
   canvas.height = height;
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Could not acquire a canvas context.");
-  context.drawImage(bitmap, 0, 0, width, height);
+  context.drawImage(bitmap, sx, sy, size, size, 0, 0, width, height);
 
   const blob = await new Promise<Blob | null>((resolve) =>
     canvas.toBlob(resolve, "image/jpeg", CAPTURE_JPEG_QUALITY),
