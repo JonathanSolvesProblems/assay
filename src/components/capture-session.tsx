@@ -17,6 +17,20 @@ import {
 const FRAMES_PER_SESSION = 3;
 const SECONDS_BETWEEN_FRAMES = 3;
 
+/**
+ * Below this mean luma the feed is not a face, it is a black rectangle.
+ *
+ * Windows will happily hand back a live MediaStream from a virtual camera that
+ * has nothing behind it, such as a phone offered through Link to Windows that is
+ * not currently connected. The stream reports readyState 4 and real dimensions,
+ * so nothing about it looks broken; every frame is simply black. A covered lens
+ * or a laptop privacy shutter produces the same thing.
+ *
+ * Without this guard the app offers to capture, spends units on frames with no
+ * face in them, and only then reports failure.
+ */
+const MIN_USABLE_LUMINANCE = 6;
+
 interface AnalyzeResponse {
   readings: Record<string, number[]>;
   frameCount: number;
@@ -41,6 +55,8 @@ export function CaptureSession() {
   const [luminance, setLuminance] = useState<number | null>(null);
   const [luminanceLog, setLuminanceLog] = useState<number[]>([]);
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
+  const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
+  const [cameraId, setCameraId] = useState<string>("");
 
   // Live luminance. This is on-thesis rather than decorative: illumination is
   // the single largest source of error in the whole pipeline, and showing it
@@ -79,12 +95,29 @@ export function CaptureSession() {
 
   useEffect(() => stopStream, [stopStream]);
 
-  async function startCamera() {
+  /**
+   * List the available cameras.
+   *
+   * Labels are only populated once permission has been granted, so this runs
+   * after the first successful getUserMedia rather than before it.
+   */
+  async function refreshCameras() {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      setCameras(devices.filter((d) => d.kind === "videoinput"));
+    } catch {
+      // A browser that will not enumerate devices still works with the default.
+    }
+  }
+
+  async function startCamera(deviceId?: string) {
     setMessage(null);
+    stopStream();
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: "user",
+          // An explicit device wins; otherwise ask for a front-facing one.
+          ...(deviceId ? { deviceId: { exact: deviceId } } : { facingMode: "user" }),
           width: { ideal: 1920 },
           height: { ideal: 1080 },
         },
@@ -96,6 +129,8 @@ export function CaptureSession() {
         await videoRef.current.play();
       }
       setPhase("streaming");
+      setCameraId(stream.getVideoTracks()[0]?.getSettings().deviceId ?? deviceId ?? "");
+      void refreshCameras();
     } catch {
       setPhase("error");
       setMessage(
@@ -209,6 +244,10 @@ export function CaptureSession() {
     }
   }
 
+  // A live stream carrying nothing but black. See MIN_USABLE_LUMINANCE.
+  const feedIsDark =
+    phase === "streaming" && luminance !== null && luminance < MIN_USABLE_LUMINANCE;
+
   const reliability = result ? reliabilityFrom(result.readings) : null;
   const luminanceDrift =
     luminanceLog.length >= 2
@@ -315,20 +354,47 @@ export function CaptureSession() {
         <div className="mt-5 flex flex-wrap items-center gap-3">
           {phase === "idle" || phase === "error" ? (
             <button
-              onClick={startCamera}
+              onClick={() => startCamera()}
               className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] uppercase text-[var(--color-paper)] transition-colors duration-150 hover:bg-[var(--color-spot)]"
             >
               Open camera
             </button>
           ) : null}
 
+          {phase === "streaming" && cameras.length > 1 && (
+            <select
+              value={cameraId}
+              onChange={(e) => startCamera(e.target.value)}
+              aria-label="Camera"
+              className="max-w-[220px] rounded-none border border-[var(--color-rule-strong)] bg-[var(--color-surface)] px-3 py-2.5 text-[13px]"
+            >
+              {cameras.map((device, i) => (
+                <option key={device.deviceId} value={device.deviceId}>
+                  {device.label || `Camera ${i + 1}`}
+                </option>
+              ))}
+            </select>
+          )}
+
           {phase === "streaming" && (
             <button
               onClick={runCapture}
-              className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] uppercase text-[var(--color-paper)] transition-colors duration-150 hover:bg-[var(--color-spot)]"
+              disabled={feedIsDark}
+              className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] text-[var(--color-paper)] uppercase transition-colors duration-150 hover:bg-[var(--color-spot)] disabled:cursor-not-allowed disabled:bg-[var(--color-rule-strong)]"
             >
               Capture three frames
             </button>
+          )}
+
+          {feedIsDark && (
+            <p className="w-full text-[13px] leading-relaxed text-[var(--color-verdict-worsening-ink)]">
+              That camera is sending a black picture. It is usually a lens cover, a
+              privacy shutter, or a virtual camera such as a phone offered through Link to
+              Windows that is not currently connected. Pick a different camera above, or
+              upload photographs instead. Capture is held until the feed carries
+              something, because analysing black frames would spend units to be told there
+              is no face.
+            </p>
           )}
 
           {(phase === "idle" || phase === "error" || phase === "done") && (
