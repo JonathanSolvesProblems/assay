@@ -19,13 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Assay is a measurement tool. It is not a medical device, it does not diagnose
-or treat any condition, and nothing it reports is medical advice. Persistent or
-worsening skin problems belong with a dermatologist.
-
-The YouCam / Perfect Corp APIs this project calls are the property of Perfect
-Corp and are governed by their own terms. This licence covers only the code in
-this repository.

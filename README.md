@@ -172,3 +172,11 @@ a published table, never from a previous run of the code.
 ## Licence
 
 MIT, see [LICENSE](LICENSE).
+
+Assay is a measurement tool. It is not a medical device, it does not diagnose or
+treat any condition, and nothing it reports is medical advice. Persistent or
+worsening skin problems belong with a dermatologist.
+
+The YouCam and Perfect Corp APIs this project calls are the property of Perfect
+Corp and are governed by their own terms. The licence above covers only the code
+in this repository.
