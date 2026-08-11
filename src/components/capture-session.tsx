@@ -77,6 +77,8 @@ export function CaptureSession() {
   const [faceRatio, setFaceRatio] = useState<number | null>(null);
   /** Seconds spent in the current analysis, for an honest progress readout. */
   const [elapsed, setElapsed] = useState(0);
+  /** Frames scored so far, for a progress readout that is actually true. */
+  const [analysed, setAnalysed] = useState(0);
 
   // Live luminance. This is on-thesis rather than decorative: illumination is
   // the single largest source of error in the whole pipeline, and showing it
@@ -292,31 +294,71 @@ export function CaptureSession() {
     }
   }
 
+  /**
+   * Analyse one frame per request.
+   *
+   * Three frames in a single request took 45 to 60 seconds and exceeded the
+   * host's 60 second function limit, so the request was killed after the units
+   * had already been spent and the browser reported only that it could not reach
+   * the service. One frame per call keeps every request comfortably inside the
+   * limit, and it means the progress readout can name the frame actually in
+   * flight instead of guessing.
+   */
   async function analyse(frames: Blob[]) {
     setPhase("analysing");
     setMessage(null);
+    setAnalysed(0);
 
-    const form = new FormData();
-    frames.forEach((blob, i) => form.append("frames", blob, `frame-${i}.jpg`));
-    form.append("concerns", DEFAULT_CONCERNS.join(","));
+    const readings: Record<string, number[]> = {};
+    const taskIds: string[] = [];
+    let unitsBefore: number | null = null;
+    let unitsAfter: number | null = null;
 
-    try {
-      const response = await fetch("/api/analyze", { method: "POST", body: form });
-      const payload = (await response.json()) as AnalyzeResponse;
+    for (const [index, blob] of frames.entries()) {
+      const form = new FormData();
+      form.append("frames", blob, `frame-${index}.jpg`);
+      form.append("concerns", DEFAULT_CONCERNS.join(","));
+      form.append("singleFrame", "1");
 
-      if (!response.ok) {
+      try {
+        const response = await fetch("/api/analyze", { method: "POST", body: form });
+        const payload = (await response.json()) as AnalyzeResponse;
+
+        if (!response.ok) {
+          setPhase("error");
+          setMessage(payload.error ?? "Analysis failed.");
+          return;
+        }
+
+        // One frame yields one reading per concern; collect them across calls.
+        for (const [concern, values] of Object.entries(payload.readings)) {
+          (readings[concern] ??= []).push(values[0]);
+        }
+        taskIds.push(...(payload.taskIds ?? []));
+        if (unitsBefore === null) unitsBefore = payload.unitsBefore;
+        unitsAfter = payload.unitsAfter;
+        setAnalysed(index + 1);
+      } catch {
         setPhase("error");
-        setMessage(payload.error ?? "Analysis failed.");
+        setMessage(
+          `Lost contact with the analysis service on frame ${index + 1}. Any frames already scored have been charged.`,
+        );
         return;
       }
-
-      setResult(payload);
-      setPhase("done");
-      persist(payload);
-    } catch {
-      setPhase("error");
-      setMessage("Could not reach the analysis service.");
     }
+
+    const merged: AnalyzeResponse = {
+      readings,
+      frameCount: frames.length,
+      taskIds,
+      unitsBefore,
+      unitsAfter,
+      capturedAt: new Date().toISOString(),
+    };
+
+    setResult(merged);
+    setPhase("done");
+    persist(merged);
   }
 
   async function onFilesChosen(event: React.ChangeEvent<HTMLInputElement>) {
@@ -406,14 +448,66 @@ export function CaptureSession() {
               }}
             />
 
-            {phase !== "streaming" && phase !== "capturing" && (
+            {phase === "analysing" && (
+              <div className="flex h-full flex-col justify-center px-10">
+                {/*
+                  A certificate does not spin. Each frame is a line on the sheet
+                  that fills as its result comes back, so the wait shows what is
+                  actually happening rather than that something is.
+                */}
+                <p className="tabular text-[10px] tracking-[0.14em] text-[var(--color-ink-muted)] uppercase">
+                  Scoring in progress
+                </p>
+                <ol className="mt-5 space-y-3">
+                  {Array.from({ length: FRAMES_PER_SESSION }, (_, i) => {
+                    const state =
+                      i < analysed ? "done" : i === analysed ? "active" : "queued";
+                    return (
+                      <li key={i} className="flex items-center gap-3">
+                        <span className="tabular w-8 text-[11px] text-[var(--color-ink-muted)]">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="relative h-[3px] flex-1 bg-[var(--color-rule)]">
+                          <span
+                            className="absolute inset-y-0 left-0 transition-[width] duration-500 ease-out"
+                            style={{
+                              width:
+                                state === "done"
+                                  ? "100%"
+                                  : state === "active"
+                                    ? "45%"
+                                    : "0%",
+                              background:
+                                state === "queued" ? "transparent" : "var(--color-spot)",
+                              opacity: state === "active" ? 0.55 : 1,
+                            }}
+                          />
+                        </span>
+                        <span className="tabular w-20 text-right text-[10px] tracking-[0.08em] text-[var(--color-ink-muted)] uppercase">
+                          {state === "done"
+                            ? "scored"
+                            : state === "active"
+                              ? "sending"
+                              : "queued"}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ol>
+                <p className="mt-6 text-[12px] leading-relaxed text-[var(--color-ink-secondary)]">
+                  Each frame is a separate call to the YouCam Skin Analysis API, sent one
+                  at a time so no single request can outlive the server and lose work
+                  already paid for.
+                </p>
+              </div>
+            )}
+
+            {phase !== "streaming" && phase !== "capturing" && phase !== "analysing" && (
               <div className="flex h-full flex-col items-center justify-center px-8 text-center">
                 <p className="max-w-xs text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
-                  {phase === "analysing"
-                    ? "Analysing three frames. Each one is a separate call to the YouCam Skin Analysis API."
-                    : phase === "done"
-                      ? "Session complete. Your noise floor is on the right."
-                      : "Assay takes three frames a few seconds apart. Your skin cannot change in that time, so any difference between them is the instrument's error."}
+                  {phase === "done"
+                    ? "Session complete. Your noise floor is on the right."
+                    : "Assay takes three frames a few seconds apart. Your skin cannot change in that time, so any difference between them is the instrument's error."}
                 </p>
               </div>
             )}
@@ -567,11 +661,8 @@ export function CaptureSession() {
 
           {phase === "analysing" && (
             <span className="tabular text-[13px] text-[var(--color-ink-secondary)]">
-              {elapsed < 3
-                ? "Uploading frames"
-                : elapsed < 30
-                  ? `Scoring ${FRAMES_PER_SESSION} frames against 6 concerns`
-                  : "Still scoring, this can take up to a minute"}
+              Scoring frame {Math.min(analysed + 1, FRAMES_PER_SESSION)} of{" "}
+              {FRAMES_PER_SESSION}
               {" · "}
               {elapsed}s
             </span>

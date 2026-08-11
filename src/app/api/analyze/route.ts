@@ -46,7 +46,13 @@ export async function POST(request: Request) {
 
   const files = form.getAll("frames").filter((f): f is File => f instanceof File);
 
-  if (files.length < 2) {
+  // A session needs replicate frames, but the client assembles a session from
+  // several single-frame calls: three frames in one request exceeded the host's
+  // 60 second function limit, and the request was killed after the units had
+  // been spent. `singleFrame` marks one leg of a session the caller is building.
+  const singleFrame = form.get("singleFrame") === "1";
+
+  if (files.length < (singleFrame ? 1 : 2)) {
     return NextResponse.json(
       {
         error:
