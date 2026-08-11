@@ -75,6 +75,8 @@ export function CaptureSession() {
   const [cameraId, setCameraId] = useState<string>("");
   /** Face height as a share of frame height, or null when undetectable. */
   const [faceRatio, setFaceRatio] = useState<number | null>(null);
+  /** Seconds spent in the current analysis, for an honest progress readout. */
+  const [elapsed, setElapsed] = useState(0);
 
   // Live luminance. This is on-thesis rather than decorative: illumination is
   // the single largest source of error in the whole pipeline, and showing it
@@ -126,6 +128,22 @@ export function CaptureSession() {
     }, 250);
 
     return () => window.clearInterval(timer);
+  }, [phase]);
+
+  // The server analyses all three frames in one request and returns once, so the
+  // client genuinely cannot know which frame is in flight. Rather than invent a
+  // per-frame counter, show the stage and the time actually spent.
+  useEffect(() => {
+    if (phase !== "analysing") {
+      setElapsed(0);
+      return;
+    }
+    const started = Date.now();
+    const t = window.setInterval(
+      () => setElapsed(Math.round((Date.now() - started) / 1000)),
+      500,
+    );
+    return () => window.clearInterval(t);
   }, [phase]);
 
   const stopStream = useCallback(() => {
@@ -549,7 +567,13 @@ export function CaptureSession() {
 
           {phase === "analysing" && (
             <span className="tabular text-[13px] text-[var(--color-ink-secondary)]">
-              Analysing frame {captured} of {FRAMES_PER_SESSION}&hellip;
+              {elapsed < 3
+                ? "Uploading frames"
+                : elapsed < 30
+                  ? `Scoring ${FRAMES_PER_SESSION} frames against 6 concerns`
+                  : "Still scoring, this can take up to a minute"}
+              {" · "}
+              {elapsed}s
             </span>
           )}
         </div>
