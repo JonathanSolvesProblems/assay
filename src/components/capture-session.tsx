@@ -7,6 +7,7 @@ import {
   CAPTURE_LONG_EDGE,
   MIN_SHORT_EDGE_SD,
   cropWindow,
+  preferredCamera,
 } from "@/lib/youcam/image";
 import { CONCERNS, DEFAULT_CONCERNS, type ConcernId } from "@/lib/domain/concerns";
 import {
@@ -130,8 +131,25 @@ export function CaptureSession() {
         await videoRef.current.play();
       }
       setPhase("streaming");
-      setCameraId(stream.getVideoTracks()[0]?.getSettings().deviceId ?? deviceId ?? "");
-      void refreshCameras();
+      const activeId =
+        stream.getVideoTracks()[0]?.getSettings().deviceId ?? deviceId ?? "";
+      setCameraId(activeId);
+
+      // Labels are only readable once permission has been granted, so the first
+      // open is the earliest point at which a virtual camera can be recognised.
+      // If the browser handed us one, switch to a real sensor without making the
+      // user discover the dropdown.
+      const devices = (await navigator.mediaDevices.enumerateDevices()).filter(
+        (d) => d.kind === "videoinput",
+      );
+      setCameras(devices);
+
+      if (!deviceId) {
+        const preferred = preferredCamera(devices);
+        if (preferred && preferred.deviceId && preferred.deviceId !== activeId) {
+          void startCamera(preferred.deviceId);
+        }
+      }
     } catch {
       setPhase("error");
       setMessage(

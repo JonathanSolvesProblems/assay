@@ -47,12 +47,42 @@ export const CAPTURE_CROP_TOP_BIAS = 0.6;
  */
 export function cropWindow(width: number, height: number) {
   const side = Math.min(width, height);
-  const window = Math.round(side * CAPTURE_CROP_FRACTION);
+
+  // The crop tightens the face's share of the frame, but it must not shrink the
+  // image below the analyser's minimum short side. A 1280x720 webcam at a flat
+  // 0.55 gives a 396px window, which is rejected outright. Widening the window
+  // to the floor keeps such a camera usable; the face occupies a smaller share
+  // of it, which is the honest trade a lower-resolution sensor forces.
+  const window = Math.min(
+    side,
+    Math.max(Math.round(side * CAPTURE_CROP_FRACTION), MIN_SHORT_EDGE_SD),
+  );
+
   return {
     sx: Math.round((width - window) / 2),
     sy: Math.round(((height - window) / 2) * CAPTURE_CROP_TOP_BIAS),
     size: window,
   };
+}
+
+/**
+ * Rank cameras so a real sensor is chosen over a virtual one.
+ *
+ * Windows commonly exposes a phone offered through Link to Windows, and OBS
+ * installs a virtual camera; both present as ordinary devices and both hand back
+ * a black stream when nothing is driving them. Picking one by default means the
+ * first thing a new user sees is a black rectangle.
+ */
+const VIRTUAL_CAMERA_HINTS = ["virtual", "obs", "link to windows", "droidcam", "epoccam"];
+
+export function preferredCamera<T extends { label: string; deviceId: string }>(
+  devices: readonly T[],
+): T | undefined {
+  const isVirtual = (label: string) => {
+    const l = label.toLowerCase();
+    return VIRTUAL_CAMERA_HINTS.some((hint) => l.includes(hint));
+  };
+  return devices.find((d) => !isVirtual(d.label)) ?? devices[0];
 }
 
 /** JPEG quality used for upload. High enough to preserve fine skin texture. */
