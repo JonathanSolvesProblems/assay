@@ -87,6 +87,23 @@ on `raw_score`** and displays `ui_score`. A noise floor derived from rounded
 integers would be badly quantised, and quantisation would masquerade as
 precision.
 
+I measured the remap before I read the reason for it, and the documentation is
+franker than I expected. Perfect Corp describe `ui_score` as "a psychological
+motivator," deliberately adjusted upward from the raw value because "consumers
+generally prefer positive evaluations regarding their skin health."
+
+That is a defensible product decision and I am not criticising it. It is also
+the single clearest argument for this project. The number a skincare app shows
+you is, by design and by the vendor's own account, kinder than the measurement
+underneath it. My table above puts a size on that kindness: **moisture reads
+45.4 and displays 68**, a 22.6 point upward adjustment on the one concern a
+hydrating product is supposed to move. An app that scored progress on the
+displayed number would be reading an encouragement as evidence, twice over,
+once from the motivational remap and once from the noise floor that nobody
+measures. Assay reads `raw_score` for exactly this reason.
+
+Source: [Inputs and Outputs](https://docs.perfectcorp.com/reference/ai_skin_analysis/section/overview/inputs-and-outputs)
+
 ## 7. Masks are real, pixel-aligned, and per-concern
 
 Returned as RGBA PNGs at exactly the input resolution (1024×1024 in, 1024×1024

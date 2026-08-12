@@ -32,9 +32,12 @@ export default function MethodPage() {
         title="A score is a measurement, and measurements have error"
       >
         <p>
-          The YouCam Skin Analysis API returns a score from 0 to 100 for each of fourteen
-          skin concerns. It is a genuinely good instrument. But like any instrument it has
-          error, and a score reported without its error is a number you cannot make a
+          The YouCam Skin Analysis API returns sixteen skin outputs in standard
+          definition. Assay models the fourteen that are continuous 0 to 100 scores with
+          a direction, and leaves out <code>skin_type</code>, which is a category rather
+          than a quantity, and <code>tear_trough</code>, which it has not characterised a
+          noise floor for. It is a genuinely good instrument. But like any instrument it
+          has error, and a score reported without its error is a number you cannot make a
           decision with.
         </p>
         <p>

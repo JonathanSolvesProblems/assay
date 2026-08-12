@@ -90,9 +90,9 @@ export default function VerdictPage() {
         </div>
         <p className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
           Nobody can tell you which four. The measurement exists, YouCam&rsquo;s Skin
-          Analysis API scores fourteen concerns from a photograph, but a single score
-          carries no error bar, and without one you cannot separate a working product from
-          a brighter bathroom.
+          Analysis API scores sixteen skin attributes from a photograph, but a single
+          score carries no error bar, and without one you cannot separate a working
+          product from a brighter bathroom.
         </p>
       </Reveal>
 
