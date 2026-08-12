@@ -27,6 +27,16 @@ export default function VerdictPage() {
   const progress = studyProgress();
   const verdicts = sortVerdicts(verdictsFor());
   const decided = verdicts.filter((v) => v.verdict !== null);
+  // Two treatment sessions make a verdict computable, but computable is not the
+  // same as decided: until a concern clears its floor every card reads
+  // "insufficient evidence", which is six restatements of one fact and tells a
+  // visitor less than the progress table does. The table carries the same
+  // honest answer in a more useful form, showing how far each concern still has
+  // to travel, so the cards only take over once at least one has resolved.
+  const resolved = decided.filter(
+    (v) => v.verdict!.state !== "insufficient_evidence" && v.verdict!.state !== "saturated",
+  );
+  const showVerdicts = resolved.length > 0;
   const floors = calibrationFloors();
   const progressRows = concernProgress();
   const actives = activesFor(study);
@@ -179,13 +189,13 @@ export default function VerdictPage() {
             { label: "Cadence", value: `${study.cadenceDays}d` },
           ]}
           status={
-            progress.hasData
+            showVerdicts
               ? { label: "Result issued", tone: "issued" }
               : { label: "No result yet", tone: "pending" }
           }
         />
 
-        {progress.hasData ? (
+        {showVerdicts ? (
           <div className="mt-10 grid gap-5">
             {decided.map((entry, i) => (
               <Reveal key={entry.concern} index={i}>
