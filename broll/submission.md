@@ -16,10 +16,10 @@ Assay
 
 ## Elevator pitch
 
-*(200 character limit. This is 148.)*
+*(200 character limit. This is 172.)*
 
 ```
-Assay tells you whether your skincare is actually working. It measures the error in YouCam's skin scores first, then only reports a change that beats it.
+Four products on your shelf are doing nothing. Assay finds which, by measuring the error in YouCam's scores first. The only skin tracker that tells you when it cannot tell.
 ```
 
 ---
@@ -349,9 +349,17 @@ the failure the project exists to prevent, so it was not something I could ship
 around.
 
 The fix was to estimate the floor between sessions rather than within them.
-Calibration is now several sessions captured close together in time with the camera
-taken down and reset in between, so the spread across their means includes
-repositioning. Writing that surfaced a second problem: with only three sessions the
+Calibration is now several sessions separated in time, so the spread across their
+means carries the drift that accumulates between sittings rather than only the
+noise inside one. I want to be exact about how far that goes, because it is the
+boundary of the claim. The three calibration sessions here are sampled from
+separate windows of one continuous recording, so they capture pose, distance and
+expression drift but not the error of physically taking the camera down and
+setting it back up. The floor is a lower bound, and the consequence cuts against
+me rather than for me: an underestimated floor makes verdicts fire more readily
+than they should. A teardown between sessions would widen every band and make
+every verdict harder to earn. That limitation is recorded in the study data file
+itself, not only in the writeup. Writing that surfaced a second problem: with only three sessions the
 between-session estimate is itself very noisy and can land below what the frames
 support, which would claim precision the data does not contain. So the floor takes
 whichever of the two errors is larger, never the smaller. Both are lower bounds on

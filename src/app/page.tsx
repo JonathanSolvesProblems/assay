@@ -42,13 +42,14 @@ export default function VerdictPage() {
         </p>
 
         <h1 className="mt-5 max-w-3xl font-serif text-[44px] leading-[1.08] tracking-[-0.01em] sm:text-[58px]">
-          Most skin trackers report your lighting as progress.
+          Four of the products on your shelf are doing nothing. Assay tells you which.
         </h1>
 
         <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-[var(--color-ink-secondary)]">
-          Assay measures its own error before it measures your skin. A change is only
-          called real when it exceeds the margin of error for your face, on your device.
-          When it doesn&rsquo;t, you get the honest answer instead of an encouraging one.
+          Most skin trackers report your lighting as progress. Assay measures its own
+          error first, then calls a change real only when it beats that margin on your
+          face, on your device. It is the only skin tracker that tells you when it
+          cannot tell.
         </p>
 
         <div className="mt-9 flex flex-wrap items-center gap-3">

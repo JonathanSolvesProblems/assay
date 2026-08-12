@@ -77,11 +77,23 @@ noise, and nothing else. They cannot see the error you add by setting the camera
 back up tomorrow, which the crop experiment above shows is the largest error
 there is.
 
-So calibration is several sessions captured the same day with the camera taken
-down and reset in between. Skin cannot change in twenty minutes, so the spread
-across those session means is pure measurement error including repositioning.
-Assay takes whichever is larger, the between-session error or the frame-level
-error, and never the smaller.
+So calibration is several sessions separated in time rather than several frames
+separated in seconds. Skin cannot change in twenty minutes, so the spread across
+those session means is pure measurement error rather than biology.
+
+One thing to be clear about, because it is the limit of the number rather than a
+detail. The three calibration sessions in this study are sampled from separate
+windows of a single continuous recording, at 120s, 520s and 900s. That captures
+the pose, distance and expression drift that accumulates between sittings, but
+not the error of physically taking the camera down and setting it back up. The
+floor it yields is therefore a **lower bound** on the true between-session error,
+and the honest consequence runs against the project: an underestimated floor
+makes verdicts fire more readily than they should, not less. A calibration with a
+genuine teardown between sessions would widen every band below and make every
+verdict harder to earn. `src/data/study.json` records this on the calibration
+block itself, and the app takes whichever is larger, the between-session error or
+the frame-level error, never the smaller, which is what keeps this bound from
+collapsing further.
 
 ## Running it
 
