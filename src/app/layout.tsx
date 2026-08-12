@@ -61,7 +61,7 @@ export default function RootLayout({
         <div className="min-h-screen">
           {/* The masthead of an issued document: a heavy top rule, the instrument
               named on the left, the certificate reference on the right. */}
-          <header className="sticky top-0 z-50 border-t-2 border-b border-t-[var(--color-ink)] border-b-[var(--color-rule)] bg-[color-mix(in_srgb,var(--color-paper)_92%,transparent)] backdrop-blur-sm">
+          <header className="sticky top-0 z-50 border-t-2 border-b border-t-[var(--color-rule-heavy)] border-b-[var(--color-rule)] bg-[color-mix(in_srgb,var(--color-paper)_92%,transparent)] backdrop-blur-sm">
             <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3.5">
               <Link href="/" className="flex items-baseline gap-3">
                 <span className="tabular text-[17px] font-medium tracking-[0.08em] uppercase">
@@ -89,7 +89,7 @@ export default function RootLayout({
 
           <main>{children}</main>
 
-          <footer className="mt-28 border-t-2 border-[var(--color-ink)]">
+          <footer className="mt-28 border-t-2 border-[var(--color-rule-heavy)]">
             <div className="mx-auto max-w-5xl px-6 py-10">
               <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                 <div className="max-w-md">
@@ -97,6 +97,17 @@ export default function RootLayout({
                   <p className="mt-2 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
                     Skin measurement with an error bar. Built on the YouCam Skin Analysis
                     API by Perfect Corp.
+                  </p>
+                  <p className="mt-3 text-[13px] text-[var(--color-ink-secondary)]">
+                    Built by{" "}
+                    <a
+                      href="https://jonathanandrei.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline decoration-[var(--color-rule-strong)] underline-offset-[3px] transition-colors duration-150 hover:text-[var(--color-spot)] hover:decoration-[var(--color-spot)]"
+                    >
+                      Jonathan Andrei
+                    </a>
                   </p>
                 </div>
                 <p className="max-w-xs text-[12px] leading-relaxed text-[var(--color-ink-muted)]">

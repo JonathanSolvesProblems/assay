@@ -233,9 +233,7 @@ export function CaptureSession() {
       if (deviceId && streamRef.current) throw error;
 
       setPhase("error");
-      setMessage(
-        "Could not open the camera. Grant camera permission, or upload photographs instead: the analysis is identical either way.",
-      );
+      setMessage(cameraFailureMessage(error));
     }
   }
 
@@ -906,6 +904,43 @@ function NoiseFloorPanel({
 }
 
 // ---- helpers --------------------------------------------------------------
+
+/**
+ * Say which of the camera failures actually happened.
+ *
+ * These arrive as DOMExceptions whose `name` is the only reliable field, and
+ * they need genuinely different responses from the person reading them. The
+ * message used to say "grant camera permission" for all of them, which is
+ * actively misleading in the most common case on a desktop: the permission is
+ * already granted and another application is holding the device.
+ *
+ * On Windows most webcams are exclusive-access, so a screen recorder with a
+ * Video Capture Device source in its active scene owns the camera and every
+ * other application gets NotReadableError. This is easy to hit while filming a
+ * demo of a camera app, and impossible to diagnose from a generic message,
+ * because the recorder is not visibly "using" the camera from the user's
+ * point of view.
+ */
+function cameraFailureMessage(error: unknown): string {
+  const name = error instanceof Error ? error.name : "";
+  const upload = "You can upload photographs instead: the analysis is identical either way.";
+
+  switch (name) {
+    case "NotReadableError":
+    case "TrackStartError":
+      return `The camera is open but another application is holding it, so this page cannot read frames from it. Screen recorders are the usual cause: in OBS, delete or hide any Video Capture Device source in the active scene, since holding one locks the camera even when you are only capturing your screen. Video conferencing apps in the background do the same. Close it, then press Open camera again. ${upload}`;
+    case "NotAllowedError":
+    case "PermissionDeniedError":
+      return `Camera permission was refused. Allow it for this site in the padlock menu in the address bar, then press Open camera again. ${upload}`;
+    case "NotFoundError":
+    case "DevicesNotFoundError":
+      return `No camera was found on this device. ${upload}`;
+    case "OverconstrainedError":
+      return `The selected camera cannot supply a usable frame size. Pick a different camera from the list. ${upload}`;
+    default:
+      return `Could not open the camera. ${upload}`;
+  }
+}
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

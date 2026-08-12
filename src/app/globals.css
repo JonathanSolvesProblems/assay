@@ -35,6 +35,11 @@
   --color-surface-sunken: #afb1ab;
   --color-rule: #9a9c96;
   --color-rule-strong: #7e817b;
+  /* The heavy masthead and footer rules. Ink in light, where a black bar reads
+     as the top of an issued document. It cannot simply follow ink into dark:
+     inverted, ink is near-white and a 2px white bar across the top reads as an
+     element that failed to theme rather than as a rule. */
+  --color-rule-heavy: #14161a;
 
   /* Ink. All pairs below verified against the stock at WCAG AA or better:
      ink 9.84:1, secondary 5.62:1, muted 4.51:1, spot 5.02:1. */
@@ -157,7 +162,10 @@
   .card {
     background: var(--color-surface);
     border: 1px solid var(--color-rule);
-    border-top: 2px solid var(--color-ink);
+    /* The heavy top rule is the card's masthead. It uses the heavy-rule token
+       rather than ink so it stays a rule in both themes; following ink into
+       dark turns every card's top edge into a bright bar. */
+    border-top: 2px solid var(--color-rule-heavy);
     border-radius: 0;
   }
 
@@ -228,6 +236,7 @@
     --color-surface-sunken: #101214;
     --color-rule: #32363a;
     --color-rule-strong: #4c5157;
+    --color-rule-heavy: #5b6167;
     --color-ink: #e3e5df;
     --color-ink-secondary: #b2b7b0;
     --color-ink-muted: #888d87;
@@ -252,6 +261,7 @@
   --color-surface-sunken: #101214;
   --color-rule: #32363a;
   --color-rule-strong: #4c5157;
+  --color-rule-heavy: #5b6167;
   --color-ink: #e3e5df;
   --color-ink-secondary: #b2b7b0;
   --color-ink-muted: #888d87;
