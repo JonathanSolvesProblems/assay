@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { DM_Mono, Public_Sans } from "next/font/google";
 import Link from "next/link";
 
+import { ThemeToggle } from "@/components/theme-toggle";
+
 import "./globals.css";
 
 /**
@@ -43,6 +45,18 @@ export default function RootLayout({
     // undefined at :root, the declarations would be invalid at computed-value
     // time, and every family would silently fall back to the browser default.
     <html lang="en" className={`${dmMono.variable} ${publicSans.variable}`}>
+      <head>
+        {/* Runs before first paint, so a visitor who chose dark never sees a
+            frame of light stock. It only ever writes an attribute the CSS
+            already understands, and a stored value that is neither "light" nor
+            "dark" is ignored rather than trusted. Without a stored choice it
+            writes nothing at all and the media query decides. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("assay-theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}`,
+          }}
+        />
+      </head>
       <body>
         <div className="min-h-screen">
           {/* The masthead of an issued document: a heavy top rule, the instrument
@@ -68,6 +82,7 @@ export default function RootLayout({
                     {item.label}
                   </Link>
                 ))}
+                <ThemeToggle />
               </nav>
             </div>
           </header>

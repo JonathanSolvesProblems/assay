@@ -204,3 +204,71 @@
     }
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Dark stock.
+
+   The light palette is a sheet of grey laboratory stock. This is the same
+   sheet under a darkroom safelight: the ink and the paper trade places, the
+   rules stay quiet, and the teal spot lifts because a dark ground eats
+   saturation. Only tokens are redefined, so every component follows without
+   knowing the theme exists.
+
+   Three selectors, deliberately. `@theme` emits onto bare `:root`, so the
+   default stays light for a visitor with no stated preference. The media query
+   is guarded with :not([data-theme="light"]) so an explicit light choice still
+   wins on a machine set to dark, and the attribute block is last so the toggle
+   wins in both directions.
+--------------------------------------------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-paper: #16181a;
+    --color-surface: #1d2023;
+    --color-surface-sunken: #101214;
+    --color-rule: #32363a;
+    --color-rule-strong: #4c5157;
+    --color-ink: #e3e5df;
+    --color-ink-secondary: #b2b7b0;
+    --color-ink-muted: #888d87;
+    --color-spot: #4fb5a6;
+    --color-verdict-working-bg: #14302c;
+    --color-verdict-working-ink: #6fd3c1;
+    --color-verdict-purge-bg: #2a2721;
+    --color-verdict-purge-ink: #c2c6be;
+    --color-verdict-worsening-bg: #e3e5df;
+    --color-verdict-worsening-ink: #14161a;
+    --color-verdict-null-bg: #1b1e20;
+    --color-verdict-null-ink: #888d87;
+    --color-verdict-pending-bg: #1f2224;
+    --color-verdict-pending-ink: #888d87;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-paper: #16181a;
+  --color-surface: #1d2023;
+  --color-surface-sunken: #101214;
+  --color-rule: #32363a;
+  --color-rule-strong: #4c5157;
+  --color-ink: #e3e5df;
+  --color-ink-secondary: #b2b7b0;
+  --color-ink-muted: #888d87;
+  --color-spot: #4fb5a6;
+  --color-verdict-working-bg: #14302c;
+  --color-verdict-working-ink: #6fd3c1;
+  --color-verdict-purge-bg: #2a2721;
+  --color-verdict-purge-ink: #c2c6be;
+  --color-verdict-worsening-bg: #e3e5df;
+  --color-verdict-worsening-ink: #14161a;
+  --color-verdict-null-bg: #1b1e20;
+  --color-verdict-null-ink: #888d87;
+  --color-verdict-pending-bg: #1f2224;
+  --color-verdict-pending-ink: #888d87;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
