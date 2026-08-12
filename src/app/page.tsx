@@ -96,6 +96,64 @@ export default function VerdictPage() {
         </p>
       </Reveal>
 
+      <Reveal as="section" index={2} className="border-t border-[var(--color-rule)] py-14">
+        <div className="grid gap-10 md:grid-cols-[1.35fr_1fr] md:items-start">
+          <div>
+            <h2 className="max-w-lg font-serif text-[30px] leading-[1.2] tracking-[0.005em]">
+              The score you are shown is not the score that was measured.
+            </h2>
+            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-[var(--color-ink-secondary)]">
+              This is not an accusation, it is in the documentation. Perfect Corp describe
+              the displayed value as{" "}
+              <span className="text-[var(--color-ink)]">
+                &ldquo;a psychological motivator&rdquo;
+              </span>
+              , adjusted upward from the underlying measurement because{" "}
+              <span className="text-[var(--color-ink)]">
+                &ldquo;consumers generally prefer positive evaluations regarding their skin
+                health.&rdquo;
+              </span>
+            </p>
+            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--color-ink-secondary)]">
+              It is a reasonable product decision. It is also why this exists. I measured
+              the gap on my own face before I read the reason for it, and it is largest on
+              moisture, the one concern a hydrating product is supposed to move. Assay
+              computes everything on the measurement and never on the motivator.
+            </p>
+          </div>
+
+          <figure className="card p-7">
+            <figcaption className="tabular text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
+              Moisture, one frame, one call
+            </figcaption>
+            <div className="mt-6 flex items-end justify-between gap-4">
+              <div>
+                <p className="tabular text-[40px] leading-none">68</p>
+                <p className="mt-2 text-[12px] text-[var(--color-ink-secondary)]">
+                  displayed
+                </p>
+              </div>
+              <div className="pb-1.5 text-[13px] text-[var(--color-ink-muted)]">vs</div>
+              <div className="text-right">
+                <p
+                  className="tabular text-[40px] leading-none"
+                  style={{ color: "var(--color-spot)" }}
+                >
+                  45.4
+                </p>
+                <p className="mt-2 text-[12px] text-[var(--color-ink-secondary)]">
+                  measured
+                </p>
+              </div>
+            </div>
+            <p className="mt-6 border-t border-[var(--color-rule)] pt-5 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
+              A 22.6 point upward adjustment. A tracker scoring progress on the left-hand
+              number reads an encouragement as evidence.
+            </p>
+          </figure>
+        </div>
+      </Reveal>
+
       <section className="border-t border-[var(--color-rule)] py-14">
         <div className="mb-8">
           <h2 className="font-serif text-[30px] tracking-[0.005em]">The study</h2>

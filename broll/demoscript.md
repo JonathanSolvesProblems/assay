@@ -24,10 +24,18 @@ Everything in square brackets is a screen direction, not something you say.
 >
 > "So I built Assay.
 >
-> It uses YouCam's Skin Analysis API, which scores fourteen things about your skin
+> It uses YouCam's Skin Analysis API, which scores sixteen things about your skin
 > from one photo. It's a good instrument. That's not the problem.
 >
 > The problem is nobody tells you the error bar."
+
+> **[0:20, the 68 vs 45.4 card on screen, hold on both numbers]**
+>
+> "Two problems, actually. The score these apps show you isn't the score that was
+> measured. The documentation calls the displayed number a psychological motivator,
+> adjusted up because people prefer good news about their skin.
+>
+> On my face, moisture measured forty-five and displayed sixty-eight."
 
 > **[0:25, the calibration table on screen, cursor moving down the radiance row]**
 >
