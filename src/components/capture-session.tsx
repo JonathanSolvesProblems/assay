@@ -49,6 +49,8 @@ type Guidance = { label: string; state: "ok" | "warn" };
 
 interface AnalyzeResponse {
   readings: Record<string, number[]>;
+  /** Per-concern overlay URLs, pixel-aligned to the submitted frame. */
+  masks?: Record<string, string>;
   frameCount: number;
   taskIds: string[];
   unitsBefore: number | null;
@@ -79,6 +81,9 @@ export function CaptureSession() {
   const [elapsed, setElapsed] = useState(0);
   /** Frames scored so far, for a progress readout that is actually true. */
   const [analysed, setAnalysed] = useState(0);
+  /** Object URL of the final frame, kept so detections can be shown over it. */
+  const [preview, setPreview] = useState<string | null>(null);
+  const [maskConcern, setMaskConcern] = useState<string | null>(null);
 
   // Live luminance. This is on-thesis rather than decorative: illumination is
   // the single largest source of error in the whole pipeline, and showing it
@@ -322,6 +327,7 @@ export function CaptureSession() {
     setAnalysed(0);
 
     const readings: Record<string, number[]> = {};
+    const masks: Record<string, string> = {};
     const taskIds: string[] = [];
     let unitsBefore: number | null = null;
     let unitsAfter: number | null = null;
@@ -360,6 +366,9 @@ export function CaptureSession() {
           (readings[concern] ??= []).push(values[0]);
         }
         taskIds.push(...(payload.taskIds ?? []));
+        for (const [concern, url] of Object.entries(payload.masks ?? {})) {
+          masks[concern] = url;
+        }
         if (unitsBefore === null) unitsBefore = payload.unitsBefore;
         unitsAfter = payload.unitsAfter;
         setAnalysed(index + 1);
@@ -374,12 +383,19 @@ export function CaptureSession() {
 
     const merged: AnalyzeResponse = {
       readings,
+      masks,
       frameCount: frames.length,
       taskIds,
       unitsBefore,
       unitsAfter,
       capturedAt: new Date().toISOString(),
     };
+
+    // Show the detections over the frame they were computed from. The overlay
+    // URLs expire in two hours, which is why this is a live view rather than
+    // something stored.
+    setPreview(URL.createObjectURL(frames[frames.length - 1]));
+    setMaskConcern(Object.keys(masks)[0] ?? null);
 
     setResult(merged);
     setPhase("done");
@@ -473,6 +489,53 @@ export function CaptureSession() {
               }}
             />
 
+            {phase === "done" && preview && result?.masks && maskConcern && (
+              <div className="relative h-full w-full">
+                {/*
+                  The frame the scores came from, with the API's own detection
+                  overlay on top. The overlays are pixel-aligned to the submitted
+                  frame, so they line up without any registration work, and they
+                  answer the question a number cannot: where.
+                */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={preview}
+                  alt="Your final captured frame"
+                  className="h-full w-full object-contain"
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={result.masks[maskConcern]}
+                  alt={`${CONCERNS[maskConcern as ConcernId]?.label ?? maskConcern} detected on your skin`}
+                  className="absolute inset-0 h-full w-full object-contain mix-blend-screen"
+                />
+                <div className="absolute right-2 bottom-2 left-2 flex flex-wrap gap-1">
+                  {Object.keys(result.masks).map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setMaskConcern(c)}
+                      className="tabular border px-2 py-1 text-[10px] tracking-[0.08em] uppercase backdrop-blur-sm"
+                      style={
+                        c === maskConcern
+                          ? {
+                              background: "var(--color-ink)",
+                              color: "var(--color-paper)",
+                              borderColor: "var(--color-ink)",
+                            }
+                          : {
+                              background: "rgba(20,22,26,0.45)",
+                              color: "#fff",
+                              borderColor: "transparent",
+                            }
+                      }
+                    >
+                      {CONCERNS[c as ConcernId]?.label ?? c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {phase === "analysing" && (
               <div className="flex h-full flex-col justify-center px-10">
                 {/*
@@ -527,15 +590,18 @@ export function CaptureSession() {
               </div>
             )}
 
-            {phase !== "streaming" && phase !== "capturing" && phase !== "analysing" && (
-              <div className="flex h-full flex-col items-center justify-center px-8 text-center">
-                <p className="max-w-xs text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
-                  {phase === "done"
-                    ? "Session complete. Your noise floor is below on a phone, and to the right on a wider screen."
-                    : "Assay takes three frames a few seconds apart. Your skin cannot change in that time, so any difference between them is the instrument's error."}
-                </p>
-              </div>
-            )}
+            {phase !== "streaming" &&
+              phase !== "capturing" &&
+              phase !== "analysing" &&
+              !(phase === "done" && preview) && (
+                <div className="flex h-full flex-col items-center justify-center px-8 text-center">
+                  <p className="max-w-xs text-[14px] leading-relaxed text-[var(--color-ink-secondary)]">
+                    {phase === "done"
+                      ? "Session complete. Your noise floor is below on a phone, and to the right on a wider screen."
+                      : "Assay takes three frames a few seconds apart. Your skin cannot change in that time, so any difference between them is the instrument's error."}
+                  </p>
+                </div>
+              )}
           </div>
 
           {/* Face guide. Reproducing framing between sessions is part of the protocol. */}

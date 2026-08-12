@@ -116,14 +116,22 @@ export async function POST(request: Request) {
     // rounded non-linear remap and a noise floor built from integers would be
     // quantised rather than precise.
     const readings: Record<string, number[]> = {};
+    // Per-concern overlays showing where on the face each concern was detected.
+    // They are pixel-aligned to the submitted frame and expire in two hours, so
+    // they are surfaced immediately rather than stored.
+    const masks: Record<string, string> = {};
+
     for (const result of results) {
       for (const [concern, output] of Object.entries(result.scores)) {
         (readings[concern] ??= []).push(output.raw_score);
+        const url = output.mask_urls?.[0];
+        if (url && !masks[concern]) masks[concern] = url;
       }
     }
 
     return NextResponse.json({
       readings,
+      masks,
       frameCount: frames.length,
       taskIds: results.map((r) => r.taskId),
       unitsBefore: balance,
