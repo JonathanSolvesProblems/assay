@@ -2,11 +2,14 @@ import Link from "next/link";
 
 import { InstrumentPanel } from "@/components/instrument-panel";
 import { Reveal } from "@/components/reveal";
+import { StudyProgress } from "@/components/study-progress";
 import { TitleBlock } from "@/components/title-block";
 import { VerdictCard } from "@/components/verdict-card";
 import { CONCERNS } from "@/lib/domain/concerns";
 import {
+  activesFor,
   calibrationFloors,
+  concernProgress,
   study,
   studyProgress,
   sortVerdicts,
@@ -25,6 +28,11 @@ export default function VerdictPage() {
   const verdicts = sortVerdicts(verdictsFor());
   const decided = verdicts.filter((v) => v.verdict !== null);
   const floors = calibrationFloors();
+  const progressRows = concernProgress();
+  const actives = activesFor(study);
+  const horizonDays = actives.length
+    ? Math.max(...actives.map((a) => a.assessAtDays))
+    : 56;
 
   return (
     <div className="mx-auto max-w-5xl px-6">
@@ -126,6 +134,14 @@ export default function VerdictPage() {
               </Reveal>
             ))}
           </div>
+        ) : progress.calibrationSessionCount > 0 ? (
+          <StudyProgress
+            rows={progressRows}
+            treatmentSessions={progress.sessionCount}
+            productName={study.products[0]?.name ?? null}
+            horizonDays={horizonDays}
+            studyDay={progress.studyDays}
+          />
         ) : (
           <EmptyStudy />
         )}

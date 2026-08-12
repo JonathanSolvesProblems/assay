@@ -10,7 +10,7 @@
 import { computeVerdict, type Verdict } from "../stats/verdict";
 import { estimateReliability, mean, type Session } from "../stats/reliability";
 import { getActive, type Active } from "../domain/actives";
-import type { ConcernId } from "../domain/concerns";
+import { CONCERNS, type ConcernId } from "../domain/concerns";
 import type { Study, StudySession } from "./types";
 
 import studyJson from "@/data/study.json";
@@ -162,6 +162,57 @@ export function calibrationFloors(source: Study = study): ConcernFloor[] {
     })
     .filter((f): f is ConcernFloor => f !== null)
     .sort((a, b) => a.floor - b.floor);
+}
+
+export interface ConcernProgress {
+  concern: ConcernId;
+  /** Baseline mean across all calibration sessions. */
+  baseline: number;
+  /** Latest treatment session mean, or null before treatment begins. */
+  latest: number | null;
+  /** Signed so positive always means better. */
+  change: number | null;
+  floor: number;
+  /** True once the change exceeds the floor. */
+  clears: boolean;
+  usable: ConcernFloor["usable"];
+}
+
+/**
+ * Where each concern currently stands, before a verdict is possible.
+ *
+ * A verdict needs two treatment sessions and a concern past its biological
+ * floor. Until then the honest thing to show is not an empty page but the study
+ * actually running: what the baseline was, where the latest reading sits, and
+ * how far it is from the bar it has to clear.
+ */
+export function concernProgress(source: Study = study): ConcernProgress[] {
+  const floors = calibrationFloors(source);
+
+  return floors.map((row) => {
+    const meta = CONCERNS[row.concern];
+    const baselineFrames = toSessions(source.calibrationSessions, row.concern).flatMap(
+      (s) => s.frames,
+    );
+    const treatment = toSessions(source.treatmentSessions, row.concern);
+    const baseline = baselineFrames.length > 0 ? mean(baselineFrames) : 0;
+    const latest =
+      treatment.length > 0 ? mean(treatment[treatment.length - 1].frames) : null;
+
+    // Positive always means better, whichever way the underlying score moves.
+    const direction = meta.higherIsBetter ? 1 : -1;
+    const change = latest === null ? null : (latest - baseline) * direction;
+
+    return {
+      concern: row.concern,
+      baseline,
+      latest,
+      change,
+      floor: row.floor,
+      clears: change !== null && Math.abs(change) > row.floor,
+      usable: row.usable,
+    };
+  });
 }
 
 export interface StudyProgress {
