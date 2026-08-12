@@ -1,128 +1,109 @@
-# Assay, demo narration
+# Demo script
 
-**Read this out loud, don't perform it.** It is written the way you talk, not the
-way a product page reads. Short sentences. Breathe at the line breaks.
+Target 95 seconds. Read the block below straight through, once, at a normal
+speaking pace. Everything after it is for editing, not for reading.
 
-Target: **95 seconds.** Hard ceiling is three minutes and judges are not required
-to watch past it, so finishing early is a feature.
-
-Everything in square brackets is a screen direction, not something you say.
+One number changes after the day 4 capture: the acne line near the end. I will
+confirm the final figures before you record.
 
 ---
 
-## The script
+## READ THIS ALOUD
 
-> **[0:00, on your face, or on the app's landing page]**
->
-> "Last year I spent about a hundred and seventy dollars on skincare.
->
-> I have no idea if any of it worked.
->
-> And the annoying part is, that's a measurable question. I just couldn't measure it."
+I have four skincare products on my shelf, and I don't know which ones work.
 
-> **[0:12, screen recording: the Assay landing page, then scroll to the instrument table]**
->
-> "So I built Assay.
->
-> It uses YouCam's Skin Analysis API, which scores sixteen things about your skin
-> from one photo. It's a good instrument. That's not the problem.
->
-> The problem is nobody tells you the error bar."
+Neither does anyone else. That's about a hundred and seventy dollars a year, spent on things that do nothing.
 
-> **[0:20, the 68 vs 45.4 card on screen, hold on both numbers]**
->
-> "Two problems, actually. The score these apps show you isn't the score that was
-> measured. The documentation calls the displayed number a psychological motivator,
-> adjusted up because people prefer good news about their skin.
->
-> On my face, moisture measured forty-five and displayed sixty-eight."
+So I built Assay.
 
-> **[0:25, the calibration table on screen, cursor moving down the radiance row]**
->
-> "Here's what I mean. I recorded myself sitting still for fifteen minutes. Same
-> chair, same camera, no product, nothing.
->
-> My radiance score dropped nine and a half points.
-> *(Exact figure is 9.54. "Nine and a half" is the honest way to say it out loud.)*
->
-> My skin did not change. The sun went down a bit. That's it. That's the whole
-> reason.
->
-> Any app comparing today to yesterday would have called that a result."
+It runs on YouCam's Skin Analysis API, which scores sixteen things about your skin from a single photo. It's a good instrument. But there are two things nobody tells you about the number it gives you.
 
-> **[0:45, the floor column, then the green and grey badges]**
->
-> "So Assay measures its own error first.
->
-> It takes a few captures where nothing could have changed, works out how much the
-> reading wobbles on your face, on your camera, and turns that into a threshold.
->
-> Then it tells you which questions it can actually answer.
->
-> Hydration and texture, it can. The floor's about three points, and a decent
-> moisturiser moves more than that.
->
-> Radiance and redness on this setup, it can't. So it says so, instead of making
-> something up."
+The first is that the score you're shown isn't the score that was measured. Perfect Corp's own documentation calls the displayed value a psychological motivator, adjusted upward because people prefer good news about their skin. On my face, moisture measured forty-five, and displayed sixty-eight.
 
-> **[1:05, the verdict card, on the real study data]**
->
-> "And that's the verdict.
->
-> Working. Not working. Or, not enough evidence yet, which is the one no other
-> tracker will ever show you.
->
-> If it's not sure, it says how many more days it needs."
+The second is that nobody gives you an error bar. So I recorded myself sitting still for fifteen minutes. My skin did not change. My radiance score fell nine and a half points.
 
-> **[1:20, back to your face, or the landing page]**
->
-> "It also knows what it's looking at. Ask it about a retinoid after three weeks
-> and it refuses, because retinoids don't do anything measurable in three weeks
-> and pretending otherwise is just wrong.
->
-> Assay. It'll tell you when nothing happened.
->
-> That turns out to be the useful part."
+Across those fifteen minutes, a tracker that just shows you a score and compares it to last time would have reported ten changes in my skin. All ten were false. There was nothing to find.
+
+That's why Assay measures its own error before it measures your skin. Three frames, seconds apart, on your face, on your device. The spread between them becomes the bar that every future change has to clear. Assay reported none of those ten.
+
+Then it runs a real study. This is my face, day two, on a hyaluronic acid serum, scored against my own noise floor. My blemish score moved five points. The bar it has to beat is six point four.
+
+So Assay tells me it can't tell yet, and shows me exactly how far it still has to go.
+
+Every other skin app will tell you you're improving.
+
+This is the one that will tell you when it doesn't know.
 
 ---
 
-## Delivery notes
+## Word count and pacing
 
-- **Do not smile through the numbers.** Say them flatly. The flatness is what
-  makes them sound true.
-- The line "My skin did not change. The sun went down a bit." is the whole video.
-  Pause before it, and pause after it. Let it sit.
-- Read the money line at the very top like you are slightly annoyed at yourself,
-  because you are. That is the honest register and it is instantly relatable.
-- If you fluff a line, restart the sentence rather than the take. Cuts are fine.
-- Record the audio in one pass and cut the screen recording to it afterwards.
-  Trying to narrate live while clicking is what makes demos sound stiff.
+About 300 words. At a natural, unhurried pace that lands between 90 and 100
+seconds. Do not speed up to fit; if it runs long, cut the sentence beginning
+"That's why Assay measures" down to "So Assay measures its own error first."
 
-## What has to be on screen
+Read it like you're explaining it to a friend who asked a genuine question. The
+two "nobody tells you" beats are the spine. Slow down on the two numbers that
+matter: **forty-five and sixty-eight**, and **nine and a half points**.
 
-In order, with roughly how long each needs:
+---
 
-| Time | Shot | Where it comes from |
-| ---- | ---- | ------------------- |
-| 0:00 | You, or the landing hero | Webcam, or the deployed site |
-| 0:12 | Landing page, scrolling | Deployed site |
-| 0:25 | The instrument table, radiance row | The home page, real calibration data |
-| 0:45 | The floor column and the badges | Same table |
-| 1:05 | A verdict card | Home page, once the study has treatment days |
-| 1:20 | Landing page or your face | Either |
+## Shot mapping
 
-## Rules from the hackathon that affect the video
+| Time | You say | On screen |
+|---|---|---|
+| 0:00 | "four skincare products... don't know which ones work" | Landing hero, held still |
+| 0:10 | "a hundred and seventy dollars a year" | Scroll to the four impact figures |
+| 0:16 | "So I built Assay" | Hero settles |
+| 0:20 | "scores sixteen things... good instrument" | Slow scroll past the study title block |
+| 0:30 | "psychological motivator... forty-five, displayed sixty-eight" | **The 68 vs 45.4 card, held** |
+| 0:45 | "sitting still for fifteen minutes... fell nine and a half points" | **Instrument table, radiance row: 93.0 / 89.5 / 83.4, drift −9.5** |
+| 0:52 | "would have reported ten changes... all ten were false" | **The 10-of-12 table, held** |
+| 1:02 | "Three frames, seconds apart" | Calibrate: camera opens, LIGHTING OK chip, capture countdown |
+| 1:08 | "the bar every future change has to clear" | Noise floor panel resolving, then concern overlays switching |
+| 1:18 | "day two... blemish score moved five points" | Study progress table, acne row |
+| 1:28 | "can't tell yet, and shows me how far it has to go" | "Inside the noise by..." column |
+| 1:33 | "tell you when it doesn't know" | Hold on the hero, or the method page's column of zeros |
 
-- Must be **publicly viewable on YouTube**, no password, no login.
-- Must **show the project running on the device it was built for**, so real screen
-  recording of the deployed site, not slides.
-- Must **explain which YouCam API is used**. The line at 0:12 does that; do not cut
-  it.
-- **No copyrighted music.** Silence is fine. Silence is better than a stock track,
-  and it makes the numbers land harder.
+---
 
-## The one thing not to do
+## How this answers the four criteria
 
-Do not open on the architecture, the statistics, or the API. Open on the money and
-the annoyance. The method is why a judge believes you; it is not why they keep
-watching.
+**Technological Implementation.** The script names the API, states what it
+returns, and then does something non-trivial with it: it separates `raw_score`
+from the displayed value, characterises the instrument before trusting it, and
+builds a per-user threshold from replicate frames. The 68 vs 45.4 beat proves
+the integration goes deeper than calling an endpoint and printing a number,
+because you cannot find that gap without reading both fields and the docs. The
+consumer value is stated in the first line as a purchase decision, not a
+feature.
+
+**Design.** Carried by the footage rather than the words. The demo moves through
+a complete product: a landing page that makes an argument, a guided capture with
+live feedback, a result with per-concern overlays, and a method page showing the
+working. Nothing in the cut is a placeholder or a mock.
+
+**Potential Impact.** A specific audience, ordinary shoppers with a shelf of
+products, a specific harm with a number attached, and a solution that addresses
+that exact harm. The closing line is the impact claim: the tool changes what you
+buy next, because it is willing to return nothing.
+
+**Quality of the Idea.** The non-obvious move is stated outright. Every other
+entry treats a skin score as a reading. This asks whether the reading is stable
+enough to compare against yesterday's, and answers with measurements rather than
+an assertion. The fifteen-minute drift and the motivator gap are both evidence
+of genuine understanding of the problem space, and neither is something you find
+without doing the work.
+
+---
+
+## Recording notes
+
+- Record audio separately from the screen capture. Do not narrate live.
+- One take, all the way through, even if you fumble. Pause, repeat the line, and
+  keep going. Fix it in the edit.
+- Phone voice memo held a hand's width away beats a laptop microphone.
+- Kill the Video Capture Device source in OBS before capturing screen, or the
+  camera path will fail.
+- Upload the finished video to YouTube as **public**, not unlisted. A private or
+  unlisted link that a judge cannot open is a scored submission lost.

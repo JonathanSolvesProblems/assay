@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { FalseClaims } from "@/components/false-claims";
 import { InstrumentPanel } from "@/components/instrument-panel";
 import { Reveal } from "@/components/reveal";
 import { StudyProgress } from "@/components/study-progress";
@@ -162,6 +163,10 @@ export default function VerdictPage() {
             </p>
           </figure>
         </div>
+      </Reveal>
+
+      <Reveal as="section" index={3} className="border-t border-[var(--color-rule)] py-14">
+        <FalseClaims windowMinutes={CALIBRATION_WINDOW_MINUTES} />
       </Reveal>
 
       <section className="border-t border-[var(--color-rule)] py-14">
