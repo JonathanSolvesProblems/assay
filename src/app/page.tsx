@@ -140,7 +140,9 @@ export default function VerdictPage() {
             treatmentSessions={progress.sessionCount}
             productName={study.products[0]?.name ?? null}
             horizonDays={horizonDays}
-            studyDay={progress.studyDays}
+            // The latest day reached, not the span between sessions: with one
+            // session the span is zero, which read as 'day 0' on day one.
+            studyDay={Math.max(0, ...study.treatmentSessions.map((t) => t.day))}
           />
         ) : (
           <EmptyStudy />
