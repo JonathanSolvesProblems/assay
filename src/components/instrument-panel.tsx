@@ -129,7 +129,7 @@ export function InstrumentPanel({
                     className="tabular py-3 text-right"
                     style={
                       Math.abs(row.drift) > row.floor
-                        ? { color: "var(--color-verdict-worsening-ink)" }
+                        ? { color: "var(--color-alert)", fontWeight: 500 }
                         : undefined
                     }
                   >

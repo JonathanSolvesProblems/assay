@@ -402,15 +402,33 @@ export function CaptureSession() {
 
   async function onFilesChosen(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
+    // Clear the input so choosing the same file again still fires a change
+    // event; without this a corrected second attempt with the same photograph
+    // silently does nothing.
+    event.target.value = "";
+
     if (files.length < 2) {
+      setPhase("error");
       setMessage(
-        "Choose at least two photographs taken seconds apart. The spread between them is what measures the error.",
+        files.length === 0
+          ? "No photographs were chosen."
+          : `Only one photograph was chosen, and one is not enough to measure anything. A session needs two or three photographs of the same sitting, taken seconds apart without moving, because the spread between them is what measures the error. Hold Ctrl, or Cmd on a Mac, to select more than one file at a time.`,
       );
       return;
     }
 
+    // Extra files are dropped rather than analysed, so say so instead of
+    // quietly charging for three and ignoring the rest.
+    if (files.length > FRAMES_PER_SESSION) {
+      setMessage(
+        `${files.length} photographs were chosen. The first ${FRAMES_PER_SESSION} will be analysed; the rest are ignored, because each one costs units and three is enough to estimate the spread.`,
+      );
+    }
+
     try {
-      const frames = await Promise.all(files.slice(0, 3).map(normaliseFile));
+      const frames = await Promise.all(
+        files.slice(0, FRAMES_PER_SESSION).map(normaliseFile),
+      );
       framesRef.current = frames;
       setCaptured(frames.length);
       await analyse(frames);
@@ -725,7 +743,7 @@ export function CaptureSession() {
           )}
 
           {feedIsDark && (
-            <p className="w-full text-[13px] leading-relaxed text-[var(--color-verdict-worsening-ink)]">
+            <p className="w-full text-[13px] leading-relaxed text-[var(--color-alert)]">
               That camera is sending a black picture. It is usually a lens cover, a
               privacy shutter, or a virtual camera such as a phone offered through Link to
               Windows that is not currently connected. Pick a different camera above, or
@@ -737,7 +755,7 @@ export function CaptureSession() {
 
           {(phase === "idle" || phase === "error" || phase === "done") && (
             <label className="cursor-pointer rounded-none border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]">
-              Upload photographs
+              Upload {FRAMES_PER_SESSION} photographs
               <input
                 type="file"
                 accept="image/jpeg,image/png"
@@ -757,6 +775,24 @@ export function CaptureSession() {
             </span>
           )}
         </div>
+
+        {/* What the upload path wants, stated before the file picker opens
+            rather than after. A session is several photographs of one sitting,
+            which is not what "upload a photo" leads anyone to expect, and
+            finding that out from a rejection is a bad way to learn it. */}
+        {(phase === "idle" || phase === "error" || phase === "done") && (
+          <p className="mt-4 max-w-xl text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
+            Uploading instead of using the camera needs{" "}
+            <span className="text-[var(--color-ink-secondary)]">
+              {FRAMES_PER_SESSION} photographs of the same sitting
+            </span>
+            , taken seconds apart without moving between them, face filling most of the
+            frame. Not three different days, and not the same file three times: it is the
+            small spread between near-identical photographs that measures the error, so
+            three separate moments would measure your life instead of the instrument. Hold
+            Ctrl, or Cmd on a Mac, to select them all at once.
+          </p>
+        )}
 
         {message && (
           <p className="mt-4 rounded-none bg-[var(--color-verdict-worsening-bg)] px-4 py-3 text-[13px] leading-relaxed text-[var(--color-verdict-worsening-ink)]">

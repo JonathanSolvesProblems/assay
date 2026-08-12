@@ -40,6 +40,12 @@
      inverted, ink is near-white and a 2px white bar across the top reads as an
      element that failed to theme rather than as a rule. */
   --color-rule-heavy: #14161a;
+  /* Standalone alert text, for a figure that is large enough to be the point.
+     The verdict inks cannot do this job: each is designed to sit on its own
+     verdict background, so used as bare text on paper it lands near-invisible
+     in one theme or both. This one is contrast-checked against paper and
+     surface in both. */
+  --color-alert: #7d2f1c;
 
   /* Ink. All pairs below verified against the stock at WCAG AA or better:
      ink 9.84:1, secondary 5.62:1, muted 4.51:1, spot 5.02:1. */
@@ -237,6 +243,7 @@
     --color-rule: #32363a;
     --color-rule-strong: #4c5157;
     --color-rule-heavy: #5b6167;
+    --color-alert: #eda385;
     --color-ink: #e3e5df;
     --color-ink-secondary: #b2b7b0;
     --color-ink-muted: #888d87;
@@ -262,6 +269,7 @@
   --color-rule: #32363a;
   --color-rule-strong: #4c5157;
   --color-rule-heavy: #5b6167;
+  --color-alert: #eda385;
   --color-ink: #e3e5df;
   --color-ink-secondary: #b2b7b0;
   --color-ink-muted: #888d87;

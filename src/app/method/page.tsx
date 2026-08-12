@@ -131,7 +131,7 @@ export default function MethodPage() {
                       className="py-1.5 text-right"
                       style={
                         v >= 3
-                          ? { color: "var(--color-verdict-worsening-ink)" }
+                          ? { color: "var(--color-alert)", fontWeight: 500 }
                           : undefined
                       }
                     >
