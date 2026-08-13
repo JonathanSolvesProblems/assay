@@ -31,13 +31,22 @@ Four products on your shelf are doing nothing. Assay finds which, by measuring t
 ```markdown
 ## Inspiration
 
-I spent about $170 last year on skincare and I genuinely cannot tell you if any
-of it worked. That bothered me, because it is a measurable question. The average
-person is holding four products right now that never delivered, and nobody can
-say which four.
+I had acne growing up, and I did what everyone with acne does: I tried a lot of
+products. The part I remember is not any single one of them, it is never knowing
+which was working. You change three things at once, something eventually gets
+better or it doesn't, and you carry the whole routine forward because you cannot
+tell which part earned its place. So you keep buying.
 
-The measurement already exists. YouCam's Skin Analysis API scores fourteen skin
-concerns from a photograph and it is a good instrument. So I started building the
+It is under control now, which is exactly why I can see the problem clearly. I
+still have four products on my shelf, I spent about $170 on skincare last year,
+and I still cannot tell you which of them do anything. The average person is
+holding four right now that never delivered, and nobody can say which four. One
+in nine women has cycled through ten or more failures. I was that person for
+years, and the reason was never that the products were all bad. It was that
+nothing could measure whether they worked.
+
+The measurement already exists. YouCam's Skin Analysis API scores sixteen skin
+outputs from a photograph and it is a good instrument. So I started building the
 obvious thing, a tracker that watches those scores over time.
 
 Then I checked whether the scores were stable enough to track. They were not, and

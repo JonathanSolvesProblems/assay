@@ -10,9 +10,9 @@ confirm the final figures before you record.
 
 ## READ THIS ALOUD
 
-I have four skincare products on my shelf, and I don't know which ones work.
+I had acne growing up. I tried a lot of products, and I could never tell which ones were actually working, so I kept buying more.
 
-Neither does anyone else. That's about a hundred and seventy dollars a year, spent on things that do nothing.
+It's under control now. But I still have four things on my shelf, and I still don't know which of them do anything. Neither does anyone else. That's about a hundred and seventy dollars a year, spent on products that don't work.
 
 So I built Assay.
 
@@ -52,7 +52,7 @@ matter: **forty-five and sixty-eight**, and **nine and a half points**.
 
 | Time | You say | On screen |
 |---|---|---|
-| 0:00 | "four skincare products... don't know which ones work" | Landing hero, held still |
+| 0:00 | "I had acne growing up... kept buying more" | Landing hero, held still |
 | 0:10 | "a hundred and seventy dollars a year" | Scroll to the four impact figures |
 | 0:16 | "So I built Assay" | Hero settles |
 | 0:20 | "scores sixteen things... good instrument" | Slow scroll past the study title block |
