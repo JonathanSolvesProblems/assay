@@ -339,6 +339,68 @@
         "BFTR5xDnpXqSrG08Te2oSIDW8ukVHAe_pr7x8uiKzDe7ICidKgDCCieSfJ7_HcGNXvQfJIvWfpPXrDyBVCgpzNQFS7bwoV55Lh8a2135_v0",
         "SnvGVtmJvNE3FcUZeZmDxzo0MNe0BWUyAHlJYzxwJQ_sq3Yrr69cvFMbDApwMr0PditD650pKGxsScuQCWTLRlePtBgYi-qUKn8JhRowgVo"
       ]
+    },
+    {
+      "id": "treatment-3-msrfuomw",
+      "day": 3,
+      "capturedAt": "2026-08-13T11:32:08.123Z",
+      "readings": {
+        "redness": [
+          68.114990234375,
+          66.46012878417969,
+          69.89605712890625,
+          63.85078048706055,
+          96.62474822998047
+        ],
+        "texture": [
+          87.76345252990723,
+          93.6055064201355,
+          91.55910015106201,
+          98.16341996192932,
+          93.625408411026
+        ],
+        "radiance": [
+          86.08904480934143,
+          88.4542465209961,
+          88.56454491615295,
+          83.85884165763855,
+          60.026705265045166
+        ],
+        "acne": [
+          80.11635,
+          89.31955,
+          76.47988,
+          88.9959,
+          88.9959
+        ],
+        "pore": [
+          93.68412339687347,
+          88.71722745895386,
+          96.22074592113495,
+          79.8582364320755,
+          93.01408529281616
+        ],
+        "moisture": [
+          76.99549794197083,
+          80.43020367622375,
+          85.7694923877716,
+          90.48752784729004,
+          91.62375330924988
+        ]
+      },
+      "cropFraction": 0.5,
+      "source": {
+        "kind": "video",
+        "file": "captures/day3.mp4",
+        "atSeconds": 20
+      },
+      "taskIds": [
+        "pO6TLICcN59ZXxLL58QRc9ePYUh6M1BNUAkRZje8qm2pgaEJUjRoQ6szhcRzHnFtVWvB9HtOcHDMByybLDV0FCLLWcaPPd_XcclznDMKGmo",
+        "jidah_TSgB0xVvFSXqlBiuzFnmfF-O9RPU8prPnnnhgBeGk74ZHMTRFso2yjN08THfLVGKKkLPoUjeFlbSdwpItocJdJir4Kxv_m7yBCZ3w",
+        "dqSJTdeS7C07tKsZ34i5Ayz2d3MvJFD8mvcpdeAvHxYrncNppAui-ftcMxN4mWX_a7TFlHWOn8jV5ChyBZ4qhekyOwbEpcWjLNvJUf3owFI",
+        "WEfz8brDyj0G5nw-QYN8s5tUZ38-Xze_9H40w22zG6jJIICu8Sf-ir2gEmv5nDxSbJGnoro-3ThnDLeVyUJipN7ZVPoglAlAB_owyO8XUcU",
+        "fmssmzUEHITJcgGxE8VDy2wOuGLvoOTwyrlJ5rjXVvFjXGX0Ol3CLrOgU0L4Td0aa9CE40ct7rdywPdf5vQsXlnjw8bm1T0679e9ONe-2m0"
+      ]
     }
   ],
   "excludedSessions": [
