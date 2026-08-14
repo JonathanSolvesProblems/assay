@@ -163,6 +163,23 @@ fifteen minutes, monotonically, on skin that by construction did not change. The
 afternoon light through the window faded and the score followed it. That is the
 entire argument for the project, measured on a real face rather than asserted.
 
+Those same fifteen minutes give the cleanest test I can offer, because skin
+cannot change in fifteen minutes and therefore there is nothing real in that data
+to find. A tracker that shows you a score and compares it to last time would have
+reported **ten of the twelve** session-to-session comparisons as a change in my
+skin, the largest a 17.0 point swing in redness. Every one would have been false.
+Assay reported none of them. That is not the tool being cautious, it is the tool
+having measured what this instrument does when nothing happens.
+
+Then the study itself returned a verdict I did not want. Four sessions on a
+hyaluronic acid serum, and texture came back at −5.00 against a floor of ±3.10,
+with blemishes resolving the same way on the four-session trend. Both read
+**getting worse**, at moderate confidence. The other four concerns stayed at no
+evidence yet and are labelled as such. I am the person who had acne growing up and
+built this to find out what works, and the first thing it told me was that
+something I bought was not helping. I would rather know, and shipping that result
+unedited is the only version of this project worth entering.
+
 ## What I learned
 
 That the interesting problem was one layer below where I started. I set out to
