@@ -3,36 +3,53 @@ import type { Verdict, VerdictState } from "@/lib/stats/verdict";
 
 import { NoiseFloorChart } from "./noise-floor-chart";
 
-const STATE_COPY: Record<VerdictState, { label: string; bg: string; ink: string }> = {
+/**
+ * `bg` and `ink` are a pair and must be used together: each ink is chosen to sit
+ * on its own badge background, so worsening's ink is a near-white designed for
+ * a near-black chip. `text` is the separate colour for the same state used as
+ * bare text on the card surface, where the ink would be light-on-light in one
+ * theme and dark-on-dark in the other. Reaching for `ink` outside the badge is
+ * the mistake this field exists to prevent.
+ */
+const STATE_COPY: Record<
+  VerdictState,
+  { label: string; bg: string; ink: string; text: string }
+> = {
   working: {
     label: "Working",
     bg: "var(--color-verdict-working-bg)",
     ink: "var(--color-verdict-working-ink)",
+    text: "var(--color-spot)",
   },
   worsening: {
     label: "Getting worse",
     bg: "var(--color-verdict-worsening-bg)",
     ink: "var(--color-verdict-worsening-ink)",
+    text: "var(--color-alert)",
   },
   expected_purge: {
     label: "Expected flare",
     bg: "var(--color-verdict-purge-bg)",
     ink: "var(--color-verdict-purge-ink)",
+    text: "var(--color-ink)",
   },
   not_working: {
     label: "Not working",
     bg: "var(--color-verdict-null-bg)",
     ink: "var(--color-verdict-null-ink)",
+    text: "var(--color-ink)",
   },
   insufficient_evidence: {
     label: "No evidence yet",
     bg: "var(--color-verdict-pending-bg)",
     ink: "var(--color-verdict-pending-ink)",
+    text: "var(--color-ink-secondary)",
   },
   saturated: {
     label: "Cannot measure",
     bg: "var(--color-surface-sunken)",
     ink: "var(--color-ink-muted)",
+    text: "var(--color-ink-muted)",
   },
 };
 
@@ -82,7 +99,7 @@ export function VerdictCard({
           </p>
           <p
             className="tabular mt-1 text-[30px] leading-none"
-            style={{ color: tone.ink }}
+            style={{ color: tone.text }}
           >
             {signed(verdict.change)}
           </p>
