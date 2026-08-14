@@ -184,10 +184,23 @@ evidence" standard for advertising claims, which is a budget line an order of
 magnitude larger than the marketing spend that currently buys virtual try-on
 widgets.
 
-Nearer term: establishing a real minimal clinically important difference for the
-scale through anchor based studies, since the five point threshold Assay uses is
-currently a product decision rather than a clinical constant, and it is labelled as
-such in the app.
+Nearer term, two things, both of which come straight out of the measurements
+rather than a feature wishlist.
+
+Live stability detection during capture. The error budget says movement is the
+largest term in it: re-cropping the same photograph moves texture by 5.81 points,
+against a realistic four week treatment effect of about five. Assay already holds
+capture until the light is usable, and the same idea applies to the larger error
+source, which is holding it until the subject is actually still. Frame to frame
+differencing would let the capture screen say hold still and then steady, so the
+error is prevented at the source instead of measured afterwards and widening
+everybody's floor. I did not ship it for this submission because the capture path
+was the one thing that had to work on the morning of the final study session, and
+a working measurement was worth more than a better-guided one.
+
+Establishing a real minimal clinically important difference for the scale, through
+anchor based studies. The five point threshold Assay uses is currently a product
+decision rather than a clinical constant, and it is labelled as such in the app.
 ```
 
 ---
