@@ -172,9 +172,9 @@ Assay reported none of them. That is not the tool being cautious, it is the tool
 having measured what this instrument does when nothing happens.
 
 Then the study itself returned a verdict I did not want. Four sessions on a
-hyaluronic acid serum, and texture came back at −5.00 against a floor of ±3.10,
-with blemishes resolving the same way on the four-session trend. Both read
-**getting worse**, at moderate confidence. The other four concerns stayed at no
+hyaluronic acid serum, and texture came back at −7.5 against a floor of ±3.1,
+with blemishes at −6.9 against ±6.4. Both read **getting worse**, at moderate
+confidence. The other four concerns stayed at no
 evidence yet and are labelled as such. I am the person who had acne growing up and
 built this to find out what works, and the first thing it told me was that
 something I bought was not helping. I would rather know, and shipping that result

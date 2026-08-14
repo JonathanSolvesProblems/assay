@@ -28,7 +28,7 @@ That's why Assay measures its own error before it measures your skin. Three fram
 
 Then it runs a real study. This is my face, four days on a hyaluronic acid serum, scored against my own noise floor.
 
-Texture is down five points. Its bar was three point one, so it cleared, and Assay calls it: getting worse. Four of the six concerns didn't clear their bars, and it says so plainly instead of dressing them up as progress.
+Texture is down seven and a half points. Its bar was three point one, so it cleared, and Assay calls it: getting worse. Four of the six concerns didn't clear their bars, and it says so plainly instead of dressing them up as progress.
 
 Every other skin app would have told me I was improving.
 
@@ -62,7 +62,7 @@ matter: **forty-five and sixty-eight**, and **nine and a half points**.
 | 1:02 | "Three frames, seconds apart" | Calibrate: camera opens, LIGHTING OK chip, capture countdown |
 | 1:08 | "the bar every future change has to clear" | Noise floor panel resolving, then concern overlays switching |
 | 1:18 | "four days on a hyaluronic acid serum" | Study section, "Result issued" status |
-| 1:24 | "texture is down five points... it cleared" | **Texture verdict card, getting worse, held** |
+| 1:24 | "texture is down seven and a half... it cleared" | **Texture verdict card, getting worse, held** |
 | 1:32 | "four of the six didn't clear their bars" | Scroll the remaining cards |
 | 1:38 | "mine told me I got worse... I'd rather know" | Hold on the hero |
 
