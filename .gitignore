@@ -62,3 +62,6 @@ coverage/
 !/broll/*.md
 
 .vercel
+
+# vidkit build artefacts
+*.edit-plan.json
