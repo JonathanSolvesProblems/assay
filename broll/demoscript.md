@@ -12,7 +12,7 @@ capture. Nothing further will change.
 
 I had acne growing up. I tried a lot of products, and I could never tell which ones were actually working, so I just kept buying more.
 
-It's under control now, but the problem never really went away. There's a serum I've been using, and I genuinely couldn't tell you whether it's doing anything. Most people can't. The average woman is holding on to four products that didn't work, and spends about a hundred and seventy dollars a year trying to find ones that do.
+It's under control now, but the problem never really went away. There's a face wash I use every morning that promises twenty-four hour moisturisation, and I genuinely couldn't tell you whether it does anything. Most people can't. The average woman is holding on to four products that didn't work, and spends about a hundred and seventy dollars a year trying to find ones that do.
 
 So I built Assay.
 
@@ -26,7 +26,7 @@ In those same fifteen minutes, a tracker that just compares today's score to las
 
 So Assay measures its own error first. Three frames, a few seconds apart, on your face, on your device. Whatever they disagree by becomes the bar that every future change has to beat. It reported none of those ten.
 
-Then it runs the actual study. This is my face, four days into that serum, measured against my own noise floor.
+Then it runs the actual study. This is my face, four days of that face wash, measured against my own noise floor. It promises twenty-four hour moisturisation, so I'm judging it on its own timetable.
 
 Texture came back down seven and a half points. Its bar was three point one, so it cleared, and Assay calls it: getting worse. The other four didn't clear their bars, and it says so, instead of dressing them up as progress.
 
@@ -46,11 +46,9 @@ Read it the way you would explain it to a friend who actually asked, not the way
 you would read a script. Contractions are deliberate, so say "didn't" and
 "couldn't" rather than straightening them out.
 
-The product is deliberately just "a serum" out loud. Its full name, The Ordinary
-Hyaluronic Acid 2% + B5, is on screen in the study block and in the data file, so
-the specificity is there for anyone reading. Spoken, an ingredient name most
-people cannot define is a word the listener stops to decode, and they miss the
-next sentence doing it.
+The product is just "a face cream" out loud, which is also what it is. An
+ingredient name most people cannot define is a word the listener stops to decode,
+and they miss the next sentence doing it.
 
 Four places to slow down, because they are the whole argument: **forty-five, it
 showed me sixty-eight**, **nine and a half points**, **ten separate times**, and
@@ -74,7 +72,7 @@ and everything after is payoff.
 | 1:00 | "my skin changed ten separate times. All ten were wrong." | **The 10-of-12 table, held** |
 | 1:10 | "Three frames, a few seconds apart" | Calibrate: camera opens, LIGHTING OK chip, capture countdown |
 | 1:18 | "the bar every future change has to beat" | Noise floor panel resolving, then concern overlays switching |
-| 1:26 | "four days into that serum" | Study section, "Result issued" status |
+| 1:26 | "four days of that face wash... its own timetable" | Study section, "Result issued" status |
 | 1:32 | "texture came back down seven and a half... it cleared" | **Texture verdict card, getting worse, −7.5 against ±3.1** |
 | 1:40 | "the other four didn't clear their bars" | Scroll the remaining cards |
 | 1:46 | "mine told me I got worse... I'd rather know" | Hold on the hero |

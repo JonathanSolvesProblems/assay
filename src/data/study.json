@@ -15,12 +15,13 @@
   ],
   "products": [
     {
-      "id": "the-ordinary-hyaluronic-acid-2-b5",
-      "name": "The Ordinary Hyaluronic Acid 2% + B5",
+      "id": "dove-men-care-extra-fresh-wash",
+      "name": "Dove Men+Care Extra Fresh Body & Face Wash",
       "activeIds": [
         "humectant"
       ],
-      "startedDay": 0
+      "startedDay": 0,
+      "note": "A rinse-off body and face wash, applied to the face in the shower daily. It is modelled as a humectant because the manufacturer states the product deposits \"24-hour nourishing MicroMoisture that continuously nourishes your skin all day\". That claim sets its own timescale, and the humectant window in the actives catalogue matches it: onset at day 1, assessment at day 14. Assay is therefore judging the product on the schedule its own label advertises, not on a stricter one chosen after the fact. Being rinse-off, it is a weak intervention by construction, which is stated here rather than discovered later."
     }
   ],
   "calibrationSessions": [

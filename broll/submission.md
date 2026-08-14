@@ -38,9 +38,9 @@ better or it doesn't, and you carry the whole routine forward because you cannot
 tell which part earned its place. So you keep buying.
 
 It is under control now, which is exactly why I can see the problem clearly. I am
-using a hyaluronic acid serum as I write this and I cannot tell you whether it is
-doing anything, which is the same not-knowing I had at seventeen with higher
-stakes attached. The average woman is still holding on to four products that
+using a face wash every morning that advertises 24-hour moisturisation, and I
+cannot tell you whether it does anything, which is the same not-knowing I had at
+seventeen with lower stakes and the same shrug. The average woman is still holding on to four products that
 did not work, spends around $170 a year trying to find ones that do, and one in
 nine have been through ten or more failures ([AmLactin / OnePoll, 2,000 American
 women aged 35+, February
@@ -182,9 +182,26 @@ Assay reported none of them. That is not the tool being cautious, it is the tool
 having measured what this instrument does when nothing happens.
 
 Then the study itself returned a verdict I did not want. Four sessions on a
-hyaluronic acid serum, and texture came back at −7.5 against a floor of ±3.1,
+Dove Men+Care Extra Fresh Body & Face Wash, and texture came back at −7.5
+against a floor of ±3.1,
 with blemishes at −6.9 against ±6.4. Both read **getting worse**, at moderate
-confidence. The other four concerns stayed at no
+confidence.
+
+The hydration result is the one worth sitting with, because it is the claim the
+product actually makes. The label promises 24-hour moisturisation, so I assessed
+it on the timescale it set for itself rather than one I chose afterwards: the
+humectant window in the catalogue opens at day 1. Moisture came back at −2.1
+against a floor of ±2.9, which is **no evidence yet**. That is not a finding that
+the product fails, and Assay does not say so. It is the honest and much less
+satisfying statement that four sessions on one face cannot resolve an effect this
+size, and that anyone claiming otherwise from the same data would be reading
+noise. A rinse-off cleanser is a weak intervention by construction, which is
+recorded in the study file rather than discovered later.
+
+That is the shape of the commercial problem underneath this project. Advertised
+claims are stated in absolute terms, on timescales the seller picks, and the
+measurement that would confirm or refute them is not something a buyer has ever
+had. Assay is the smallest working version of giving them one. The other four concerns stayed at no
 evidence yet and are labelled as such. I am the person who had acne growing up and
 built this to find out what works, and the first thing it told me was that
 something I bought was not helping. I would rather know, and shipping that result
