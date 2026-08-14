@@ -3,8 +3,8 @@
 Target 95 seconds. Read the block below straight through, once, at a normal
 speaking pace. Everything after it is for editing, not for reading.
 
-One number changes after the day 4 capture: the acne line near the end. I will
-confirm the final figures before you record.
+Final. Every number below is verified against the live site as of the day 4
+capture. Nothing further will change.
 
 ---
 
@@ -26,13 +26,13 @@ Across those fifteen minutes, a tracker that just shows you a score and compares
 
 That's why Assay measures its own error before it measures your skin. Three frames, seconds apart, on your face, on your device. The spread between them becomes the bar that every future change has to clear. Assay reported none of those ten.
 
-Then it runs a real study. This is my face, day two, on a hyaluronic acid serum, scored against my own noise floor. My blemish score moved five points. The bar it has to beat is six point four.
+Then it runs a real study. This is my face, four days on a hyaluronic acid serum, scored against my own noise floor.
 
-So Assay tells me it can't tell yet, and shows me exactly how far it still has to go.
+Texture is down five points. Its bar was three point one, so it cleared, and Assay calls it: getting worse. Four of the six concerns didn't clear their bars, and it says so plainly instead of dressing them up as progress.
 
-Every other skin app will tell you you're improving.
+Every other skin app would have told me I was improving.
 
-This is the one that will tell you when it doesn't know.
+Mine told me I got worse. On a product I bought. That's the whole point: I'd rather know.
 
 ---
 
@@ -61,9 +61,10 @@ matter: **forty-five and sixty-eight**, and **nine and a half points**.
 | 0:52 | "would have reported ten changes... all ten were false" | **The 10-of-12 table, held** |
 | 1:02 | "Three frames, seconds apart" | Calibrate: camera opens, LIGHTING OK chip, capture countdown |
 | 1:08 | "the bar every future change has to clear" | Noise floor panel resolving, then concern overlays switching |
-| 1:18 | "day two... blemish score moved five points" | Study progress table, acne row |
-| 1:28 | "can't tell yet, and shows me how far it has to go" | "Inside the noise by..." column |
-| 1:33 | "tell you when it doesn't know" | Hold on the hero, or the method page's column of zeros |
+| 1:18 | "four days on a hyaluronic acid serum" | Study section, "Result issued" status |
+| 1:24 | "texture is down five points... it cleared" | **Texture verdict card, getting worse, held** |
+| 1:32 | "four of the six didn't clear their bars" | Scroll the remaining cards |
+| 1:38 | "mine told me I got worse... I'd rather know" | Hold on the hero |
 
 ---
 
