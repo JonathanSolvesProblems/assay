@@ -87,11 +87,11 @@ export default function VerdictPage() {
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <Figure
             value="$170"
-            label="wasted per year on skincare that turns out not to work"
+            label="spent a year trying to find skincare that is right for you"
           />
           <Figure
             value="4"
-            label="products the average person keeps that never delivered"
+            label="failed products the average woman is still holding on to"
           />
           <Figure
             value="1 in 9"
@@ -99,6 +99,14 @@ export default function VerdictPage() {
           />
           <Figure value="£1bn" label="of skincare abandoned annually in the UK alone" />
         </div>
+
+        <p className="mt-6 text-[11px] leading-relaxed text-[var(--color-ink-muted)]">
+          First three: AmLactin / OnePoll survey of 2,000 American women aged 35 and
+          over, February 2022. Fourth: The Body Shop survey of 2,000 UK adults, reported
+          by Professional Beauty. The same OnePoll survey found a product gets about
+          three weeks to prove itself, which is shorter than the onset window of almost
+          every active ingredient it might contain.
+        </p>
         <p className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
           Nobody can tell you which four. The measurement exists, YouCam&rsquo;s Skin
           Analysis API scores sixteen skin attributes from a photograph, but a single

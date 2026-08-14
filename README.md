@@ -12,11 +12,22 @@ the YouCam API Skin AI & Apparel VTO Hackathon.
 
 ## The problem
 
-The average woman spends around $170 a year on skincare that turns out not to
-work, and is holding four products right now that never delivered. Nobody can
-tell her which four, because nobody can measure it.
+The average woman spends around $170 a year trying to find skincare that is right
+for her, and is still holding on to four products that did not work. One in nine
+have been through ten or more. Nobody can tell her which four, because nobody can
+measure it.
 
-The measurement exists. YouCam's Skin Analysis API scores fourteen skin concerns
+Those figures are from a [survey of 2,000 American women aged 35 and over,
+commissioned by AmLactin and conducted by OnePoll in February
+2022](https://swns-research.medium.com/women-reveal-how-many-failed-skincare-products-theyre-still-holding-onto-f1091f8a7b1f).
+The same survey found a product gets about three weeks to prove itself, which is
+shorter than the onset window of almost every active ingredient it might contain,
+and is the reason Assay refuses to return a verdict before an ingredient has had
+time to work. A separate [survey of 2,000 UK adults for The Body
+Shop](https://professionalbeauty.co.uk/site/newsdetails/more-than-1-billion-in-skincare-products-wasted-uk)
+puts the value of abandoned skincare in the UK alone at over £1 billion.
+
+The measurement exists. YouCam's Skin Analysis API scores sixteen skin outputs
 from a photograph, and it is a genuinely good instrument. The problem is that a
 score reported without its error is a number you cannot make a decision with.
 

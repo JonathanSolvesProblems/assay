@@ -40,11 +40,20 @@ tell which part earned its place. So you keep buying.
 It is under control now, which is exactly why I can see the problem clearly. I am
 using a hyaluronic acid serum as I write this and I cannot tell you whether it is
 doing anything, which is the same not-knowing I had at seventeen with higher
-stakes attached. The average person is holding four products that never
-delivered, around $170 a year goes on skincare that turns out not to work, and
-one in nine women has cycled through ten or more failures. I was that person for
-years, and the reason was never that the products were all bad. It was that
-nothing could measure whether they worked.
+stakes attached. The average woman is still holding on to four products that
+did not work, spends around $170 a year trying to find ones that do, and one in
+nine have been through ten or more failures ([AmLactin / OnePoll, 2,000 American
+women aged 35+, February
+2022](https://swns-research.medium.com/women-reveal-how-many-failed-skincare-products-theyre-still-holding-onto-f1091f8a7b1f)).
+I was that one in nine for years, and the reason was never that the products were
+all bad. It was that nothing could measure whether they worked.
+
+The same survey has the detail that bothers me most as an engineer: a product
+gets about three weeks to prove itself before people decide. Almost nothing in
+skincare acts that fast. Retinoids need four weeks to begin and twelve to assess.
+So the standard consumer verdict is being reached before the evidence could
+physically exist, which is a measurement problem wearing the costume of a
+willpower problem.
 
 The measurement already exists. YouCam's Skin Analysis API scores sixteen skin
 outputs from a photograph and it is a good instrument. So I started building the
