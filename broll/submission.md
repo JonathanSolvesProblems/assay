@@ -144,7 +144,7 @@ to be scored to produce those numbers:
 | --- | ---: | ---: | ---: | ---: |
 | The model itself, byte identical input | 0.00 | 0.00 | 0.00 | 0.00 |
 | JPEG quality, q80 to q96 | 2.91 | 0.35 | 0.12 | 2.55 |
-| Brightness, plus or minus 8% | 4.86 | 3.87 | 1.96 | 1.52 |
+| Brightness, plus or minus 8% | 4.85 | 3.87 | 1.96 | 1.52 |
 | Cropping the same photograph differently | | | 5.81 | |
 
 The model is perfectly deterministic, which matters more than it sounds: it means

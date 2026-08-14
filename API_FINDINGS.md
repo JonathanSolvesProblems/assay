@@ -165,7 +165,7 @@ Same face, same framing, one variable changed at a time:
 |---|---|---|---|---|---|
 | Model (identical bytes) | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
 | JPEG quality q80 → q96 | 2.91 | 0.35 | 0.12 | 2.55 | 0.11 |
-| Brightness ±8% | **4.86** | 3.87 | 1.96 | 1.52 | 0.69 |
+| Brightness ±8% | **4.85** | 3.87 | 1.96 | 1.52 | 0.69 |
 
 Two consequences:
 

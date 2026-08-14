@@ -148,7 +148,7 @@ export default function MethodPage() {
           Two things fall out of this. Re&#8209;saving the same photograph at a different
           JPEG quality, pixels a person cannot tell apart, moves the blemish score by{" "}
           <Num>2.91</Num> points. And an eight percent brightness change, roughly a lamp
-          against a window, moves it by <Num>4.86</Num>.
+          against a window, moves it by <Num>4.85</Num>.
         </p>
         <p>
           That is larger than most genuine one&#8209;week treatment effects. A tracker

@@ -37,7 +37,7 @@ Assay measured how bad that gets. Same face, one variable changed at a time:
 | ------------------- | ---: | -------: | ------: | ---: |
 | The model itself (byte-identical input) | 0.00 | 0.00 | 0.00 | 0.00 |
 | JPEG quality, q80 to q96 | 2.91 | 0.35 | 0.12 | 2.55 |
-| Brightness, plus or minus 8% | **4.86** | 3.87 | 1.96 | 1.52 |
+| Brightness, plus or minus 8% | **4.85** | 3.87 | 1.96 | 1.52 |
 | **Cropping the same photograph differently** | | | **5.81** | |
 
 A realistic four-week treatment effect is about five points. Re-saving the same
