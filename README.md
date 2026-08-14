@@ -203,3 +203,46 @@ worsening skin problems belong with a dermatologist.
 The YouCam and Perfect Corp APIs this project calls are the property of Perfect
 Corp and are governed by their own terms. The licence above covers only the code
 in this repository.
+
+## Sources
+
+Every external figure quoted in this repository, on the site, or in the demo
+video, with what it supports.
+
+**Consumer figures.** [Women reveal how many failed skincare products they're
+still holding onto](https://swns-research.medium.com/women-reveal-how-many-failed-skincare-products-theyre-still-holding-onto-f1091f8a7b1f),
+SWNS Research, 15 February 2022. A survey of 2,000 American women aged 35 and
+over, commissioned by AmLactin and conducted by OnePoll. Source of the four
+failed products still being held, the roughly $170 a year spent trying to find
+products that are right for them, the one in nine who have been through ten or
+more, and the finding that a product gets about three weeks to prove itself
+before people decide.
+
+**Wasted skincare.** [More than £1 billion in wasted skincare products sitting
+in homes across the UK](https://professionalbeauty.co.uk/site/newsdetails/more-than-1-billion-in-skincare-products-wasted-uk),
+Professional Beauty. A separate survey of 2,000 UK adults for The Body Shop,
+which found an average of two unused or abandoned products per person at £35.02
+each. Quoted only for the £1 billion total; it is not the source of the four
+products figure above and the two surveys are not combined anywhere.
+
+**The displayed score.** [AI Skin Analysis, Inputs and
+Outputs](https://docs.perfectcorp.com/reference/ai_skin_analysis/section/overview/inputs-and-outputs),
+Perfect Corp developer documentation. Source of the description of `ui_score` as
+"a psychological motivator" adjusted upward because "consumers generally prefer
+positive evaluations regarding their skin health", and of the full standard and
+high definition output lists.
+
+**Product claim under test.** Dove Men+Care Extra Fresh Body & Face Wash, whose
+label states "24-hour nourishing Micromoisture that continuously nourishes your
+skin all day". That stated timescale is what sets the assessment window used in
+`src/data/study.json`.
+
+**Method.** The standard error of measurement is estimated by Bland and Altman's
+within-subject method, and the minimal detectable change as 1.96 × √2 × SEM,
+both standard in clinical measurement science. The illumination quotation on the
+method page is from the dermatology imaging literature and is cited in place
+there.
+
+Every other number in this repository was measured by calling the YouCam API
+directly. Those measurements, and how to reproduce them, are in
+[API_FINDINGS.md](API_FINDINGS.md).
