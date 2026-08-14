@@ -12,7 +12,7 @@ capture. Nothing further will change.
 
 I had acne growing up. I tried a lot of products, and I could never tell which ones were actually working, so I just kept buying more.
 
-It's under control now. But I still have four bottles in my bathroom, and if you asked me which of them actually do anything, I couldn't tell you. Most people can't. That's around a hundred and seventy dollars a year on skincare that turns out to do nothing.
+It's under control now, but the problem never really went away. I'm using a hyaluronic acid serum at the moment, and I genuinely couldn't tell you whether it's doing anything. Most people can't. The average person is holding four products that never delivered, and about a hundred and seventy dollars a year goes on skincare that turns out to do nothing.
 
 So I built Assay.
 
@@ -60,7 +60,7 @@ and everything after is payoff.
 | Time | You say | On screen |
 |---|---|---|
 | 0:00 | "I had acne growing up... kept buying more" | Landing hero, held still |
-| 0:11 | "four bottles in my bathroom... hundred and seventy dollars" | Scroll to the four impact figures |
+| 0:11 | "the average person is holding four... hundred and seventy dollars" | Scroll to the four impact figures |
 | 0:22 | "So I built Assay" | Hero settles |
 | 0:26 | "scores sixteen things... good instrument" | Slow scroll past the study title block |
 | 0:36 | "moisture measured forty-five. It showed me sixty-eight." | **The 68 vs 45.4 card, held** |

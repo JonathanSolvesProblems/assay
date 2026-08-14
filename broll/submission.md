@@ -37,11 +37,12 @@ which was working. You change three things at once, something eventually gets
 better or it doesn't, and you carry the whole routine forward because you cannot
 tell which part earned its place. So you keep buying.
 
-It is under control now, which is exactly why I can see the problem clearly. I
-still have four products on my shelf, I spent about $170 on skincare last year,
-and I still cannot tell you which of them do anything. The average person is
-holding four right now that never delivered, and nobody can say which four. One
-in nine women has cycled through ten or more failures. I was that person for
+It is under control now, which is exactly why I can see the problem clearly. I am
+using a hyaluronic acid serum as I write this and I cannot tell you whether it is
+doing anything, which is the same not-knowing I had at seventeen with higher
+stakes attached. The average person is holding four products that never
+delivered, around $170 a year goes on skincare that turns out not to work, and
+one in nine women has cycled through ten or more failures. I was that person for
 years, and the reason was never that the products were all bad. It was that
 nothing could measure whether they worked.
 
