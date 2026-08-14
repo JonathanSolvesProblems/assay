@@ -10,41 +10,48 @@ capture. Nothing further will change.
 
 ## READ THIS ALOUD
 
-I had acne growing up. I tried a lot of products, and I could never tell which ones were actually working, so I kept buying more.
+I had acne growing up. I tried a lot of products, and I could never tell which ones were actually working, so I just kept buying more.
 
-It's under control now. But I still have four things on my shelf, and I still don't know which of them do anything. Neither does anyone else. That's about a hundred and seventy dollars a year, spent on products that don't work.
+It's under control now. But I still have four bottles in my bathroom, and if you asked me which of them actually do anything, I couldn't tell you. Most people can't. That's around a hundred and seventy dollars a year on skincare that turns out to do nothing.
 
 So I built Assay.
 
-It runs on YouCam's Skin Analysis API, which scores sixteen things about your skin from a single photo. It's a good instrument. But there are two things nobody tells you about the number it gives you.
+It runs on YouCam's Skin Analysis API, which scores sixteen things about your skin from a single photo. It's a good instrument. But there are two things nobody tells you about the number it gives back.
 
-The first is that the score you're shown isn't the score that was measured. Perfect Corp's own documentation calls the displayed value a psychological motivator, adjusted upward because people prefer good news about their skin. On my face, moisture measured forty-five, and displayed sixty-eight.
+The first is that the score you see isn't the score it measured. Perfect Corp's own documentation calls the displayed number a psychological motivator, adjusted upward because people prefer good news about their skin. On my face, moisture measured forty-five. It showed me sixty-eight.
 
-The second is that nobody gives you an error bar. So I recorded myself sitting still for fifteen minutes. My skin did not change. My radiance score fell nine and a half points.
+The second is that nobody gives you an error bar. So I sat still in front of a camera for fifteen minutes. My skin didn't change. My radiance score dropped nine and a half points.
 
-Across those fifteen minutes, a tracker that just shows you a score and compares it to last time would have reported ten changes in my skin. All ten were false. There was nothing to find.
+In those same fifteen minutes, a tracker that just compares today's score to last time would have told me my skin changed ten separate times. All ten were wrong. There was nothing there to find.
 
-That's why Assay measures its own error before it measures your skin. Three frames, seconds apart, on your face, on your device. The spread between them becomes the bar that every future change has to clear. Assay reported none of those ten.
+So Assay measures its own error first. Three frames, a few seconds apart, on your face, on your device. Whatever they disagree by becomes the bar that every future change has to beat. It reported none of those ten.
 
-Then it runs a real study. This is my face, four days on a hyaluronic acid serum, scored against my own noise floor.
+Then it runs the actual study. This is my face, four days on a hyaluronic acid serum, measured against my own noise floor.
 
-Texture is down seven and a half points. Its bar was three point one, so it cleared, and Assay calls it: getting worse. Four of the six concerns didn't clear their bars, and it says so plainly instead of dressing them up as progress.
+Texture came back down seven and a half points. Its bar was three point one, so it cleared, and Assay calls it: getting worse. The other four didn't clear their bars, and it says so, instead of dressing them up as progress.
 
-Every other skin app would have told me I was improving.
+Any other app would have told me I was improving.
 
-Mine told me I got worse. On a product I bought. That's the whole point: I'd rather know.
+Mine told me I got worse, on something I paid for. That's the whole point. I'd rather know.
 
 ---
 
 ## Word count and pacing
 
-About 300 words. At a natural, unhurried pace that lands between 90 and 100
-seconds. Do not speed up to fit; if it runs long, cut the sentence beginning
-"That's why Assay measures" down to "So Assay measures its own error first."
+About 320 words, which lands between 95 and 105 seconds at a normal talking
+pace. Do not rush to hit 90. If it runs long, drop the sentence "There was
+nothing there to find."
 
-Read it like you're explaining it to a friend who asked a genuine question. The
-two "nobody tells you" beats are the spine. Slow down on the two numbers that
-matter: **forty-five and sixty-eight**, and **nine and a half points**.
+Read it the way you would explain it to a friend who actually asked, not the way
+you would read a script. Contractions are deliberate, so say "didn't" and
+"couldn't" rather than straightening them out.
+
+Four places to slow down, because they are the whole argument: **forty-five, it
+showed me sixty-eight**, **nine and a half points**, **ten separate times**, and
+the last line.
+
+The two "nobody tells you" beats are the spine. Everything before them is setup
+and everything after is payoff.
 
 ---
 
@@ -53,18 +60,18 @@ matter: **forty-five and sixty-eight**, and **nine and a half points**.
 | Time | You say | On screen |
 |---|---|---|
 | 0:00 | "I had acne growing up... kept buying more" | Landing hero, held still |
-| 0:10 | "a hundred and seventy dollars a year" | Scroll to the four impact figures |
-| 0:16 | "So I built Assay" | Hero settles |
-| 0:20 | "scores sixteen things... good instrument" | Slow scroll past the study title block |
-| 0:30 | "psychological motivator... forty-five, displayed sixty-eight" | **The 68 vs 45.4 card, held** |
-| 0:45 | "sitting still for fifteen minutes... fell nine and a half points" | **Instrument table, radiance row: 93.0 / 89.5 / 83.4, drift −9.5** |
-| 0:52 | "would have reported ten changes... all ten were false" | **The 10-of-12 table, held** |
-| 1:02 | "Three frames, seconds apart" | Calibrate: camera opens, LIGHTING OK chip, capture countdown |
-| 1:08 | "the bar every future change has to clear" | Noise floor panel resolving, then concern overlays switching |
-| 1:18 | "four days on a hyaluronic acid serum" | Study section, "Result issued" status |
-| 1:24 | "texture is down seven and a half... it cleared" | **Texture verdict card, getting worse, held** |
-| 1:32 | "four of the six didn't clear their bars" | Scroll the remaining cards |
-| 1:38 | "mine told me I got worse... I'd rather know" | Hold on the hero |
+| 0:11 | "four bottles in my bathroom... hundred and seventy dollars" | Scroll to the four impact figures |
+| 0:22 | "So I built Assay" | Hero settles |
+| 0:26 | "scores sixteen things... good instrument" | Slow scroll past the study title block |
+| 0:36 | "moisture measured forty-five. It showed me sixty-eight." | **The 68 vs 45.4 card, held** |
+| 0:50 | "sat still for fifteen minutes... dropped nine and a half points" | **Instrument table, radiance row: 93.0 / 89.5 / 83.4, drift −9.5** |
+| 1:00 | "my skin changed ten separate times. All ten were wrong." | **The 10-of-12 table, held** |
+| 1:10 | "Three frames, a few seconds apart" | Calibrate: camera opens, LIGHTING OK chip, capture countdown |
+| 1:18 | "the bar every future change has to beat" | Noise floor panel resolving, then concern overlays switching |
+| 1:26 | "four days on a hyaluronic acid serum" | Study section, "Result issued" status |
+| 1:32 | "texture came back down seven and a half... it cleared" | **Texture verdict card, getting worse, −7.5 against ±3.1** |
+| 1:40 | "the other four didn't clear their bars" | Scroll the remaining cards |
+| 1:46 | "mine told me I got worse... I'd rather know" | Hold on the hero |
 
 ---
 
