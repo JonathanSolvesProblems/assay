@@ -73,7 +73,7 @@ export class YouCamError extends Error {
       case YOUCAM_ERROR_CODES.FACE_TOO_SMALL:
         return "Your face fills too little of the frame. Move closer, so your head roughly fills the oval, and try again.";
       case YOUCAM_ERROR_CODES.FACE_ANGLE:
-        return "Your head was turned too far. Look straight at the camera and hold still, then try again.";
+        return "Your head was turned or tilted too far for the analyser to read that frame. Face the camera straight on and keep your expression neutral: laughing or talking tips the head further than it feels like. Nothing was scored, so try that frame again.";
       case YOUCAM_ERROR_CODES.FILE_TOO_LARGE:
         return "That photo is too large. Assay captures below 10 MB.";
       case YOUCAM_ERROR_CODES.NSFW:
@@ -355,7 +355,15 @@ export class YouCamClient {
       );
 
       if (data.task_status === "error") {
-        throw new YouCamError(data.error ?? "Skin analysis failed.", data.error_code);
+        // The task endpoint reports the reason in `error` as a bare code string
+        // and leaves `error_code` unset, which is the reverse of the upload
+        // endpoints. Reading only `error_code` meant every documented failure
+        // fell through the message map and put a raw identifier such as
+        // error_large_face_angle in front of the person mid-capture.
+        throw new YouCamError(
+          data.error ?? "Skin analysis failed.",
+          data.error_code ?? data.error,
+        );
       }
 
       if (data.task_status === "success") {

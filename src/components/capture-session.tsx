@@ -833,6 +833,7 @@ function Protocol() {
           "Hold the phone at arm's length, face filling the oval.",
           "No makeup, hair back off the face.",
           "Do not move between frames. Reproducing the same framing is what keeps the noise floor low.",
+          "Keep a neutral expression and face the camera square. Laughing or talking tilts the head far enough for the analyser to refuse the frame.",
           "Repeat at the same time of day. Skin genuinely changes between morning and night.",
         ].map((step, i) => (
           <li key={i} className="flex gap-3">

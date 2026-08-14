@@ -283,3 +283,22 @@ answering the question is worth more than a confident answer from one that is no
 The only accepted `model` value is `youcam-image-v2`; the API helpfully returns
 the valid enum on a bad value, which is the fastest way to discover payload
 shapes across this API generally.
+
+## 14. The task endpoint reports its failure code in a different field
+
+A failed upload returns the reason in `error_code`. A failed *task* returns it
+in `error`, as a bare code string, and leaves `error_code` unset:
+
+```json
+{ "task_status": "error", "error": "error_large_face_angle" }
+```
+
+Reading `error_code` alone therefore yields `undefined` for every analysis
+failure, which is the class of failure a person actually hits: turned head,
+face too small, no face. Assay had a complete message map keyed on those codes
+and none of it ever fired, so a real user mid-capture was shown the raw
+identifier `error_large_face_angle` instead of an instruction.
+
+This is the same shape as finding 2, where the success envelope key varies
+between `data`, `result` and `results` across endpoints of one API version.
+Read both fields.
