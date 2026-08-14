@@ -89,7 +89,36 @@ result, it is a wrong one, because retinoids do not remodel anything on that
 timescale. Assay carries the onset window for each active ingredient and refuses
 to render a verdict before it.
 
+Two of those six states are what the live study currently shows, because four days
+on one face is what the data honestly supports: **getting worse** on texture and
+blemishes, **no evidence yet** on the other four. The remaining states are
+implemented and unit tested, and the method page works through each with the
+numbers that would trigger it, but I am not going to claim a demonstration the
+study has not earned.
+
 ## How I built it
+
+**On the "not a wrapper" question, with the numbers.** 618 of roughly 6,900 lines
+of source talk to the API. Against that sit about 2,000 lines of domain logic:
+1,206 for the statistics, 442 for the concern and active-ingredient catalogues,
+339 for the study store. Roughly three lines of measurement reasoning for every
+line of API plumbing, plus 1,426 lines of tests, none of which touch the network.
+
+The reason for that ratio is that the API answers a different question from the
+one a shopper has. It returns a score. It cannot tell you whether that score is
+stable enough to compare against last week's, and that is the entire decision.
+Answering it needed things no endpoint provides: a determinism check to prove the
+model returns identical output for identical bytes, an error budget decomposing
+the remaining variation by cause, a standard error of measurement and minimal
+detectable change computed per user, onset windows per active ingredient so a
+verdict is refused before an ingredient could physically have worked, and
+saturation detection so a score pinned at the top of its range is reported as
+unmeasurable rather than as perfect precision.
+
+The clearest evidence is `API_FINDINGS.md`: fourteen documented behaviours of the
+Skin Analysis API, several absent from or contradicting the published docs. That
+file is a byproduct of using the API as an instrument and then characterising the
+instrument. It is not something a wrapper produces.
 
 Next.js and TypeScript on the front, with the YouCam Skin Analysis API as the
 measurement instrument. Every frame is normalised to a fixed size, a fixed JPEG
@@ -293,9 +322,9 @@ Assay tells a shopper whether a skincare product is actually working on their ow
 face, using the YouCam Skin Analysis API as a measurement instrument rather than as
 a scoring widget.
 
-The consumer problem is concrete. The average woman spends around $170 a year on
-skincare that turns out not to work and is holding four products that never
-delivered, with no way to tell which four. Skin scores exist, but a score reported
+The consumer problem is concrete. The average woman spends around $170 a year
+trying to find skincare that is right for her and is still holding four products
+that did not work, with no way to tell which four. Skin scores exist, but a score reported
 without its error cannot support that decision.
 
 Assay measures the instrument's error first. It takes several captures where the
@@ -463,3 +492,7 @@ TODO or leave blank
 - [ ] Thumbnail image at 3:2, under 5 MB
 - [ ] Topic selected: **Skin AI**
 - [ ] `TODO` placeholders above all replaced
+
+---
+
+## Honest limitations
