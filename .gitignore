@@ -65,3 +65,6 @@ coverage/
 
 # vidkit build artefacts
 *.edit-plan.json
+
+# short-form build artefacts
+*.short.edit-plan.json
