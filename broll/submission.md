@@ -288,6 +288,12 @@ youcam-api, perfect-corp, skin-analysis-api, ai-image-generator, typescript, nex
 
 ---
 
+## Video demonstration link
+
+```
+https://www.youtube.com/watch?v=2TTFyaoxwjE
+```
+
 ## "Try it out" links
 
 ```
@@ -483,7 +489,7 @@ TODO or leave blank
 
 - [ ] Deployed URL is live and the API key is set in the host's environment
 - [ ] Repo is public, `README.md` explains how to run it, `.env.example` present
-- [ ] Demo video is on YouTube, public, no login, 1 to 3 minutes
+- [x] Demo video is on YouTube, public, no login, 1 to 3 minutes (2:36)
 - [ ] Video shows the deployed site running, not slides
 - [ ] Video says which YouCam API is used
 - [ ] No copyrighted music in the video

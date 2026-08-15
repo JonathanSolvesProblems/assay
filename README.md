@@ -8,6 +8,8 @@ face, by measuring its own error before it measures your skin.
 Built on the [YouCam Skin Analysis API](https://yce.perfectcorp.com/ai-api) for
 the YouCam API Skin AI & Apparel VTO Hackathon.
 
+**[Watch the 2 minute demo](https://www.youtube.com/watch?v=2TTFyaoxwjE)**  ·  **[Try it live](https://assay.jonathanandrei.com)**  ·  **[The method](https://assay.jonathanandrei.com/method)**
+
 ---
 
 ## The problem
