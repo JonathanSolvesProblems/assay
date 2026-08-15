@@ -301,6 +301,7 @@ https://www.youtube.com/watch?v=2TTFyaoxwjE
 ```
 https://assay.jonathanandrei.com
 https://github.com/JonathanSolvesProblems/assay
+https://jonathanandrei.com/blog/assay-skincare-tracker-with-an-error-bar-youcam-api/
 ```
 
 ---

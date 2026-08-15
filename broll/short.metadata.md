@@ -31,6 +31,7 @@ Live app ............ https://assay.jonathanandrei.com
 Source code (MIT) ... https://github.com/JonathanSolvesProblems/assay
 The method, in full . https://assay.jonathanandrei.com/method
 YouCam API .......... https://yce.perfectcorp.com/ai-api
+Written write-up .... https://jonathanandrei.com/blog/assay-skincare-tracker-with-an-error-bar-youcam-api/
 My other work ....... https://jonathanandrei.com
 
 Full 2 minute version on this channel, including the 4 day study on my own face

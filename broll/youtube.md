@@ -55,6 +55,7 @@ Source code (MIT) ... https://github.com/JonathanSolvesProblems/assay
 The method, in full . https://assay.jonathanandrei.com/method
 Calibrate your own .. https://assay.jonathanandrei.com/calibrate
 YouCam API .......... https://yce.perfectcorp.com/ai-api
+Written write-up .... https://jonathanandrei.com/blog/assay-skincare-tracker-with-an-error-bar-youcam-api/
 My other work ....... https://jonathanandrei.com
 
 Everything I learned about the Skin Analysis API is in API_FINDINGS.md in the
