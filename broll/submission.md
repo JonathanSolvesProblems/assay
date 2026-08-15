@@ -3,8 +3,9 @@
 Copy each block into the matching field. Written in first person throughout,
 since this is a solo entry.
 
-**Placeholders to fill before submitting** are marked `TODO`. Everything else is
-final.
+**Every value below is final.** There are no placeholders left. Anything inside a
+fenced block is meant to be pasted verbatim; anything outside one is a note to me
+and must not be pasted.
 
 ---
 
@@ -479,9 +480,9 @@ carry no score and would inject undefined values straight into the statistics.
 
 ## Share a link to any social posts about your project
 
-```
-TODO or leave blank
-```
+Optional field. Leave it empty unless a post exists; there is deliberately no
+paste block here, because a block containing the word TODO is a block that ends
+up pasted into the form.
 
 ---
 
@@ -497,7 +498,7 @@ TODO or leave blank
       verdict card
 - [ ] Thumbnail image at 3:2, under 5 MB
 - [ ] Topic selected: **Skin AI**
-- [ ] `TODO` placeholders above all replaced
+- [x] No placeholders left in any paste block (verified)
 
 ---
 
