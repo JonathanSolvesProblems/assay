@@ -231,11 +231,12 @@ recorded in the study file rather than discovered later.
 That is the shape of the commercial problem underneath this project. Advertised
 claims are stated in absolute terms, on timescales the seller picks, and the
 measurement that would confirm or refute them is not something a buyer has ever
-had. Assay is the smallest working version of giving them one. The other four concerns stayed at no
-evidence yet and are labelled as such. I am the person who had acne growing up and
-built this to find out what works, and the first thing it told me was that
-something I bought was not helping. I would rather know, and shipping that result
-unedited is the only version of this project worth entering.
+had. Assay is the smallest working version of giving them one.
+
+I am the person who had acne growing up and built this to find out what works, and
+the first thing it told me was that something I bought was not helping. I would
+rather know, and shipping that result unedited is the only version of this project
+worth entering.
 
 ## What I learned
 
