@@ -256,8 +256,8 @@ lab charges $25,000 to $80,000 for a skincare efficacy study; the machinery to r
 one for a few hundred dollars is already here and only needs more people pointing
 cameras at themselves. That maps onto the FTC's "competent and reliable scientific
 evidence" standard for advertising claims, which is a budget line an order of
-magnitude larger than the marketing spend that currently buys virtual try-on
-widgets.
+magnitude larger than the marketing spend that currently funds virtual try-on
+integrations.
 
 Nearer term, two things, both of which come straight out of the measurements
 rather than a feature wishlist.
@@ -328,7 +328,7 @@ New
 ```
 Assay tells a shopper whether a skincare product is actually working on their own
 face, using the YouCam Skin Analysis API as a measurement instrument rather than as
-a scoring widget.
+a score display.
 
 The consumer problem is concrete. The average woman spends around $170 a year
 trying to find skincare that is right for her and is still holding four products
@@ -402,7 +402,7 @@ nothing, which makes framing too tight a cheap mistake to test for.
 ## Are there industries or use cases you think Perfect Corp.'s API could serve that nobody is talking about yet?
 
 ```
-Claims substantiation. Right now the API is sold as a conversion widget, paid for
+Claims substantiation. Right now the API is sold as a conversion feature, paid for
 out of a marketing budget. The same scores, captured under a controlled protocol
 with an error model on top, are an instrument, and that opens a different and much
 larger budget line.
