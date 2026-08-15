@@ -299,7 +299,7 @@ https://www.youtube.com/watch?v=2TTFyaoxwjE
 ## "Try it out" links
 
 ```
-https://assay-lime.vercel.app
+https://assay.jonathanandrei.com
 https://github.com/JonathanSolvesProblems/assay
 ```
 
