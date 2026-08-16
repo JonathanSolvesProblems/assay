@@ -10,11 +10,35 @@ import {
   preferredCamera,
 } from "@/lib/youcam/image";
 import { CONCERNS, DEFAULT_CONCERNS, type ConcernId } from "@/lib/domain/concerns";
+import study from "@/data/study.json";
 import {
   estimateReliability,
   type ReliabilityEstimate,
   type Session,
 } from "@/lib/stats/reliability";
+
+/**
+ * A real session anyone can open without spending a unit.
+ *
+ * The live path costs API units, which come out of one finite hackathon
+ * balance, so a visitor arriving after that balance is gone would otherwise
+ * meet an error instead of the thing the page is about. This replays a session
+ * that genuinely happened: the readings below are the ones the API returned for
+ * the first calibration sitting, carried straight from the study file rather
+ * than typed in here, and the task ids that produced them travel with it. It is
+ * labelled as a replay wherever it is shown, because presenting stored numbers
+ * as a fresh capture of the viewer's own face would be the exact dishonesty
+ * this project exists to argue against.
+ */
+const SAMPLE_SESSION: AnalyzeResponse = {
+  readings: study.calibrationSessions[0].readings as Record<string, number[]>,
+  masks: {},
+  frameCount: study.calibrationSessions[0].readings.texture.length,
+  taskIds: (study.calibrationSessions[0].taskIds ?? []) as string[],
+  unitsBefore: null,
+  unitsAfter: null,
+  capturedAt: study.calibrationSessions[0].capturedAt ?? study.startedAt,
+};
 
 const FRAMES_PER_SESSION = 3;
 const SECONDS_BETWEEN_FRAMES = 3;
@@ -73,6 +97,8 @@ export function CaptureSession() {
   const [luminance, setLuminance] = useState<number | null>(null);
   const [luminanceLog, setLuminanceLog] = useState<number[]>([]);
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
+  /** True when the panel is showing the stored session rather than a live one. */
+  const [isReplay, setIsReplay] = useState(false);
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [cameraId, setCameraId] = useState<string>("");
   /** Face height as a share of frame height, or null when undetectable. */
@@ -426,6 +452,7 @@ export function CaptureSession() {
     }
 
     try {
+      setIsReplay(false);
       const frames = await Promise.all(
         files.slice(0, FRAMES_PER_SESSION).map(normaliseFile),
       );
@@ -754,6 +781,20 @@ export function CaptureSession() {
           )}
 
           {(phase === "idle" || phase === "error" || phase === "done") && (
+            <>
+            <button
+              type="button"
+              onClick={() => {
+                setResult(SAMPLE_SESSION);
+                setIsReplay(true);
+                setPhase("done");
+                setMessage(null);
+              }}
+              className="rounded-none border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]"
+            >
+              See a completed session
+            </button>
+
             <label className="cursor-pointer rounded-none border border-[var(--color-rule-strong)] px-5 py-2.5 text-[14px] transition-colors duration-200 hover:bg-[var(--color-surface-sunken)]">
               Upload {FRAMES_PER_SESSION} photographs
               <input
@@ -764,6 +805,7 @@ export function CaptureSession() {
                 onChange={onFilesChosen}
               />
             </label>
+            </>
           )}
 
           {phase === "analysing" && (
@@ -804,6 +846,7 @@ export function CaptureSession() {
       <aside>
         {reliability ? (
           <NoiseFloorPanel
+            replay={isReplay}
             degenerate={degenerateFloor}
             reliability={reliability}
             luminanceDrift={luminanceDrift}
@@ -853,11 +896,13 @@ function Protocol() {
 }
 
 function NoiseFloorPanel({
+  replay,
   degenerate,
   reliability,
   luminanceDrift,
   units,
 }: {
+  replay: boolean;
   degenerate: boolean;
   reliability: Record<string, ReliabilityEstimate>;
   luminanceDrift: number | null;
@@ -868,15 +913,25 @@ function NoiseFloorPanel({
   return (
     <div className="card p-6">
       <p className="text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-muted)]">
-        Your noise floor
+        {replay ? "Recorded session" : "Your noise floor"}
       </p>
       <h3 className="mt-2 font-serif text-[22px] leading-tight tracking-[0.005em]">
         What a change has to beat
       </h3>
-      <p className="mt-3 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
-        Measured on your face, on your device, from three frames taken seconds apart. Any
-        future change smaller than these numbers cannot be told apart from the instrument.
-      </p>
+      {replay ? (
+        <p className="mt-3 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
+          This is a real session replayed, not a capture of you. These are the readings
+          the YouCam Skin Analysis API returned for the first calibration sitting of the
+          study on this site, five frames of one face seconds apart, and the floors below
+          are computed from them live by the same code the camera path uses. Capture your
+          own above to get numbers for your face and your device.
+        </p>
+      ) : (
+        <p className="mt-3 text-[13px] leading-relaxed text-[var(--color-ink-secondary)]">
+          Measured on your face, on your device, from three frames taken seconds apart. Any
+          future change smaller than these numbers cannot be told apart from the instrument.
+        </p>
+      )}
 
       <dl className="mt-5 space-y-2.5">
         {entries.map(([concern, estimate]) => {

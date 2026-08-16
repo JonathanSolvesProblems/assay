@@ -95,7 +95,7 @@ export async function POST(request: Request) {
     if (balance !== null && balance < estimate) {
       return NextResponse.json(
         {
-          error: `Not enough units: this session needs about ${estimate} and ${balance} remain.`,
+          error: `This session needs about ${estimate} API units and ${balance} remain on the hackathon balance, so a live capture cannot run right now. Press "See a completed session" to open a real recorded session instead: the readings are genuine API output and the noise floor is computed from them by the same code this button would have used. The study on the home page is also entirely real.`,
         },
         { status: 402 },
       );
