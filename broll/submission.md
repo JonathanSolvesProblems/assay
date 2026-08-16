@@ -361,10 +361,10 @@ seeded.
 
 One practical note for anyone testing it. Live capture spends real API units from
 a single finite hackathon balance, and the four-day study consumed most of it. So
-there are three ways to see the capture path work. Press **See a completed
-session** for a real recorded sitting, which costs nothing: the readings are
+there are three ways to see the capture path work. Press "See a completed
+session" for a real recorded sitting, which costs nothing: the readings are
 genuine API output and the noise floor is computed from them live by the same code
-the camera path runs. Or open **Use your own YouCam API key** on the same page and
+the camera path runs. Or open "Use your own YouCam API key" on the same page and
 paste one, and every call runs on your units instead of mine, with the capture
 button re-enabling as soon as the key checks out; that key is held in the page for
 the life of the tab, never stored, never logged, and never used for anything but
