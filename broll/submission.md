@@ -358,6 +358,15 @@ is the evidence standard the FTC expects behind an advertising claim.
 Everything the app displays comes from a real capture. The study data in the
 repository is a genuine prospective n-of-1 study, and no readings are generated or
 seeded.
+
+One practical note for anyone testing it. Live capture spends real API units from
+a single finite hackathon balance, and the four-day study consumed most of it. If
+that balance is exhausted when you arrive, the capture page says so and disables
+the button rather than starting a session it cannot finish, and the **See a
+completed session** button opens a real recorded sitting: genuine API output, with
+the noise floor computed from it live by the same code the camera path runs. The
+demo video shows the live path running end to end, and the repository runs against
+your own key with `YOUCAM_API_KEY` set.
 ```
 
 ---
