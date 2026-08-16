@@ -105,11 +105,17 @@ export function CaptureSession() {
    * and then fail on the last, which spends real money for nothing.
    */
   const [canCapture, setCanCapture] = useState(true);
+  /**
+   * A key the visitor supplies so they can spend their own balance instead of
+   * mine. Component state only: never written to localStorage, never persisted
+   * server-side, sent with a request and forgotten.
+   */
+  const [ownKey, setOwnKey] = useState("");
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [cameraId, setCameraId] = useState<string>("");
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/budget")
+    fetch("/api/budget" + (ownKey ? `?apiKey=${encodeURIComponent(ownKey)}` : ""))
       .then((r) => r.json())
       .then((d) => {
         if (!cancelled && d && typeof d.canCapture === "boolean") setCanCapture(d.canCapture);
@@ -120,7 +126,7 @@ export function CaptureSession() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [ownKey]);
 
   /** Face height as a share of frame height, or null when undetectable. */
   const [faceRatio, setFaceRatio] = useState<number | null>(null);
@@ -382,6 +388,7 @@ export function CaptureSession() {
       form.append("frames", blob, `frame-${index}.jpg`);
       form.append("concerns", DEFAULT_CONCERNS.join(","));
       form.append("singleFrame", "1");
+    if (ownKey) form.append("apiKey", ownKey);
 
       try {
         const response = await fetch("/api/analyze", { method: "POST", body: form });
@@ -771,13 +778,55 @@ export function CaptureSession() {
             </select>
           )}
 
+          {/* Bring your own key. The hosted balance is finite and the study spent
+              most of it, so anyone with a YouCam key can run the live path on
+              their own units rather than be turned away. */}
+          {phase !== "analysing" && (
+            <details className="w-full">
+              <summary className="cursor-pointer text-[13px] text-[var(--color-ink-secondary)] hover:text-[var(--color-spot)]">
+                Use your own YouCam API key
+              </summary>
+              <div className="mt-3 border-l-2 border-[var(--color-rule-strong)] pl-4">
+                <label
+                  className="block text-[13px] leading-relaxed text-[var(--color-ink-secondary)]"
+                  htmlFor="own-key"
+                >
+                  The balance behind this deployment is finite and the four-day study
+                  spent most of it. Paste a YouCam API key here and every call runs on
+                  your units instead. It is held in this page only for as long as the tab
+                  is open: never saved to your browser, never written to disk on the
+                  server, never logged, and never used for anything but the requests you
+                  start. Reload the page and it is gone. Reading your balance costs
+                  nothing.
+                </label>
+                <input
+                  id="own-key"
+                  type="password"
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={ownKey}
+                  onChange={(e) => setOwnKey(e.target.value)}
+                  placeholder="YouCam API key"
+                  className="tabular mt-3 w-full max-w-md border border-[var(--color-rule-strong)] bg-[var(--color-surface-sunken)] px-3 py-2 text-[13px] text-[var(--color-ink)] outline-none focus:border-[var(--color-spot)]"
+                />
+                {ownKey && (
+                  <p className="mt-2 text-[12px] text-[var(--color-ink-muted)]">
+                    {canCapture
+                      ? "That key can fund a full session. Open the camera above."
+                      : "That key was not accepted, or its balance cannot fund three frames."}
+                  </p>
+                )}
+              </div>
+            </details>
+          )}
+
           {!canCapture && phase !== "analysing" && (
             <p className="w-full text-[13px] leading-relaxed text-[var(--color-alert)]">
               The hackathon API balance can no longer fund a full three-frame session, so
               live capture is switched off rather than started and abandoned halfway.
-              Everything else still works: press <strong>See a completed session</strong>{" "}
-              for a real recorded one, and the study on the home page is entirely real
-              captured data.
+              Two ways round it: paste your own key above and it runs on your units, or
+              press <strong>See a completed session</strong> for a real recorded one. The
+              study on the home page is entirely real captured data either way.
             </p>
           )}
 

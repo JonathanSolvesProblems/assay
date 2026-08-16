@@ -30,6 +30,10 @@ export const maxDuration = 60;
 const MAX_FRAMES = 4;
 
 export async function POST(request: Request) {
+  // A visitor may supply their own key rather than spend the server's balance.
+  // It is read from this request only: never logged, stored, or reused.
+  let suppliedKey = "";
+
   if (!process.env.YOUCAM_API_KEY) {
     return NextResponse.json(
       { error: "The server has no YouCam API key configured." },
@@ -51,6 +55,9 @@ export async function POST(request: Request) {
   // 60 second function limit, and the request was killed after the units had
   // been spent. `singleFrame` marks one leg of a session the caller is building.
   const singleFrame = form.get("singleFrame") === "1";
+
+  const rawKey = form.get("apiKey");
+  if (typeof rawKey === "string") suppliedKey = rawKey.trim();
 
   if (files.length < (singleFrame ? 1 : 2)) {
     return NextResponse.json(
@@ -86,7 +93,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const client = createYouCamClient();
+  const client = createYouCamClient(suppliedKey);
 
   try {
     const balance = await client.getCreditBalance();

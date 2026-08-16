@@ -18,13 +18,18 @@ import { MEASURED_SKIN_ANALYSIS_COST } from "@/lib/youcam/types";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET() {
-  if (!process.env.YOUCAM_API_KEY) {
+export async function GET(request: Request) {
+  // A caller-supplied key is checked instead of the server's, so the page can
+  // tell a visitor whether *their* balance funds a session. Read per request,
+  // never logged or stored.
+  const supplied = new URL(request.url).searchParams.get("apiKey")?.trim() ?? "";
+
+  if (!supplied && !process.env.YOUCAM_API_KEY) {
     return NextResponse.json({ balance: null, canCapture: false, perFrame: null });
   }
 
   try {
-    const balance = await createYouCamClient().getCreditBalance();
+    const balance = await createYouCamClient(supplied).getCreditBalance();
     return NextResponse.json({
       balance,
       perFrame: MEASURED_SKIN_ANALYSIS_COST,

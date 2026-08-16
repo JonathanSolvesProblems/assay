@@ -454,9 +454,16 @@ export class YouCamClient {
 }
 
 /** Build a client from the server environment. */
-export function createYouCamClient(): YouCamClient {
+/**
+ * @param apiKey Optional caller-supplied key, used instead of the server's own.
+ *   The hosted deployment runs on one finite hackathon balance, so a visitor who
+ *   has their own key can spend theirs rather than be turned away once mine is
+ *   gone. A supplied key is used for that request and nothing else: it is never
+ *   logged, never written to disk, and never persisted between requests.
+ */
+export function createYouCamClient(apiKey?: string): YouCamClient {
   return new YouCamClient({
-    apiKey: process.env.YOUCAM_API_KEY ?? "",
+    apiKey: apiKey?.trim() || process.env.YOUCAM_API_KEY || "",
     baseUrl: process.env.YOUCAM_API_BASE,
     reserveUnits: Number(process.env.YOUCAM_RESERVE_UNITS ?? 0),
   });
