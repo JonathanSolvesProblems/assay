@@ -99,8 +99,29 @@ export function CaptureSession() {
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   /** True when the panel is showing the stored session rather than a live one. */
   const [isReplay, setIsReplay] = useState(false);
+  /**
+   * Whether the hackathon balance can fund a whole session. Frames are sent one
+   * per request, so without asking first a session can pay for its first frames
+   * and then fail on the last, which spends real money for nothing.
+   */
+  const [canCapture, setCanCapture] = useState(true);
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [cameraId, setCameraId] = useState<string>("");
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/budget")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled && d && typeof d.canCapture === "boolean") setCanCapture(d.canCapture);
+      })
+      .catch(() => {
+        // A failed lookup must never block a capture; the analyse route still guards.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   /** Face height as a share of frame height, or null when undetectable. */
   const [faceRatio, setFaceRatio] = useState<number | null>(null);
   /** Seconds spent in the current analysis, for an honest progress readout. */
@@ -750,10 +771,25 @@ export function CaptureSession() {
             </select>
           )}
 
+          {!canCapture && phase !== "analysing" && (
+            <p className="w-full text-[13px] leading-relaxed text-[var(--color-alert)]">
+              The hackathon API balance can no longer fund a full three-frame session, so
+              live capture is switched off rather than started and abandoned halfway.
+              Everything else still works: press <strong>See a completed session</strong>{" "}
+              for a real recorded one, and the study on the home page is entirely real
+              captured data.
+            </p>
+          )}
+
           {phase === "streaming" && (
             <button
               onClick={runCapture}
-              disabled={feedIsDark || faceTooSmall}
+              disabled={feedIsDark || faceTooSmall || !canCapture}
+              title={
+                canCapture
+                  ? undefined
+                  : "The hackathon API balance cannot fund a full session. Open a completed session instead."
+              }
               className="rounded-none bg-[var(--color-ink)] px-5 py-2.5 text-[13px] tracking-[0.06em] text-[var(--color-paper)] uppercase transition-colors duration-150 hover:bg-[var(--color-spot)] disabled:cursor-not-allowed disabled:bg-[var(--color-rule-strong)]"
             >
               Capture three frames
