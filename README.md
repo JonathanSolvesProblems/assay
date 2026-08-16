@@ -108,6 +108,44 @@ block itself, and the app takes whichever is larger, the between-session error o
 the frame-level error, never the smaller, which is what keeps this bound from
 collapsing further.
 
+## Trying it without installing anything
+
+The hosted app is at **[assay.jonathanandrei.com](https://assay.jonathanandrei.com)**.
+Everything on the home page is real captured data and costs you nothing to read.
+
+Live capture spends YouCam API units, and this deployment runs on a single finite
+hackathon balance that the four-day study consumed most of. So there are three
+ways to see the capture path work, in increasing order of involvement.
+
+**1. A recorded session, no key, no cost.** Open
+[/calibrate](https://assay.jonathanandrei.com/calibrate) and press **See a
+completed session**. That replays the first calibration sitting of the study: the
+readings are the ones the API actually returned, and the noise floor is computed
+from them live by the same code the camera path runs. It is labelled a replay
+wherever it appears.
+
+**2. Your own key, on your own face.** On the same page, open **Use your own
+YouCam API key** and paste one. Every call then runs on your units instead of
+mine, and the capture button re-enables as soon as the key checks out. A session
+is three frames at 12 units each, so 36 units in total, and reading a balance
+costs nothing.
+
+The key is held in the page for the life of the tab and nothing more. It is never
+written to `localStorage`, never persisted on the server, never logged, and never
+used for anything but the requests you start. Reload the page and it is gone. The
+handling is in [`src/app/api/analyze/route.ts`](src/app/api/analyze/route.ts) and
+[`src/app/api/budget/route.ts`](src/app/api/budget/route.ts) if you would rather
+read it than trust it.
+
+**3. Run it yourself.** Clone the repository and follow the next section. Set
+`YOUCAM_API_KEY` in `.env.local` and the whole thing, including the ingest and
+experiment scripts, runs against your own account.
+
+If a balance cannot fund a full three-frame session, the capture button is
+disabled and the page says so, rather than starting a session it cannot finish.
+Frames are sent one per request, so without that check a session could pay for
+its first frames and fail on the last.
+
 ## Running it
 
 ```bash

@@ -360,13 +360,18 @@ repository is a genuine prospective n-of-1 study, and no readings are generated 
 seeded.
 
 One practical note for anyone testing it. Live capture spends real API units from
-a single finite hackathon balance, and the four-day study consumed most of it. If
-that balance is exhausted when you arrive, the capture page says so and disables
-the button rather than starting a session it cannot finish, and the **See a
-completed session** button opens a real recorded sitting: genuine API output, with
-the noise floor computed from it live by the same code the camera path runs. The
-demo video shows the live path running end to end, and the repository runs against
-your own key with `YOUCAM_API_KEY` set.
+a single finite hackathon balance, and the four-day study consumed most of it. So
+there are three ways to see the capture path work. Press **See a completed
+session** for a real recorded sitting, which costs nothing: the readings are
+genuine API output and the noise floor is computed from them live by the same code
+the camera path runs. Or open **Use your own YouCam API key** on the same page and
+paste one, and every call runs on your units instead of mine, with the capture
+button re-enabling as soon as the key checks out; that key is held in the page for
+the life of the tab, never stored, never logged, and never used for anything but
+the requests you start. Or clone the repository and run it against your own
+account. If a balance cannot fund a full three-frame session the page disables
+capture and says so, rather than starting a session it cannot finish. The demo
+video shows the live path running end to end.
 ```
 
 ---
