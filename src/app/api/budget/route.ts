@@ -39,7 +39,16 @@ export async function GET(request: Request) {
       canCapture: balance === null || balance >= MEASURED_SKIN_ANALYSIS_COST * 3,
     });
   } catch {
-    // Never block a capture because the balance lookup itself failed.
-    return NextResponse.json({ balance: null, canCapture: true, perFrame: null });
+    // Failing open is right for the server's own key, where a transient lookup
+    // glitch should not block a capture the analyse route would have allowed.
+    // It is wrong for a key the visitor just pasted: there the lookup failing is
+    // the evidence that the key does not work, and enabling the button would
+    // start a session doomed to fail on the first frame.
+    return NextResponse.json({
+      balance: null,
+      canCapture: !supplied,
+      perFrame: null,
+      keyRejected: Boolean(supplied),
+    });
   }
 }
