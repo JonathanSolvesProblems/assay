@@ -32,14 +32,13 @@ const MAX_FRAMES = 4;
 export async function POST(request: Request) {
   // A visitor may supply their own key rather than spend the server's balance.
   // It is read from this request only: never logged, stored, or reused.
+  //
+  // The "is there a key at all" check cannot happen here, before the body is
+  // parsed, because a supplied key arrives in that body. Checking early would
+  // reject every caller-supplied key the moment the server has none of its own,
+  // which is exactly the state this deployment is in now that the hackathon is
+  // over. The check lives below, once both possibilities are known.
   let suppliedKey = "";
-
-  if (!process.env.YOUCAM_API_KEY) {
-    return NextResponse.json(
-      { error: "The server has no YouCam API key configured." },
-      { status: 503 },
-    );
-  }
 
   let form: FormData;
   try {
@@ -58,6 +57,16 @@ export async function POST(request: Request) {
 
   const rawKey = form.get("apiKey");
   if (typeof rawKey === "string") suppliedKey = rawKey.trim();
+
+  if (!suppliedKey && !process.env.YOUCAM_API_KEY) {
+    return NextResponse.json(
+      {
+        error:
+          "The hackathon this was built for is over and its API balance is spent, so this deployment no longer holds a key of its own. Everything else still works: the study on the home page is real captured data, and \"See a completed session\" replays a real sitting at no cost. To run a live capture, open \"Use your own YouCam API key\" and paste one, and every call runs on your units.",
+      },
+      { status: 503 },
+    );
+  }
 
   if (files.length < (singleFrame ? 1 : 2)) {
     return NextResponse.json(

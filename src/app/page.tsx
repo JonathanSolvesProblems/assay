@@ -47,7 +47,20 @@ export default function VerdictPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6">
-      <Reveal as="section" className="pt-20 pb-16 sm:pt-28">
+      {/* The hackathon is over and the balance is spent. Saying so plainly beats
+          letting a visitor discover it by pressing a disabled button. */}
+      <div className="mt-6 border-l-2 border-[var(--color-rule-strong)] py-1 pl-4 text-[13px] leading-relaxed text-[var(--color-ink-muted)]">
+        Built for the YouCam API Skin AI &amp; Apparel VTO Hackathon, which has now
+        finished. Everything on this page is real captured data and stays exactly as it
+        was submitted. The API balance behind it is spent, so live capture runs on your
+        own YouCam key, and{" "}
+        <Link href="/calibrate" className="underline underline-offset-[3px] hover:text-[var(--color-spot)]">
+          a completed session
+        </Link>{" "}
+        can be replayed at no cost.
+      </div>
+
+      <Reveal as="section" className="pt-10 pb-16 sm:pt-14">
         <p className="tabular text-[11px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
           Skin measurement with an error bar
         </p>

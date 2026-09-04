@@ -822,11 +822,12 @@ export function CaptureSession() {
 
           {!canCapture && phase !== "analysing" && (
             <p className="w-full text-[13px] leading-relaxed text-[var(--color-alert)]">
-              The hackathon API balance can no longer fund a full three-frame session, so
-              live capture is switched off rather than started and abandoned halfway.
-              Two ways round it: paste your own key above and it runs on your units, or
-              press <strong>See a completed session</strong> for a real recorded one. The
-              study on the home page is entirely real captured data either way.
+              The hackathon this was built for is over and its API balance is spent, so
+              this deployment no longer carries a key of its own and live capture is
+              switched off rather than started and abandoned halfway. Two ways round it:
+              paste your own key above and every call runs on your units, or press{" "}
+              <strong>See a completed session</strong> for a real recorded one at no cost.
+              The study on the home page is entirely real captured data either way.
             </p>
           )}
 
