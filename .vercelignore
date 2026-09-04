@@ -1,0 +1,12 @@
+# The CLI uploads the working directory, not the git tree, and these hold
+# gigabytes of local capture and edit media that the build never reads.
+captures/
+broll/
+experiments/
+.scratch/
+*.mp4
+*.mov
+*.mkv
+*.mp3
+node_modules/
+.next/
